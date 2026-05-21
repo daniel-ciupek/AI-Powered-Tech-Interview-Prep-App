@@ -127,8 +127,11 @@ Pełen stack: patrz `PROJECT.md` sekcja 13.
 
 ### 5.1. Struktura fazy
 - Każda **Faza** ma podpunkty: X.1, X.2, X.3...
-- Pracujemy **sekwencyjnie** — kończymy 2.1 przed 2.2.
+- Pracujemy **sekwencyjnie** — kończymy X.1 przed X.2.
 - Każdy podpunkt: kod + test + Pint + Larastan **muszą być zielone**.
+- **Po każdym podpunkcie:** commit + push (drobny, atomowy commit po uzyskaniu zgody).
+- Rytm: `kod → testy zielone → Pint ✅ → commit → push → następny podpunkt`.
+- Częste commity = czytelna historia w GitHubie (ważne dla rekruterów i CI).
 
 ### 5.2. Definition of Done (DoD) etapu
 Faza N nie jest "skończona" dopóki:
@@ -140,6 +143,12 @@ Faza N nie jest "skończona" dopóki:
 - ✅ Manualny smoke test (poprosić użytkownika o weryfikację).
 - ✅ Code review subagentem `senior-reviewer` — komentarze rozwiązane.
 - ✅ Tag git `phase-X-complete` po commitcie końcowym.
+
+### 5.2.5. Procedura po każdym podpunkcie (X.1, X.2...)
+1. Uruchom szybki check: `vendor/bin/pint --test` + `vendor/bin/pest`.
+2. Zapytaj o zgodę na commit (`feat/fix/test(scope): X.N — krótki opis`).
+3. Zapytaj o zgodę na push (`git push origin main`).
+4. Sprawdź CI — jeśli czerwony, napraw ZANIM zaczniesz kolejny podpunkt.
 
 ### 5.3. Procedura na koniec etapu
 1. Uruchom `composer test:all` (custom script — Pint + Larastan + Pest).
@@ -154,8 +163,9 @@ Faza N nie jest "skończona" dopóki:
 ## 6. Reguły Git (KRYTYCZNE)
 
 ### 6.1. Autoryzacja
-- **ZAWSZE pytaj przed `git commit`.**
-- **ZAWSZE pytaj przed `git push`.**
+- **ZAWSZE pytaj przed `git commit`** — każdy commit, po podpunkcie i na koniec fazy.
+- **ZAWSZE pytaj przed `git push`** — push następuje od razu po każdym commicie (nie czekamy do końca fazy).
+- Jednorazowa zgoda na commit = jeden konkretny commit; na push = jeden konkretny push.
 - **NIGDY** `git push --force` na `main` bez wyraźnej, świadomej prośby.
 - **NIGDY** `git commit --no-verify` ani `git push --no-verify` (chyba że user wprost prosi z uzasadnieniem — wtedy zapisz feedback memory).
 - **NIGDY** `git reset --hard`, `git clean -fd`, `git branch -D` bez potwierdzenia.

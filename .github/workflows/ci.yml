@@ -19,7 +19,7 @@ jobs:
       pgsql:
         image: postgres:18-alpine
         env:
-          POSTGRES_DB: prepmind_testing
+          POSTGRES_DB: testing
           POSTGRES_USER: sail
           POSTGRES_PASSWORD: password
         ports:
@@ -65,7 +65,7 @@ jobs:
       - name: Configure .env for CI
         run: |
           sed -i 's/DB_CONNECTION=sqlite/DB_CONNECTION=pgsql/' .env
-          sed -i '/^DB_CONNECTION=pgsql/a DB_HOST=127.0.0.1\nDB_PORT=5432\nDB_DATABASE=prepmind_testing\nDB_USERNAME=sail\nDB_PASSWORD=password' .env
+          sed -i '/^DB_CONNECTION=pgsql/a DB_HOST=127.0.0.1\nDB_PORT=5432\nDB_DATABASE=testing\nDB_USERNAME=sail\nDB_PASSWORD=password' .env
           sed -i 's/CACHE_STORE=database/CACHE_STORE=redis/' .env
           sed -i 's/QUEUE_CONNECTION=database/QUEUE_CONNECTION=redis/' .env
 
@@ -79,7 +79,7 @@ jobs:
         run: ./vendor/bin/phpstan analyse --level=8 --memory-limit=512M --no-progress
 
       - name: Run tests (Pest with coverage)
-        run: ./vendor/bin/pest --parallel --coverage --min=80
+        run: ./vendor/bin/pest --coverage --min=80
         env:
           PCOV_ENABLED: 1
 
