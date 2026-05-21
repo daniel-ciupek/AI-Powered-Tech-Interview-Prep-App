@@ -1,0 +1,16 @@
+#!/bin/sh
+
+echo "📝 [commit-msg] Validating commit message format..."
+npx --no -- commitlint --edit "$1"
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ Commit message does not follow Conventional Commits format."
+  echo "   Required: type(scope): description"
+  echo "   Examples:"
+  echo "     feat(repetition): implement SM2 algorithm"
+  echo "     fix(gemini): handle invalid JSON response"
+  echo "     chore(deps): bump laravel/pint"
+  echo "   Types: feat|fix|chore|test|docs|refactor|perf|style|build|ci"
+  exit 1
+fi
+echo "✅ [commit-msg] Commit message is valid."

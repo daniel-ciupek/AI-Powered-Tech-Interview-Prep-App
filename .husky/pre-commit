@@ -1,0 +1,29 @@
+#!/bin/sh
+
+echo "🔍 [pre-commit] Running code quality checks..."
+
+# 1. Laravel Pint (auto-fix staged PHP files)
+echo "→ Pint (code style)..."
+./vendor/bin/pint --dirty
+if [ $? -ne 0 ]; then
+  echo "❌ Pint failed. Fix errors and re-stage files."
+  exit 1
+fi
+
+# Re-stage files fixed by Pint
+git add -u
+
+# 2. Gitleaks (secret scan)
+echo "→ gitleaks (secret scan)..."
+GITLEAKS_BIN=$(which gitleaks 2>/dev/null || echo "$HOME/.local/bin/gitleaks")
+if [ -f "$GITLEAKS_BIN" ]; then
+  "$GITLEAKS_BIN" protect --staged --no-banner --redact
+  if [ $? -ne 0 ]; then
+    echo "❌ gitleaks found potential secrets! Remove them before committing."
+    exit 1
+  fi
+else
+  echo "⚠️  gitleaks not found — skipping secret scan (install from https://github.com/gitleaks/gitleaks)"
+fi
+
+echo "✅ [pre-commit] All checks passed."
