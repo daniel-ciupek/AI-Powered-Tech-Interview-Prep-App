@@ -182,16 +182,15 @@ Format: `type(scope): short description`
 Dozwolone typy: `feat`, `fix`, `chore`, `test`, `docs`, `refactor`, `perf`, `style`, `build`, `ci`.
 
 ### 6.3. Branche
-- `main` — stabilna gałąź (chroniona).
-- `feature/X.Y-short-description` — pojedynczy podpunkt fazy.
-- `fix/short-description` — bugfix poza fazą.
-- `chore/short-description` — sprzątanie, deps.
+- `main` — stabilna gałąź produkcyjna (tylko przez PR z `dev`).
+- `dev` — gałąź robocza, tutaj budujemy cały projekt fazami.
+- `fix/short-description` — hotfixy na `main` (tylko pilne).
 
 ### 6.4. Pull Request workflow
-- PR z feature branch do `main`.
-- Wymagany zielony CI.
-- Self-review przed mergem.
-- Squash & merge (jeden commit per feature na `main`).
+- Cała praca (fazy 1-6) odbywa się na gałęzi `dev`.
+- Po każdym podpunkcie: commit + push do `dev` (CI odpala się na `dev`).
+- Po zakończeniu **całego projektu**: PR z `dev` → `main`.
+- PR wymaga zielonego CI i self-review przed mergem.
 
 ---
 
@@ -417,3 +416,4 @@ W `.claude/commands/`:
 | Język komunikacji | PL z userem, EN w kodzie | 2026-05-21 |
 | Format commitów | Conventional Commits | 2026-05-21 |
 | Hooki | Husky + lint-staged + commitlint + gitleaks | 2026-05-21 |
+| Branch roboczy | `dev` → PR do `main` po ukończeniu projektu | 2026-05-21 |
