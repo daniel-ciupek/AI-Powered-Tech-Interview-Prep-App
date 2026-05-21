@@ -72,6 +72,12 @@ jobs:
       - name: Run migrations
         run: php artisan migrate --force
 
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+
       - name: Check code style (Pint)
         run: ./vendor/bin/pint --test
 
