@@ -55,10 +55,6 @@ Thumbs.db
 /storage/app/audio-cache/
 /storage/app/ai-cache/
 /storage/app/public/
-/storage/framework/cache/
-/storage/framework/sessions/
-/storage/framework/testing/
-/storage/framework/views/
 /storage/logs/*.log
 
 # =============================================================================
