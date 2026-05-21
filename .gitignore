@@ -1,0 +1,117 @@
+# =============================================================================
+# Laravel defaults
+# =============================================================================
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+
+# =============================================================================
+# Environment / secrets (CRITICAL)
+# =============================================================================
+.env
+.env.backup
+.env.production
+.env.local
+.env.*.local
+!.env.example
+!.env.testing.example
+
+# API keys / credentials
+*.pem
+*.key
+*.cert
+*.crt
+secrets/
+credentials/
+
+# =============================================================================
+# IDE / Editor
+# =============================================================================
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# =============================================================================
+# Storage / cache / logs
+# =============================================================================
+/storage/app/audio-cache/
+/storage/app/ai-cache/
+/storage/app/public/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/testing/
+/storage/framework/views/
+/storage/logs/*.log
+
+# =============================================================================
+# Static analysis / testing artifacts
+# =============================================================================
+.phpstan-cache/
+.phpunit.cache/
+.pest-cache/
+coverage/
+coverage.xml
+.php_cs.cache
+.php-cs-fixer.cache
+
+# =============================================================================
+# Database dumps
+# =============================================================================
+*.sqlite
+*.sqlite-journal
+*.dump
+*.sql
+!database/seeders/*.sql
+
+# =============================================================================
+# Build outputs
+# =============================================================================
+/dist
+/build
+*.tsbuildinfo
+
+# =============================================================================
+# Claude / local agent config
+# =============================================================================
+.claude/settings.local.json
+.claude/.cache/
+.claude/local/
+
+# =============================================================================
+# OS / misc
+# =============================================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# =============================================================================
+# Docker overrides (Sail)
+# =============================================================================
+/.docker/local/
+docker-compose.override.yml
+
+# =============================================================================
+# Husky / NPM tooling
+# =============================================================================
+.husky/_/
