@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ApiKeyInput from '@/Components/ApiKeyInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
@@ -10,6 +11,7 @@ interface Settings {
 
 const props = defineProps<{
     settings: Settings;
+    has_api_key: boolean;
     status?: string;
 }>();
 
@@ -155,6 +157,11 @@ const themes = [
                         <p v-if="form.errors.theme" class="mt-1 text-sm text-red-600">
                             {{ form.errors.theme }}
                         </p>
+                    </div>
+
+                    <!-- API Key -->
+                    <div class="bg-white p-6 shadow sm:rounded-lg">
+                        <ApiKeyInput :has-api-key="has_api_key" />
                     </div>
 
                     <!-- Save -->

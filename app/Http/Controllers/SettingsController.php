@@ -24,6 +24,7 @@ class SettingsController extends Controller
                 'daily_goal' => $user->daily_goal,
                 'theme' => $user->theme->value,
             ],
+            'has_api_key' => $user->gemini_api_key_encrypted !== null,
             'status' => session('status'),
         ]);
     }
