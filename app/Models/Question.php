@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Tags\HasTags;
 
 /**
@@ -44,5 +45,11 @@ class Question extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /** @return HasOne<Repetition, $this> */
+    public function repetition(): HasOne
+    {
+        return $this->hasOne(Repetition::class);
     }
 }

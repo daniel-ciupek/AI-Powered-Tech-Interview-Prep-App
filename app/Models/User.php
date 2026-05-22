@@ -39,6 +39,12 @@ class User extends Authenticatable
         return $this->hasMany(Question::class);
     }
 
+    /** @return HasMany<Repetition, $this> */
+    public function repetitions(): HasMany
+    {
+        return $this->hasMany(Repetition::class);
+    }
+
     /**
      * @return array<string, string>
      */
