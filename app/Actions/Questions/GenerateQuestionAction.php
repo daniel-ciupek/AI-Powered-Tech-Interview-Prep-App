@@ -51,12 +51,19 @@ class GenerateQuestionAction
             );
         }
 
-        return $user->questions()->create([
+        $question = $user->questions()->create([
             'content' => $validated['question'],
             'expected_answer' => $validated['expected_answer'],
             'expected_keywords' => $validated['expected_keywords'],
             'difficulty' => $difficulty,
             'source' => QuestionSource::AiGenerated,
         ]);
+
+        $user->repetitions()->create([
+            'question_id' => $question->id,
+            'next_review_at' => now(),
+        ]);
+
+        return $question;
     }
 }
