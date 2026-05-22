@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\StudyController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,6 +34,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/settings/api-key', [ApiKeyController::class, 'store'])->name('settings.api-key.store');
     Route::delete('/settings/api-key', [ApiKeyController::class, 'destroy'])->name('settings.api-key.destroy');
+
+    Route::get('/questions', [QuestionsController::class, 'index'])->name('questions.index');
+    Route::get('/study', [StudyController::class, 'session'])->name('study.session');
 });
 
 require __DIR__.'/auth.php';

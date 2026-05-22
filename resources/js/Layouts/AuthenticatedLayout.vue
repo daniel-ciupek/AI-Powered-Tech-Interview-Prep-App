@@ -39,6 +39,18 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    :href="route('study.session')"
+                                    :active="route().current('study.session')"
+                                >
+                                    Study
+                                </NavLink>
+                                <NavLink
+                                    :href="route('questions.index')"
+                                    :active="route().current('questions.index')"
+                                >
+                                    Questions
+                                </NavLink>
                             </div>
                         </div>
 
@@ -169,6 +181,12 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                         <div class="mt-3 space-y-1">
+                            <ResponsiveNavLink :href="route('study.session')">
+                                Study
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('questions.index')">
+                                Questions
+                            </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('profile.edit')">
                                 Profile
                             </ResponsiveNavLink>
