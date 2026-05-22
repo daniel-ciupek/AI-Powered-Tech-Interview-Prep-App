@@ -8,6 +8,7 @@ use App\Enums\Difficulty;
 use App\Enums\QuestionSource;
 use App\Models\Question;
 use App\Models\User;
+use App\Services\Gemini\AiCacheService;
 use App\Services\Gemini\GeminiClient;
 use App\Services\Gemini\PromptBuilder;
 use App\Services\Gemini\ResponseValidator;
@@ -15,8 +16,11 @@ use Illuminate\Support\Facades\Crypt;
 
 class GenerateQuestionAction
 {
+    private const MODEL = 'gemini-2.0-flash';
+
     public function __construct(
         private readonly ResponseValidator $responseValidator,
+        private readonly AiCacheService $cacheService,
     ) {}
 
     /**
@@ -26,16 +30,26 @@ class GenerateQuestionAction
     {
         assert($user->gemini_api_key_encrypted !== null);
 
-        $apiKey = Crypt::decryptString($user->gemini_api_key_encrypted);
-
         $prompt = (new PromptBuilder)
             ->withTags($tags)
             ->withDifficulty($difficulty)
             ->buildQuestionPrompt();
 
-        $result = (new GeminiClient($apiKey))->generate($prompt);
+        $validated = $this->cacheService->get($prompt);
 
-        $validated = $this->responseValidator->validate($result['text']);
+        if ($validated === null) {
+            $apiKey = Crypt::decryptString($user->gemini_api_key_encrypted);
+            $result = (new GeminiClient($apiKey))->generate($prompt);
+            $validated = $this->responseValidator->validate($result['text']);
+
+            $this->cacheService->put(
+                prompt: $prompt,
+                validated: $validated,
+                tokensIn: $result['tokens_in'],
+                tokensOut: $result['tokens_out'],
+                model: self::MODEL,
+            );
+        }
 
         return $user->questions()->create([
             'content' => $validated['question'],
