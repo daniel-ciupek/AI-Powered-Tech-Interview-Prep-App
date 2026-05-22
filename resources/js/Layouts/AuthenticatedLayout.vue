@@ -51,6 +51,12 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Questions
                                 </NavLink>
+                                <NavLink
+                                    :href="route('interview.show')"
+                                    :active="route().current('interview.show')"
+                                >
+                                    Interview
+                                </NavLink>
                             </div>
                         </div>
 
@@ -186,6 +192,9 @@ const showingNavigationDropdown = ref(false);
                             </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('questions.index')">
                                 Questions
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('interview.show')">
+                                Interview
                             </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('profile.edit')">
                                 Profile

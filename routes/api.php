@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\InterviewController;
 use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\RepetitionController;
 use App\Http\Controllers\Api\StudySessionController;
@@ -16,4 +17,11 @@ Route::middleware('auth')->group(function () {
         ->name('api.repetitions.review');
     Route::get('/study/today', [StudySessionController::class, 'today'])
         ->name('api.study.today');
+
+    Route::post('/interview/start', [InterviewController::class, 'start'])
+        ->name('api.interview.start');
+    Route::post('/interview/{interviewSession}/message', [InterviewController::class, 'message'])
+        ->name('api.interview.message');
+    Route::post('/interview/{interviewSession}/finish', [InterviewController::class, 'finish'])
+        ->name('api.interview.finish');
 });

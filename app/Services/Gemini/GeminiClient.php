@@ -73,6 +73,65 @@ class GeminiClient
     }
 
     /**
+     * Multi-turn chat with system instruction and conversation history.
+     *
+     * @param  array<int, array{role: string, content: string}>  $messages  role: user|assistant
+     * @return array{text: string, tokens_in: int, tokens_out: int}
+     */
+    public function chat(string $systemPrompt, array $messages, int $maxOutputTokens = 1024): array
+    {
+        $url = self::BASE_URL."/{$this->model}:generateContent";
+
+        $contents = array_map(static fn (array $msg): array => [
+            'role' => $msg['role'] === 'assistant' ? 'model' : 'user',
+            'parts' => [['text' => $msg['content']]],
+        ], $messages);
+
+        $payload = [
+            'systemInstruction' => ['parts' => [['text' => $systemPrompt]]],
+            'contents' => $contents,
+            'generationConfig' => [
+                'maxOutputTokens' => $maxOutputTokens,
+                'temperature' => 0.9,
+            ],
+        ];
+
+        $lastException = null;
+
+        for ($attempt = 0; $attempt <= self::MAX_RETRIES; $attempt++) {
+            if ($attempt > 0 && $this->retryBaseMs > 0) {
+                usleep($this->retryBaseMs * 1000 * (2 ** ($attempt - 1)));
+            }
+
+            $response = Http::withQueryParameters(['key' => $this->apiKey])
+                ->timeout(60)
+                ->post($url, $payload);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                if (! is_array($data)) {
+                    throw new GeminiApiException('Gemini API returned non-JSON response');
+                }
+
+                return $this->parseResponse($data);
+            }
+
+            if (in_array($response->status(), self::RETRYABLE_STATUSES, strict: true)) {
+                $lastException = $response->status() === 429
+                    ? new GeminiRateLimitException('Gemini API rate limit exceeded after retries')
+                    : new GeminiApiException("Gemini server error: {$response->status()}");
+
+                continue;
+            }
+
+            throw new GeminiApiException("Gemini API error {$response->status()}: ".$response->body());
+        }
+
+        throw $lastException ?? new GeminiApiException('Max retries exceeded');
+    }
+
+    /**
      * @param  array<string, mixed>  $data
      * @return array{text: string, tokens_in: int, tokens_out: int}
      */

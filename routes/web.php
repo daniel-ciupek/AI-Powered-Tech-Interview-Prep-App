@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\ApiKeyController;
+use App\Http\Controllers\InterviewPageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\SettingsController;
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/questions', [QuestionsController::class, 'index'])->name('questions.index');
     Route::get('/study', [StudyController::class, 'session'])->name('study.session');
+    Route::get('/interview', [InterviewPageController::class, 'show'])->name('interview.show');
 });
 
 require __DIR__.'/auth.php';
