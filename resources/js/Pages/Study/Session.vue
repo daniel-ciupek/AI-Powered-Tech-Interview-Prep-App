@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import QuestionCard from '@/Components/QuestionCard.vue';
+import TagSelector from '@/Components/TagSelector.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 interface Question {
     id: number;
@@ -23,13 +24,30 @@ const question = ref<Question | null>(null);
 const generating = ref(false);
 const error = ref<string | null>(null);
 
+const availableTags = ref<string[]>([]);
+const selectedTags = ref<string[]>([]);
+
+onMounted(async () => {
+    if (props.has_api_key) {
+        try {
+            const response = await window.axios.get<{ data: string[] }>('/api/tags');
+            availableTags.value = response.data.data;
+        } catch {
+            // tags optional — silent fail
+        }
+    }
+});
+
 async function generateQuestion(): Promise<void> {
     generating.value = true;
     error.value = null;
     question.value = null;
 
     try {
-        const response = await window.axios.post<{ data: Question }>('/api/questions/generate');
+        const response = await window.axios.post<{ data: Question }>('/api/questions/generate', {
+            tags: selectedTags.value,
+            difficulty: props.preferred_difficulty,
+        });
         question.value = response.data.data;
     } catch (err: unknown) {
         const axiosErr = err as { response?: { data?: { message?: string }; status?: number } };
@@ -55,7 +73,7 @@ async function generateQuestion(): Promise<void> {
         </template>
 
         <div class="py-10">
-            <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 space-y-6">
 
                 <!-- No API key -->
                 <div v-if="!has_api_key" class="rounded-lg border-2 border-dashed border-gray-300 py-16 text-center">
@@ -67,8 +85,17 @@ async function generateQuestion(): Promise<void> {
                     </p>
                 </div>
 
-                <!-- Ready to generate -->
-                <div v-else>
+                <template v-else>
+                    <!-- Tag selector -->
+                    <div class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+                        <TagSelector
+                            :tags="availableTags"
+                            :selected-tags="selectedTags"
+                            :max-tags="5"
+                            @update:selected-tags="selectedTags = $event"
+                        />
+                    </div>
+
                     <!-- Generate button -->
                     <div class="text-center">
                         <button
@@ -81,17 +108,16 @@ async function generateQuestion(): Promise<void> {
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
                             </svg>
-                            {{ generating ? 'Generating question…' : question ? 'Next Question' : 'Generate Question' }}
+                            {{ generating ? 'Generating…' : question ? 'Next Question' : 'Generate Question' }}
                         </button>
                         <p class="mt-2 text-xs text-gray-500">
                             Difficulty: <span class="font-medium capitalize">{{ preferred_difficulty }}</span>
-                            · change in
-                            <Link :href="route('settings.edit')" class="text-indigo-600 underline">Settings</Link>
+                            · <Link :href="route('settings.edit')" class="text-indigo-600 underline">change</Link>
                         </p>
                     </div>
 
                     <!-- Error -->
-                    <p v-if="error" class="mt-6 rounded-md bg-red-50 px-4 py-3 text-sm text-red-700 text-center">
+                    <p v-if="error" class="rounded-md bg-red-50 px-4 py-3 text-sm text-red-700 text-center">
                         {{ error }}
                     </p>
 
@@ -100,16 +126,15 @@ async function generateQuestion(): Promise<void> {
                         enter-active-class="transition duration-300 ease-out"
                         enter-from-class="opacity-0 translate-y-2"
                     >
-                        <div v-if="question" class="mt-8">
+                        <div v-if="question">
                             <QuestionCard :question="question" />
-
                             <p class="mt-4 text-center text-sm text-gray-500">
-                                Question saved to your
+                                Saved to your
                                 <Link :href="route('questions.index')" class="text-indigo-600 underline">library</Link>.
                             </p>
                         </div>
                     </Transition>
-                </div>
+                </template>
             </div>
         </div>
     </AuthenticatedLayout>
