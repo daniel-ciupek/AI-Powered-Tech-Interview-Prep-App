@@ -19,9 +19,12 @@ Route::middleware('auth')->group(function () {
         ->name('api.study.today');
 
     Route::post('/interview/start', [InterviewController::class, 'start'])
+        ->middleware('throttle:interview-start')
         ->name('api.interview.start');
     Route::post('/interview/{interviewSession}/message', [InterviewController::class, 'message'])
+        ->middleware('throttle:interview-message')
         ->name('api.interview.message');
     Route::post('/interview/{interviewSession}/finish', [InterviewController::class, 'finish'])
+        ->middleware('throttle:interview-message')
         ->name('api.interview.finish');
 });

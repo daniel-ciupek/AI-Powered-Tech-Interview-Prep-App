@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\RateLimiter;
 
 function interviewGeminiResponse(string $text = 'Hello! I am Anna. Let us start.'): array
 {
@@ -114,6 +115,25 @@ test('finish interview dispatches report job', function () {
 
     expect($session->refresh()->status)->toBe(SessionStatus::Completed);
     Queue::assertPushed(GenerateInterviewReportJob::class);
+});
+
+test('start interview is rate limited per user', function () {
+    Http::fake(['*' => Http::response(interviewGeminiResponse(), 200)]);
+
+    $user = User::factory()->create([
+        'gemini_api_key_encrypted' => Crypt::encryptString('fake-key'),
+    ]);
+    RateLimiter::clear('interview-start:'.$user->id);
+
+    for ($i = 0; $i < 3; $i++) {
+        $this->actingAs($user)
+            ->postJson('/api/interview/start')
+            ->assertStatus(201);
+    }
+
+    $this->actingAs($user)
+        ->postJson('/api/interview/start')
+        ->assertStatus(429);
 });
 
 test('interview page requires authentication', function () {
