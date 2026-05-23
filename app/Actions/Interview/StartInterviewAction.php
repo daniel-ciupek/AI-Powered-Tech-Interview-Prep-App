@@ -13,7 +13,7 @@ use App\Services\Gemini\GeminiClient;
 use App\Services\Gemini\PromptBuilder;
 use Illuminate\Support\Facades\Crypt;
 
-class StartInterviewAction
+final class StartInterviewAction
 {
     /**
      * @param  list<string>  $tags

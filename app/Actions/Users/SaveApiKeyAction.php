@@ -7,7 +7,7 @@ namespace App\Actions\Users;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 
-class SaveApiKeyAction
+final class SaveApiKeyAction
 {
     public function __invoke(User $user, string $apiKey): void
     {

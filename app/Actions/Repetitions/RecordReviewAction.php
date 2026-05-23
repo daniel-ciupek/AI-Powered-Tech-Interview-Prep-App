@@ -8,7 +8,7 @@ use App\Events\QuestionReviewed;
 use App\Models\Repetition;
 use App\Services\Sm2Engine;
 
-class RecordReviewAction
+final class RecordReviewAction
 {
     public function __construct(private readonly Sm2Engine $sm2Engine) {}
 

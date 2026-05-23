@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Services\Gemini\GeminiClient;
 use Illuminate\Support\Facades\Crypt;
 
-class GenerateReportAction
+final class GenerateReportAction
 {
     private const REPORT_PROMPT = <<<'PROMPT'
     Rozmowa kwalifikacyjna dobiegła końca. Na podstawie całej powyższej konwersacji

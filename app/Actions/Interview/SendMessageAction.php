@@ -12,7 +12,7 @@ use App\Services\Gemini\GeminiClient;
 use App\Services\Gemini\PromptBuilder;
 use Illuminate\Support\Facades\Crypt;
 
-class SendMessageAction
+final class SendMessageAction
 {
     public function __invoke(User $user, InterviewSession $session, string $userContent): InterviewMessage
     {

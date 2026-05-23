@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\Onboarding\CompleteOnboardingAction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -30,15 +31,12 @@ class OnboardingController extends Controller
         ]);
     }
 
-    public function complete(Request $request): RedirectResponse
+    public function complete(Request $request, CompleteOnboardingAction $action): RedirectResponse
     {
         $user = $request->user();
         assert($user !== null);
 
-        if ($user->onboarded_at === null) {
-            $user->onboarded_at = now();
-            $user->save();
-        }
+        $action($user);
 
         return Redirect::route('dashboard');
     }
