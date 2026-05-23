@@ -11,5 +11,13 @@
     "error": "Wystąpił błąd.",
     "confirm": "Potwierdź",
     "yes": "Tak",
-    "no": "Nie"
+    "no": "Nie",
+    "tags": {
+        "label": "Tematy",
+        "hint": "(maks. {max} — Enter lub przecinek aby dodać)",
+        "placeholder": "Wpisz temat i naciśnij Enter…",
+        "remove": "Usuń tag {tag}",
+        "limit_reached": "Osiągnięto limit {max} tagów.",
+        "too_long": "Tag może mieć maks. {max} znaków."
+    }
 }
