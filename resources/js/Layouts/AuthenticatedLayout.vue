@@ -37,25 +37,25 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
-                                    Dashboard
+                                    {{ $t('nav.dashboard') }}
                                 </NavLink>
                                 <NavLink
                                     :href="route('study.session')"
                                     :active="route().current('study.session')"
                                 >
-                                    Study
+                                    {{ $t('nav.study') }}
                                 </NavLink>
                                 <NavLink
                                     :href="route('questions.index')"
                                     :active="route().current('questions.index')"
                                 >
-                                    Questions
+                                    {{ $t('nav.questions') }}
                                 </NavLink>
                                 <NavLink
                                     :href="route('interview.show')"
                                     :active="route().current('interview.show')"
                                 >
-                                    Interview
+                                    {{ $t('nav.interview') }}
                                 </NavLink>
                             </div>
                         </div>
@@ -92,19 +92,19 @@ const showingNavigationDropdown = ref(false);
                                         <DropdownLink
                                             :href="route('profile.edit')"
                                         >
-                                            Profile
+                                            {{ $t('nav.profile') }}
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('settings.edit')"
                                         >
-                                            Settings
+                                            {{ $t('nav.settings') }}
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('logout')"
                                             method="post"
                                             as="button"
                                         >
-                                            Log Out
+                                            {{ $t('nav.logout') }}
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -167,7 +167,7 @@ const showingNavigationDropdown = ref(false);
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
                         >
-                            Dashboard
+                            {{ $t('nav.dashboard') }}
                         </ResponsiveNavLink>
                     </div>
 
@@ -188,26 +188,26 @@ const showingNavigationDropdown = ref(false);
 
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('study.session')">
-                                Study
+                                {{ $t('nav.study') }}
                             </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('questions.index')">
-                                Questions
+                                {{ $t('nav.questions') }}
                             </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('interview.show')">
-                                Interview
+                                {{ $t('nav.interview') }}
                             </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('profile.edit')">
-                                Profile
+                                {{ $t('nav.profile') }}
                             </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('settings.edit')">
-                                Settings
+                                {{ $t('nav.settings') }}
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 :href="route('logout')"
                                 method="post"
                                 as="button"
                             >
-                                Log Out
+                                {{ $t('nav.logout') }}
                             </ResponsiveNavLink>
                         </div>
                     </div>
