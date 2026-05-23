@@ -27,7 +27,7 @@ class InterviewController extends Controller
         assert($user !== null);
 
         if ($user->gemini_api_key_encrypted === null) {
-            return response()->json(['message' => 'Gemini API key not configured.'], 422);
+            return response()->json(['message' => __('messages.gemini_key_missing')], 422);
         }
 
         $difficulty = Difficulty::from(
@@ -39,9 +39,9 @@ class InterviewController extends Controller
 
             return response()->json($this->sessionPayload($session), 201);
         } catch (GeminiRateLimitException) {
-            return response()->json(['message' => 'AI rate limit reached. Please try again shortly.'], 429);
+            return response()->json(['message' => __('messages.ai_rate_limit')], 429);
         } catch (GeminiException) {
-            return response()->json(['message' => 'AI unavailable. Please try again.'], 502);
+            return response()->json(['message' => __('messages.ai_unavailable')], 502);
         }
     }
 
@@ -56,7 +56,7 @@ class InterviewController extends Controller
         Gate::authorize('update', $interviewSession);
 
         if (! $interviewSession->isActive()) {
-            return response()->json(['message' => 'Session is no longer active.'], 422);
+            return response()->json(['message' => __('messages.interview_inactive')], 422);
         }
 
         try {
@@ -72,9 +72,9 @@ class InterviewController extends Controller
                 ],
             ]);
         } catch (GeminiRateLimitException) {
-            return response()->json(['message' => 'AI rate limit reached. Please try again shortly.'], 429);
+            return response()->json(['message' => __('messages.ai_rate_limit')], 429);
         } catch (GeminiException) {
-            return response()->json(['message' => 'AI unavailable. Please try again.'], 502);
+            return response()->json(['message' => __('messages.ai_unavailable')], 502);
         }
     }
 
@@ -86,14 +86,14 @@ class InterviewController extends Controller
         Gate::authorize('update', $interviewSession);
 
         if (! $interviewSession->isActive()) {
-            return response()->json(['message' => 'Session is already finished.'], 422);
+            return response()->json(['message' => __('messages.interview_already_finished')], 422);
         }
 
         $interviewSession->update(['status' => SessionStatus::Completed, 'ended_at' => now()]);
 
         GenerateInterviewReportJob::dispatch($interviewSession, $user);
 
-        return response()->json(['message' => 'Report generation queued.']);
+        return response()->json(['message' => __('messages.report_queued')]);
     }
 
     /** @return array<string, mixed> */

@@ -21,7 +21,7 @@ class QuestionController extends Controller
         assert($user !== null);
 
         if ($user->gemini_api_key_encrypted === null) {
-            return response()->json(['message' => 'Gemini API key not configured.'], 422);
+            return response()->json(['message' => __('messages.gemini_key_missing')], 422);
         }
 
         $difficulty = Difficulty::from(
@@ -33,9 +33,9 @@ class QuestionController extends Controller
 
             return (new QuestionResource($question))->response()->setStatusCode(201);
         } catch (GeminiRateLimitException) {
-            return response()->json(['message' => 'AI rate limit reached. Please try again shortly.'], 429);
+            return response()->json(['message' => __('messages.ai_rate_limit')], 429);
         } catch (GeminiException) {
-            return response()->json(['message' => 'AI generation failed. Please try again.'], 502);
+            return response()->json(['message' => __('messages.ai_generation_failed')], 502);
         }
     }
 }

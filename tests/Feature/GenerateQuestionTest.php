@@ -31,7 +31,7 @@ test('generate returns 422 when no api key is configured', function () {
     $this->actingAs($user)
         ->postJson('/api/questions/generate')
         ->assertStatus(422)
-        ->assertJsonFragment(['message' => 'Gemini API key not configured.']);
+        ->assertJsonFragment(['message' => __('messages.gemini_key_missing')]);
 });
 
 test('generate creates and returns a question on success', function () {
