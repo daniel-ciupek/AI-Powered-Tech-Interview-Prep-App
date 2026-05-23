@@ -1,75 +1,162 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PrepMind
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![CI](https://github.com/daniel-ciupek/AI-Powered-Tech-Interview-Prep-App/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/daniel-ciupek/AI-Powered-Tech-Interview-Prep-App/actions/workflows/ci.yml)
+![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
+![Vue](https://img.shields.io/badge/Vue-3-4FC08D?logo=vue.js&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![PWA](https://img.shields.io/badge/PWA-installable-5A0FC8?logo=pwa&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-## About Laravel
+AI-powered tech-interview prep — spaced repetition and a conversational
+interview simulator powered by your own Google Gemini key (BYOK).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+PrepMind generates technical questions tailored to your level, schedules
+them with the SM-2 algorithm, and lets you practise a live conversation
+with an AI interviewer who later returns a written assessment. The app
+is Polish-first with full English fallback, dark mode, installable as a
+PWA, and ships with text-to-speech on every question and AI reply.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+> **Status:** active development. Phase 5 (UX polish — dashboard,
+> onboarding wizard, PWA, dark mode, TTS) is complete. Phase 6 polish is
+> next.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
 
-## Learning Laravel
+- 🧠 **AI-generated questions** — Gemini 2.5 Flash, scoped to your
+  difficulty (junior / mid / senior) and a free-text list of topics.
+- 🔁 **Spaced repetition** — SM-2 engine schedules every reviewed
+  question; daily study sessions surface only what is due.
+- 💬 **Interview simulator** — multi-turn chat with an AI "Anna"
+  recruiter persona, ending with a structured Polish assessment report
+  (queued via Laravel jobs).
+- 📊 **Personal dashboard** — streak, daily goal progress, 30-day
+  retention rate, 12-week review heatmap.
+- 🌗 **Dark mode** without FOUC — preference stored per-user, applied
+  before paint via an inline script.
+- 🌍 **Polish + English** — `vue-i18n` on the frontend, Laravel
+  translations on the backend (errors, validation, emails).
+- 📱 **Installable PWA** — manifest, icons, service worker, offline
+  shell, `NetworkOnly` strategy so SPA navigations always get fresh
+  HTML.
+- 🔊 **Text-to-speech** — Web Speech API; one click on any question or
+  AI reply.
+- 🔐 **Encrypted BYOK** — your Gemini key is stored with
+  `Crypt::encryptString`, hidden via `#[Hidden]`, never logged.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Stack
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Layer | Choice |
+|---|---|
+| Backend | Laravel 12 · PHP 8.3 |
+| Database | PostgreSQL 16 (uses `jsonb`, `jsonb_array_elements_text`) |
+| Cache & Queue | Redis 7 |
+| Frontend | Inertia.js 2 · Vue 3 (Composition API + `<script setup lang="ts">`) |
+| Styling | Tailwind CSS 3 with `darkMode: 'class'` |
+| Auth | Laravel Breeze (Inertia+Vue preset) |
+| AI | Google Gemini 2.5 Flash (`thinkingBudget=0`, forced JSON mime) |
+| PWA | `vite-plugin-pwa` 1 with inline workbox runtime |
+| Tests | Pest 3 (Feature + Unit), 159 tests, ≥93% coverage |
+| Quality | Pint · Larastan level 8 · Husky + lint-staged · gitleaks · commitlint |
+| Env | Laravel Sail (Docker) |
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Architecture
 
-## Agentic Development
+The app follows a thin-controller / fat-action pattern. Controllers
+delegate to **invokable Action classes** (`app/Actions/{Domain}/…`)
+which compose **Services** (`app/Services/{Domain}/…`) for cross-cutting
+concerns — the Gemini client, SM-2 engine, AI response cache. Eloquent
+models hold relationships and casts; business logic stays out.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+HTTP → FormRequest → Controller → Action → Service → Model → DB
+                                       ↓
+                                     Event → Listener (streak, jobs)
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+- **Actions** are `final` and `__invoke`-able. Examples:
+  `GenerateQuestionAction`, `RecordReviewAction`,
+  `LoadDashboardStatsAction`, `CompleteOnboardingAction`.
+- **Policies** enforce per-row authorisation
+  (`QuestionPolicy`, `InterviewSessionPolicy`).
+- **Rate limiters** named in `AppServiceProvider`
+  (`interview-start`, `interview-message`, `question-generate`),
+  attached to specific API routes.
+- **AI cache** keyed on `(user_id, sha256(prompt))` so generated
+  question content never crosses users.
+- **Middleware** `EnsureUserIsOnboarded` gates feature pages until the
+  4-step wizard is completed, while leaving `PATCH /settings` and
+  `POST /settings/api-key` reachable from inside the wizard.
+
+## Getting started
+
+```bash
+git clone https://github.com/daniel-ciupek/AI-Powered-Tech-Interview-Prep-App
+cd "AI-Powered-Tech-Interview-Prep-App"
+cp .env.example .env
+
+./vendor/bin/sail up -d
+./vendor/bin/sail composer install
+./vendor/bin/sail npm install
+./vendor/bin/sail php artisan key:generate
+./vendor/bin/sail php artisan migrate --seed
+./vendor/bin/sail npm run dev
+```
+
+The app is served at <http://localhost>. Sign up, complete the 4-step
+onboarding wizard (paste a Gemini API key from
+[Google AI Studio](https://aistudio.google.com/apikey)), and you are in.
+
+### PWA build
+
+```bash
+./vendor/bin/sail npm run build
+```
+
+This generates `public/build/`, then `scripts/post-build-pwa.mjs`
+rewrites the service worker's precache URLs to absolute paths and
+copies `sw.js` + `manifest.webmanifest` to the public root so the SW
+can claim scope `/`.
+
+## Development workflow
+
+```bash
+./vendor/bin/sail composer test:all       # Pint --test + Larastan + Pest
+./vendor/bin/sail composer lint           # Pint auto-fix
+./vendor/bin/sail composer analyse        # Larastan level 8
+./vendor/bin/sail composer test           # Pest (parallel)
+./vendor/bin/sail composer test:coverage  # ≥80% gate
+```
+
+Git hooks (Husky + lint-staged + commitlint + gitleaks) enforce style,
+secret scanning and Conventional Commits on every commit; pre-push
+re-runs the full Pest suite.
 
 ## Internationalization
 
 PrepMind is bilingual (Polish-first, English fallback) end-to-end.
 
-**Frontend (Vue 3 + Inertia)** — translations live in `resources/js/i18n/locales/{pl,en}/*.json` and are auto-loaded by `resources/js/i18n/index.ts` through Vite's `import.meta.glob`. Each JSON file becomes a namespace, so `auth.json` is referenced as `$t('auth.login.submit')`. The plugin is mounted in `app.ts` with `legacy: false` (Composition API), default locale `pl`, fallback `en`.
+- **Frontend** (Vue 3 + Inertia) — `resources/js/i18n/locales/{pl,en}/*.json`,
+  auto-loaded by `resources/js/i18n/index.ts` through Vite's
+  `import.meta.glob`. Each JSON file is a namespace, so `auth.json` is
+  used as `$t('auth.login.submit')`. Mounted in `app.ts` with
+  `legacy: false`, locale `pl`, fallback `en`.
+- **Backend** (Laravel) — `lang/{pl,en}/*.php` (auth, validation,
+  passwords, pagination + `messages.php` for AI/API copy). Controllers
+  and FormRequests use `__('messages.…')`.
 
-**Backend (Laravel)** — translations live in `lang/{pl,en}/*.php` (auth, validation, passwords, pagination + custom `messages.php` for AI/API error copy). Controllers and FormRequests use `__('messages.…')`. `config/app.php` defaults `locale=pl`, `fallback_locale=en`, `faker_locale=pl_PL`; override via `APP_LOCALE` in `.env`.
-
-**Adding a new language:**
-1. Copy `lang/pl/` → `lang/xx/` and translate the PHP arrays.
-2. Copy `resources/js/i18n/locales/pl/` → `…/xx/` and translate the JSON files (keep the keys).
-3. Set `APP_LOCALE=xx` in `.env` (and `i18n.locale` in `resources/js/i18n/index.ts` if you want it as the runtime default).
+**Adding a new language:** copy `lang/pl/` → `lang/xx/`, copy
+`resources/js/i18n/locales/pl/` → `…/xx/`, translate the values, set
+`APP_LOCALE=xx`.
 
 ## Tag system
 
-Topic tags on `interview_sessions.topic_tags` (jsonb) are **free-text** — users type any topic they want. The Vue side uses `Components/FreeTextTagInput.vue` (chip preview + HTML5 `<datalist>` autosuggest). The backend `GET /api/tags` aggregates the top 30 most-used tags from the existing `interview_sessions` rows (Postgres `jsonb_array_elements_text`) and caches them for 10 minutes. There is no separate tags table — the `spatie/laravel-tags` package was removed in favour of this simpler model.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Topic tags on `interview_sessions.topic_tags` (jsonb) are **free-text** —
+users type any topic. The Vue side uses `Components/FreeTextTagInput.vue`
+(chip preview + HTML5 `<datalist>` autosuggest). `GET /api/tags`
+aggregates the top 30 most-used tags via PostgreSQL's
+`jsonb_array_elements_text` and caches for 10 minutes.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+[MIT](LICENSE)
