@@ -40,6 +40,6 @@ test('prompt falls back to general programming when no tags given', function () 
 test('prompt instructs gemini to respond with JSON only', function () {
     $prompt = (new PromptBuilder)->buildQuestionPrompt();
 
-    expect($prompt)->toContain('valid JSON')
+    expect($prompt)->toContain('poprawnym JSON-em')
         ->and($prompt)->toContain('expected_keywords');
 });

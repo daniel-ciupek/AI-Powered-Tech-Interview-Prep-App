@@ -82,7 +82,7 @@ test('generate sends prompt to correct Gemini API endpoint', function () {
 
     Http::assertSent(function ($request) {
         return str_contains($request->url(), 'generativelanguage.googleapis.com')
-            && str_contains($request->url(), 'gemini-2.0-flash')
+            && str_contains($request->url(), 'gemini-2.5-flash')
             && str_contains($request->url(), 'my-api-key');
     });
 });

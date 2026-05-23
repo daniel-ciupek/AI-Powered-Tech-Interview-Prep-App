@@ -195,7 +195,7 @@ test('generate report job sends conversation history to gemini', function () {
         $prompt = $payload['contents'][0]['parts'][0]['text'] ?? '';
 
         return str_contains($prompt, 'unique-candidate-answer-marker')
-            && str_contains($prompt, 'Overall Assessment');
+            && str_contains($prompt, 'Ogólna ocena');
     });
 });
 

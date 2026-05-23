@@ -18,7 +18,7 @@ class GeminiClient
 
     public function __construct(
         private readonly string $apiKey,
-        private readonly string $model = 'gemini-2.0-flash',
+        private readonly string $model = 'gemini-2.5-flash',
         private readonly int $retryBaseMs = 1000,
     ) {}
 

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class GenerateQuestionAction
 {
-    private const MODEL = 'gemini-2.0-flash';
+    private const MODEL = 'gemini-2.5-flash';
 
     public function __construct(
         private readonly ResponseValidator $responseValidator,

@@ -14,17 +14,17 @@ use Illuminate\Support\Facades\Crypt;
 class GenerateReportAction
 {
     private const REPORT_PROMPT = <<<'PROMPT'
-    The interview is now over. Based on the entire conversation above,
-    generate a structured Markdown evaluation report for the candidate.
+    Rozmowa kwalifikacyjna dobiegła końca. Na podstawie całej powyższej konwersacji
+    wygeneruj uporządkowany raport oceny kandydata w formacie Markdown.
 
-    Include:
-    ## Overall Assessment
-    ## Strengths
-    ## Areas for Improvement
-    ## Recommendation (Hire / Consider / Pass)
+    Sekcje (zachowaj polskie nagłówki):
+    ## Ogólna ocena
+    ## Mocne strony
+    ## Obszary do poprawy
+    ## Rekomendacja (Zatrudnić / Rozważyć / Odrzucić)
 
-    Be specific, reference actual answers from the conversation.
-    Write in English.
+    Bądź konkretny, odwołuj się do rzeczywistych odpowiedzi z rozmowy.
+    Pisz po polsku.
     PROMPT;
 
     public function __invoke(User $user, InterviewSession $session): InterviewSession
