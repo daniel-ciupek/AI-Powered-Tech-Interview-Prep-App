@@ -1,0 +1,26 @@
+{
+    "title": "Pytania",
+    "header": "Moje pytania",
+    "study_session": "Sesja nauki →",
+    "generate": "+ Generuj",
+    "generating": "Generuję…",
+    "no_api_key": "Brak skonfigurowanego klucza Gemini API.",
+    "go_to_settings": "Przejdź do Ustawień",
+    "go_to_settings_suffix": ", aby go dodać.",
+    "generation_failed": "Generowanie nie powiodło się. Spróbuj ponownie.",
+    "empty_state": "Brak pytań.",
+    "empty_state_hint_prefix": "Kliknij",
+    "empty_state_hint_button": "+ Generuj",
+    "empty_state_hint_suffix": ", aby utworzyć swoje pierwsze pytanie AI.",
+    "card": {
+        "show_answer": "Pokaż odpowiedź",
+        "hide_answer": "Ukryj odpowiedź",
+        "source_ai": "Wygenerowane przez AI",
+        "source_user": "Utworzone przez użytkownika",
+        "difficulty": {
+            "junior": "Junior",
+            "mid": "Mid",
+            "senior": "Senior"
+        }
+    }
+}

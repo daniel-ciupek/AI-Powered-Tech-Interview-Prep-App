@@ -1,0 +1,26 @@
+{
+    "title": "Questions",
+    "header": "My Questions",
+    "study_session": "Study Session →",
+    "generate": "+ Generate",
+    "generating": "Generating…",
+    "no_api_key": "No Gemini API key configured.",
+    "go_to_settings": "Go to Settings",
+    "go_to_settings_suffix": " to add one.",
+    "generation_failed": "Generation failed. Please try again.",
+    "empty_state": "No questions yet.",
+    "empty_state_hint_prefix": "Click",
+    "empty_state_hint_button": "+ Generate",
+    "empty_state_hint_suffix": " to create your first AI question.",
+    "card": {
+        "show_answer": "Show answer",
+        "hide_answer": "Hide answer",
+        "source_ai": "AI generated",
+        "source_user": "User created",
+        "difficulty": {
+            "junior": "Junior",
+            "mid": "Mid",
+            "senior": "Senior"
+        }
+    }
+}

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n();
 
 interface Question {
     id: number;
@@ -18,10 +21,10 @@ const props = defineProps<{
 
 const answerVisible = ref(props.showAnswerByDefault ?? false);
 
-const difficultyConfig = {
-    junior: { label: 'Junior', classes: 'bg-green-100 text-green-800' },
-    mid: { label: 'Mid', classes: 'bg-yellow-100 text-yellow-800' },
-    senior: { label: 'Senior', classes: 'bg-red-100 text-red-800' },
+const difficultyClasses = {
+    junior: 'bg-green-100 text-green-800',
+    mid: 'bg-yellow-100 text-yellow-800',
+    senior: 'bg-red-100 text-red-800',
 } as const;
 </script>
 
@@ -34,9 +37,9 @@ const difficultyConfig = {
             </p>
             <span
                 class="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold"
-                :class="difficultyConfig[question.difficulty].classes"
+                :class="difficultyClasses[question.difficulty]"
             >
-                {{ difficultyConfig[question.difficulty].label }}
+                {{ t(`questions.card.difficulty.${question.difficulty}`) }}
             </span>
         </div>
 
@@ -58,7 +61,7 @@ const difficultyConfig = {
                 @click="answerVisible = !answerVisible"
                 class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
             >
-                {{ answerVisible ? 'Hide answer' : 'Show answer' }}
+                {{ answerVisible ? t('questions.card.hide_answer') : t('questions.card.show_answer') }}
             </button>
 
             <Transition
@@ -78,8 +81,8 @@ const difficultyConfig = {
 
         <!-- Meta -->
         <p class="mt-3 text-xs text-gray-400">
-            {{ question.source === 'ai_generated' ? 'AI generated' : 'User created' }}
-            · {{ new Date(question.created_at).toLocaleDateString() }}
+            {{ question.source === 'ai_generated' ? t('questions.card.source_ai') : t('questions.card.source_user') }}
+            · {{ new Date(question.created_at).toLocaleDateString(locale) }}
         </p>
     </div>
 </template>
