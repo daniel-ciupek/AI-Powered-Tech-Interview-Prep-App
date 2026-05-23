@@ -20,7 +20,7 @@ interface Question {
 
 interface StudyItem {
     repetition_id: number;
-    question: { data: Question };
+    question: Question;
 }
 
 const props = defineProps<{
@@ -42,7 +42,7 @@ const reviewing = ref(false);
 const sessionComplete = ref(false);
 
 const currentItem = (): StudyItem | null => dueItems.value[currentIndex.value] ?? null;
-const currentQuestion = (): Question | null => currentItem()?.question.data ?? null;
+const currentQuestion = (): Question | null => currentItem()?.question ?? null;
 
 // ─── Load due questions ───────────────────────────────────────────────────
 async function loadDueQuestions(): Promise<void> {
