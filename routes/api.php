@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\StudySessionController;
 use App\Http\Controllers\Api\TagController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/tags', [TagController::class, 'index'])->name('api.tags.index');
     Route::post('/questions/generate', [QuestionController::class, 'generate'])
         ->name('api.questions.generate');
