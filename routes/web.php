@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\ApiKeyController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InterviewPageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionsController;
@@ -10,15 +11,14 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StudyController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', static function () {
     return redirect()->route(Auth::check() ? 'dashboard' : 'login');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
