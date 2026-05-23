@@ -105,3 +105,19 @@ test('generate validates tags array', function () {
         ->postJson('/api/questions/generate', ['tags' => 'not-an-array'])
         ->assertStatus(422);
 });
+
+test('generate endpoint is rate limited per user', function () {
+    Http::fake(['*' => Http::response(geminiQuestionResponse(), 200)]);
+
+    $user = User::factory()->create([
+        'gemini_api_key_encrypted' => Crypt::encryptString('fake-api-key'),
+    ]);
+
+    foreach (range(1, 10) as $i) {
+        $this->actingAs($user)->postJson('/api/questions/generate')->assertStatus(201);
+    }
+
+    $this->actingAs($user)
+        ->postJson('/api/questions/generate')
+        ->assertStatus(429);
+});

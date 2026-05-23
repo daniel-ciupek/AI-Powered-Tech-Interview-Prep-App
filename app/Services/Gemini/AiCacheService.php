@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Gemini;
 
 use App\Models\AiResponseCache;
+use App\Models\User;
 
 class AiCacheService
 {
@@ -13,9 +14,11 @@ class AiCacheService
     /**
      * @return array<string, mixed>|null
      */
-    public function get(string $prompt): ?array
+    public function get(User $user, string $prompt): ?array
     {
-        $cached = AiResponseCache::where('prompt_hash', $this->hash($prompt))
+        $cached = AiResponseCache::query()
+            ->where('user_id', $user->id)
+            ->where('prompt_hash', $this->hash($prompt))
             ->where('created_at', '>=', now()->subDays(self::TTL_DAYS))
             ->first();
 
@@ -25,10 +28,10 @@ class AiCacheService
     /**
      * @param  array<string, mixed>  $validated
      */
-    public function put(string $prompt, array $validated, int $tokensIn, int $tokensOut, string $model): void
+    public function put(User $user, string $prompt, array $validated, int $tokensIn, int $tokensOut, string $model): void
     {
         AiResponseCache::updateOrCreate(
-            ['prompt_hash' => $this->hash($prompt)],
+            ['user_id' => $user->id, 'prompt_hash' => $this->hash($prompt)],
             [
                 'response' => $validated,
                 'model' => $model,
@@ -40,7 +43,9 @@ class AiCacheService
 
     public function pruneExpired(): int
     {
-        return AiResponseCache::where('created_at', '<', now()->subDays(self::TTL_DAYS))->delete();
+        return AiResponseCache::query()
+            ->where('created_at', '<', now()->subDays(self::TTL_DAYS))
+            ->delete();
     }
 
     private function hash(string $prompt): string

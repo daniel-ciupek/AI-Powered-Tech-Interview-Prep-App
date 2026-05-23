@@ -20,6 +20,7 @@ test('generate uses cached response and does not call gemini', function () {
     // Pre-populate cache with a matching entry
     $cacheService = app(AiCacheService::class);
     $cacheService->put(
+        user: $user,
         prompt: app(PromptBuilder::class)
             ->withDifficulty(Difficulty::Junior)
             ->buildQuestionPrompt(),
@@ -31,7 +32,7 @@ test('generate uses cached response and does not call gemini', function () {
         ],
         tokensIn: 0,
         tokensOut: 0,
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash',
     );
 
     $response = $this->actingAs($user)

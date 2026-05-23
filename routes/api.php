@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/tags', [TagController::class, 'index'])->name('api.tags.index');
     Route::post('/questions/generate', [QuestionController::class, 'generate'])
+        ->middleware('throttle:question-generate')
         ->name('api.questions.generate');
     Route::post('/repetitions/{repetition}/review', [RepetitionController::class, 'review'])
         ->name('api.repetitions.review');

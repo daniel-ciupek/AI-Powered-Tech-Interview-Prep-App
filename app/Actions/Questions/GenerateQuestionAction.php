@@ -14,7 +14,7 @@ use App\Services\Gemini\PromptBuilder;
 use App\Services\Gemini\ResponseValidator;
 use Illuminate\Support\Facades\Crypt;
 
-class GenerateQuestionAction
+final class GenerateQuestionAction
 {
     private const MODEL = 'gemini-2.5-flash';
 
@@ -35,7 +35,7 @@ class GenerateQuestionAction
             ->withDifficulty($difficulty)
             ->buildQuestionPrompt();
 
-        $validated = $this->cacheService->get($prompt);
+        $validated = $this->cacheService->get($user, $prompt);
 
         if ($validated === null) {
             $apiKey = Crypt::decryptString($user->gemini_api_key_encrypted);
@@ -43,6 +43,7 @@ class GenerateQuestionAction
             $validated = $this->responseValidator->validate($result['text']);
 
             $this->cacheService->put(
+                user: $user,
                 prompt: $prompt,
                 validated: $validated,
                 tokensIn: $result['tokens_in'],

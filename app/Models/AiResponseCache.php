@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property int $user_id
  * @property string $prompt_hash
  * @property array<string, mixed> $response
  * @property string $model
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $tokens_out
  * @property Carbon $created_at
  */
-#[Fillable(['prompt_hash', 'response', 'model', 'tokens_in', 'tokens_out'])]
+#[Fillable(['user_id', 'prompt_hash', 'response', 'model', 'tokens_in', 'tokens_out'])]
 class AiResponseCache extends Model
 {
     protected $table = 'ai_response_cache';

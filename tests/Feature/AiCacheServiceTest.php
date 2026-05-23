@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\AiResponseCache;
+use App\Models\User;
 use App\Services\Gemini\AiCacheService;
 use Illuminate\Support\Facades\DB;
 
@@ -16,12 +17,13 @@ function validatedQuestion(array $overrides = []): array
     ], $overrides);
 }
 
-function insertExpiredCacheEntry(string $prompt): void
+function insertExpiredCacheEntry(User $user, string $prompt): void
 {
     DB::table('ai_response_cache')->insert([
+        'user_id' => $user->id,
         'prompt_hash' => hash('sha256', $prompt),
         'response' => json_encode(validatedQuestion()),
-        'model' => 'gemini-2.0-flash',
+        'model' => 'gemini-2.5-flash',
         'tokens_in' => 10,
         'tokens_out' => 20,
         'created_at' => now()->subDays(AiCacheService::TTL_DAYS + 1)->toDateTimeString(),
@@ -29,14 +31,17 @@ function insertExpiredCacheEntry(string $prompt): void
 }
 
 test('get returns null on cache miss', function () {
-    expect((new AiCacheService)->get('unknown prompt'))->toBeNull();
+    $user = User::factory()->create();
+
+    expect((new AiCacheService)->get($user, 'unknown prompt'))->toBeNull();
 });
 
 test('put stores validated response and get retrieves it', function () {
+    $user = User::factory()->create();
     $service = new AiCacheService;
-    $service->put('test prompt', validatedQuestion(), 50, 100, 'gemini-2.0-flash');
+    $service->put($user, 'test prompt', validatedQuestion(), 50, 100, 'gemini-2.5-flash');
 
-    $result = $service->get('test prompt');
+    $result = $service->get($user, 'test prompt');
 
     expect($result)->not->toBeNull()
         ->and($result['question'])->toBe('What is dependency injection?')
@@ -44,24 +49,43 @@ test('put stores validated response and get retrieves it', function () {
 });
 
 test('get returns null for expired cache entries', function () {
-    insertExpiredCacheEntry('old prompt');
+    $user = User::factory()->create();
+    insertExpiredCacheEntry($user, 'old prompt');
 
-    expect((new AiCacheService)->get('old prompt'))->toBeNull();
+    expect((new AiCacheService)->get($user, 'old prompt'))->toBeNull();
 });
 
-test('put updates existing entry for same prompt', function () {
+test('put updates existing entry for same prompt and user', function () {
+    $user = User::factory()->create();
     $service = new AiCacheService;
-    $service->put('same prompt', validatedQuestion(['question' => 'First']), 10, 20, 'gemini-2.0-flash');
-    $service->put('same prompt', validatedQuestion(['question' => 'Second']), 15, 25, 'gemini-2.0-flash');
+    $service->put($user, 'same prompt', validatedQuestion(['question' => 'First']), 10, 20, 'gemini-2.5-flash');
+    $service->put($user, 'same prompt', validatedQuestion(['question' => 'Second']), 15, 25, 'gemini-2.5-flash');
 
     expect(AiResponseCache::count())->toBe(1)
-        ->and($service->get('same prompt')['question'])->toBe('Second');
+        ->and($service->get($user, 'same prompt')['question'])->toBe('Second');
+});
+
+test('two users with the same prompt get isolated cache entries', function () {
+    $alice = User::factory()->create();
+    $bob = User::factory()->create();
+    $service = new AiCacheService;
+
+    $service->put($alice, 'shared prompt', validatedQuestion(['question' => "Alice's question"]), 10, 20, 'gemini-2.5-flash');
+
+    expect($service->get($bob, 'shared prompt'))->toBeNull();
+
+    $service->put($bob, 'shared prompt', validatedQuestion(['question' => "Bob's question"]), 10, 20, 'gemini-2.5-flash');
+
+    expect($service->get($alice, 'shared prompt')['question'])->toBe("Alice's question")
+        ->and($service->get($bob, 'shared prompt')['question'])->toBe("Bob's question")
+        ->and(AiResponseCache::count())->toBe(2);
 });
 
 test('prune expired deletes old entries and keeps fresh ones', function () {
+    $user = User::factory()->create();
     $service = new AiCacheService;
-    insertExpiredCacheEntry('expired');
-    $service->put('fresh', validatedQuestion(), 10, 20, 'gemini-2.0-flash');
+    insertExpiredCacheEntry($user, 'expired');
+    $service->put($user, 'fresh', validatedQuestion(), 10, 20, 'gemini-2.5-flash');
 
     $deleted = $service->pruneExpired();
 
