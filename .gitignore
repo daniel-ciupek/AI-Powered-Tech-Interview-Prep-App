@@ -6,6 +6,8 @@
 /public/build
 /public/hot
 /public/storage
+/public/sw.js
+/public/manifest.webmanifest
 /storage/*.key
 /storage/pail
 /vendor

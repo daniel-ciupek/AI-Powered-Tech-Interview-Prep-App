@@ -8,8 +8,10 @@ import { createApp, DefineComponent, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { bootstrapTheme } from './composables/useTheme';
 import { i18n } from './i18n';
+import { registerServiceWorker } from './pwa';
 
 bootstrapTheme();
+registerServiceWorker();
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
