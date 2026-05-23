@@ -34,6 +34,8 @@ class GeminiClient
             'generationConfig' => [
                 'maxOutputTokens' => $maxOutputTokens,
                 'temperature' => 0.7,
+                'responseMimeType' => 'application/json',
+                'thinkingConfig' => ['thinkingBudget' => 0],
             ],
         ];
 
@@ -93,6 +95,7 @@ class GeminiClient
             'generationConfig' => [
                 'maxOutputTokens' => $maxOutputTokens,
                 'temperature' => 0.9,
+                'thinkingConfig' => ['thinkingBudget' => 0],
             ],
         ];
 
