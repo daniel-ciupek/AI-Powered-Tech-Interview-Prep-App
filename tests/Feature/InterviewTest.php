@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Enums\MessageRole;
 use App\Enums\SessionStatus;
 use App\Jobs\GenerateInterviewReportJob;
+use App\Models\InterviewMessage;
 use App\Models\InterviewSession;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
@@ -134,6 +136,67 @@ test('start interview is rate limited per user', function () {
     $this->actingAs($user)
         ->postJson('/api/interview/start')
         ->assertStatus(429);
+});
+
+test('generate report job writes final_report and completes session', function () {
+    $reportMarkdown = "## Overall Assessment\nSolid junior performance.\n\n## Recommendation\nHire.";
+
+    Http::fake(['*' => Http::response(interviewGeminiResponse($reportMarkdown), 200)]);
+
+    $user = User::factory()->create([
+        'gemini_api_key_encrypted' => Crypt::encryptString('fake-key'),
+    ]);
+    $session = InterviewSession::factory()->create([
+        'user_id' => $user->id,
+        'status' => SessionStatus::Completed,
+        'ended_at' => now(),
+        'tokens_used_total' => 100,
+    ]);
+    InterviewMessage::create([
+        'session_id' => $session->id,
+        'role' => MessageRole::Assistant,
+        'content' => 'Tell me about dependency injection.',
+        'tokens_used' => 30,
+    ]);
+    InterviewMessage::create([
+        'session_id' => $session->id,
+        'role' => MessageRole::User,
+        'content' => 'It is a pattern where dependencies are provided externally.',
+        'tokens_used' => 20,
+    ]);
+
+    GenerateInterviewReportJob::dispatchSync($session, $user);
+
+    $session->refresh();
+
+    expect($session->final_report)->toBe($reportMarkdown);
+    expect($session->status)->toBe(SessionStatus::Completed);
+    expect($session->tokens_used_total)->toBeGreaterThan(100);
+});
+
+test('generate report job sends conversation history to gemini', function () {
+    Http::fake(['*' => Http::response(interviewGeminiResponse('Report body'), 200)]);
+
+    $user = User::factory()->create([
+        'gemini_api_key_encrypted' => Crypt::encryptString('fake-key'),
+    ]);
+    $session = InterviewSession::factory()->create(['user_id' => $user->id]);
+    InterviewMessage::create([
+        'session_id' => $session->id,
+        'role' => MessageRole::User,
+        'content' => 'unique-candidate-answer-marker',
+        'tokens_used' => 10,
+    ]);
+
+    GenerateInterviewReportJob::dispatchSync($session, $user);
+
+    Http::assertSent(static function ($request): bool {
+        $payload = $request->data();
+        $prompt = $payload['contents'][0]['parts'][0]['text'] ?? '';
+
+        return str_contains($prompt, 'unique-candidate-answer-marker')
+            && str_contains($prompt, 'Overall Assessment');
+    });
 });
 
 test('interview page requires authentication', function () {
