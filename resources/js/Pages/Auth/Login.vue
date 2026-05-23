@@ -81,7 +81,7 @@ const submit = () => {
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-200"
                 >
                     {{ t('auth.login.forgot_password') }}
                 </Link>
@@ -94,6 +94,16 @@ const submit = () => {
                     {{ t('auth.login.submit') }}
                 </PrimaryButton>
             </div>
+
+            <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+                {{ t('auth.login.no_account') }}
+                <Link
+                    :href="route('register')"
+                    class="ms-1 font-medium text-indigo-600 underline hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                >
+                    {{ t('auth.login.register_here') }}
+                </Link>
+            </p>
         </form>
     </GuestLayout>
 </template>
