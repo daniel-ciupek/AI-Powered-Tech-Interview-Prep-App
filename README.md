@@ -41,6 +41,23 @@ php artisan boost:install
 
 Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
 
+## Internationalization
+
+PrepMind is bilingual (Polish-first, English fallback) end-to-end.
+
+**Frontend (Vue 3 + Inertia)** — translations live in `resources/js/i18n/locales/{pl,en}/*.json` and are auto-loaded by `resources/js/i18n/index.ts` through Vite's `import.meta.glob`. Each JSON file becomes a namespace, so `auth.json` is referenced as `$t('auth.login.submit')`. The plugin is mounted in `app.ts` with `legacy: false` (Composition API), default locale `pl`, fallback `en`.
+
+**Backend (Laravel)** — translations live in `lang/{pl,en}/*.php` (auth, validation, passwords, pagination + custom `messages.php` for AI/API error copy). Controllers and FormRequests use `__('messages.…')`. `config/app.php` defaults `locale=pl`, `fallback_locale=en`, `faker_locale=pl_PL`; override via `APP_LOCALE` in `.env`.
+
+**Adding a new language:**
+1. Copy `lang/pl/` → `lang/xx/` and translate the PHP arrays.
+2. Copy `resources/js/i18n/locales/pl/` → `…/xx/` and translate the JSON files (keep the keys).
+3. Set `APP_LOCALE=xx` in `.env` (and `i18n.locale` in `resources/js/i18n/index.ts` if you want it as the runtime default).
+
+## Tag system
+
+Topic tags on `interview_sessions.topic_tags` (jsonb) are **free-text** — users type any topic they want. The Vue side uses `Components/FreeTextTagInput.vue` (chip preview + HTML5 `<datalist>` autosuggest). The backend `GET /api/tags` aggregates the top 30 most-used tags from the existing `interview_sessions` rows (Postgres `jsonb_array_elements_text`) and caches them for 10 minutes. There is no separate tags table — the `spatie/laravel-tags` package was removed in favour of this simpler model.
+
 ## Contributing
 
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).

@@ -120,6 +120,9 @@ Pełen stack: patrz `PROJECT.md` sekcja 13.
 | Pinia stores | camelCase | `interviewSession.ts` |
 | API endpoints | kebab-case, plural | `/api/interview-sessions` |
 | Inertia routes | dot-notation | `questions.index`, `study.session` |
+| i18n keys (Vue) | `namespace.key` flat in JSON tree | `$t('interview.start_button')` |
+| Locale namespaces | per-feature plik JSON | `resources/js/i18n/locales/pl/auth.json` |
+| Laravel translations | per-feature plik PHP | `lang/pl/messages.php`, `__('messages.ai_rate_limit')` |
 
 ---
 
