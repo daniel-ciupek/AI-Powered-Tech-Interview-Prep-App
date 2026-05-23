@@ -69,20 +69,18 @@ export default defineConfig({
             workbox: {
                 inlineWorkboxRuntime: true,
                 additionalManifestEntries: extraPrecache,
-                navigateFallback: '/offline.html',
-                navigateFallbackDenylist: [
-                    /^\/api\//,
-                    /^\/login/,
-                    /^\/register/,
-                    /^\/logout/,
-                    /^\/forgot-password/,
-                    /^\/reset-password/,
-                    /^\/verify-email/,
-                    /^\/confirm-password/,
-                    /^\/email\//,
-                ],
                 globPatterns: ['**/*.{js,css,woff2}'],
                 runtimeCaching: [
+                    {
+                        // Navigations: always hit the network so Inertia gets
+                        // fresh server-rendered HTML. Only fall back to the
+                        // precached offline shell if the request actually fails.
+                        urlPattern: ({ request }) => request.mode === 'navigate',
+                        handler: 'NetworkOnly',
+                        options: {
+                            precacheFallback: { fallbackURL: '/offline.html' },
+                        },
+                    },
                     {
                         urlPattern: /^https:\/\/fonts\.bunny\.net\/.*/i,
                         handler: 'CacheFirst',
