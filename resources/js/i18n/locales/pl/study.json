@@ -1,0 +1,23 @@
+{
+    "title": "Sesja nauki",
+    "header": "Sesja nauki",
+    "due_counter": "{current} / {total} do powtórki",
+    "no_api_key_header": "Wymagany klucz Gemini API",
+    "no_api_key_prefix": "Dodaj go w",
+    "no_api_key_link": "Ustawieniach",
+    "no_api_key_suffix": ".",
+    "didnt_know": "← Nie wiedziałem",
+    "didnt_know_shortcut": "(R)",
+    "got_it": "Pamiętam →",
+    "got_it_shortcut": "(G)",
+    "shortcuts_hint": "Użyj strzałek lub R / G jako skrótów",
+    "session_complete": "Sesja ukończona 🎉",
+    "session_complete_summary": "Wszystkie {count} fiszek zostało powtórzonych.",
+    "generate": "Wygeneruj pytanie",
+    "generating": "Generuję…",
+    "difficulty_prefix": "Poziom:",
+    "difficulty_change": "zmień",
+    "rate_limit": "Limit zapytań osiągnięty. Poczekaj chwilę.",
+    "generation_failed": "Generowanie nie powiodło się.",
+    "come_back_tomorrow": "Wróć jutro, aby ją powtórzyć!"
+}

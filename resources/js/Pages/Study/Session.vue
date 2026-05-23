@@ -4,6 +4,9 @@ import TagSelector from '@/Components/TagSelector.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 interface Question {
     id: number;
@@ -81,8 +84,8 @@ async function generateQuestion(): Promise<void> {
     } catch (err: unknown) {
         const e = err as { response?: { data?: { message?: string }; status?: number } };
         generateError.value = e.response?.status === 429
-            ? 'Rate limit reached. Please wait a moment.'
-            : (e.response?.data?.message ?? 'Generation failed.');
+            ? t('study.rate_limit')
+            : (e.response?.data?.message ?? t('study.generation_failed'));
     } finally {
         generating.value = false;
     }
@@ -120,14 +123,14 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
 </script>
 
 <template>
-    <Head title="Study Session" />
+    <Head :title="t('study.title')" />
 
     <AuthenticatedLayout>
         <template #header>
             <div class="flex items-center justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">Study Session</h2>
+                <h2 class="text-xl font-semibold leading-tight text-gray-800">{{ t('study.header') }}</h2>
                 <span v-if="dueItems.length > 0 && !sessionComplete" class="text-sm text-gray-500">
-                    {{ currentIndex + 1 }} / {{ dueItems.length }} due
+                    {{ t('study.due_counter', { current: currentIndex + 1, total: dueItems.length }) }}
                 </span>
             </div>
         </template>
@@ -137,9 +140,10 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
 
                 <!-- No API key -->
                 <div v-if="!has_api_key" class="rounded-lg border-2 border-dashed border-gray-300 py-16 text-center">
-                    <p class="font-medium text-gray-600">Gemini API key required</p>
+                    <p class="font-medium text-gray-600">{{ t('study.no_api_key_header') }}</p>
                     <p class="mt-1 text-sm text-gray-500">
-                        Add it in <Link :href="route('settings.edit')" class="text-indigo-600 underline">Settings</Link>.
+                        {{ t('study.no_api_key_prefix') }}
+                        <Link :href="route('settings.edit')" class="text-indigo-600 underline">{{ t('study.no_api_key_link') }}</Link>{{ t('study.no_api_key_suffix') }}
                     </p>
                 </div>
 
@@ -161,8 +165,8 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                                 @click="recordReview(2)"
                                 class="flex-1 rounded-lg border-2 border-red-300 bg-red-50 py-3 text-sm font-semibold text-red-700 hover:bg-red-100 disabled:opacity-50 transition"
                             >
-                                ← Didn't know
-                                <span class="ml-1 text-xs text-red-400">(R)</span>
+                                {{ t('study.didnt_know') }}
+                                <span class="ml-1 text-xs text-red-400">{{ t('study.didnt_know_shortcut') }}</span>
                             </button>
                             <button
                                 type="button"
@@ -170,19 +174,19 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                                 @click="recordReview(4)"
                                 class="flex-1 rounded-lg border-2 border-green-300 bg-green-50 py-3 text-sm font-semibold text-green-700 hover:bg-green-100 disabled:opacity-50 transition"
                             >
-                                Got it →
-                                <span class="ml-1 text-xs text-green-400">(G)</span>
+                                {{ t('study.got_it') }}
+                                <span class="ml-1 text-xs text-green-400">{{ t('study.got_it_shortcut') }}</span>
                             </button>
                         </div>
                         <p class="text-center text-xs text-gray-400">
-                            Use arrow keys or R / G as shortcuts
+                            {{ t('study.shortcuts_hint') }}
                         </p>
                     </template>
 
                     <!-- ── SESSION COMPLETE ────────────────────────────── -->
                     <div v-else-if="sessionComplete" class="rounded-lg border border-green-200 bg-green-50 py-12 text-center">
-                        <p class="text-lg font-semibold text-green-800">Session complete 🎉</p>
-                        <p class="mt-1 text-sm text-green-600">All {{ dueItems.length }} cards reviewed.</p>
+                        <p class="text-lg font-semibold text-green-800">{{ t('study.session_complete') }}</p>
+                        <p class="mt-1 text-sm text-green-600">{{ t('study.session_complete_summary', { count: dueItems.length }) }}</p>
                     </div>
 
                     <!-- ── GENERATE MODE ───────────────────────────────── -->
@@ -209,11 +213,11 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
                                 </svg>
-                                {{ generating ? 'Generating…' : 'Generate Question' }}
+                                {{ generating ? t('study.generating') : t('study.generate') }}
                             </button>
                             <p class="mt-2 text-xs text-gray-500">
-                                Difficulty: <span class="font-medium capitalize">{{ preferred_difficulty }}</span>
-                                · <Link :href="route('settings.edit')" class="text-indigo-600 underline">change</Link>
+                                {{ t('study.difficulty_prefix') }} <span class="font-medium capitalize">{{ preferred_difficulty }}</span>
+                                · <Link :href="route('settings.edit')" class="text-indigo-600 underline">{{ t('study.difficulty_change') }}</Link>
                             </p>
                         </div>
 
@@ -225,7 +229,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                             <div v-if="generatedQuestion">
                                 <QuestionCard :question="generatedQuestion" />
                                 <p class="mt-4 text-center text-sm text-gray-500">
-                                    Come back tomorrow to review it!
+                                    {{ t('study.come_back_tomorrow') }}
                                 </p>
                             </div>
                         </Transition>

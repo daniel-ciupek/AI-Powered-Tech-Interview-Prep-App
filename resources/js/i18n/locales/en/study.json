@@ -1,0 +1,23 @@
+{
+    "title": "Study Session",
+    "header": "Study Session",
+    "due_counter": "{current} / {total} due",
+    "no_api_key_header": "Gemini API key required",
+    "no_api_key_prefix": "Add it in",
+    "no_api_key_link": "Settings",
+    "no_api_key_suffix": ".",
+    "didnt_know": "← Didn't know",
+    "didnt_know_shortcut": "(R)",
+    "got_it": "Got it →",
+    "got_it_shortcut": "(G)",
+    "shortcuts_hint": "Use arrow keys or R / G as shortcuts",
+    "session_complete": "Session complete 🎉",
+    "session_complete_summary": "All {count} cards reviewed.",
+    "generate": "Generate Question",
+    "generating": "Generating…",
+    "difficulty_prefix": "Difficulty:",
+    "difficulty_change": "change",
+    "rate_limit": "Rate limit reached. Please wait a moment.",
+    "generation_failed": "Generation failed.",
+    "come_back_tomorrow": "Come back tomorrow to review it!"
+}

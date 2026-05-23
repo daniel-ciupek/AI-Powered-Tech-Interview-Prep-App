@@ -4,6 +4,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useInterviewSession } from '@/stores/interviewSession';
 import { Head, Link } from '@inertiajs/vue3';
 import { nextTick, onMounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
     has_api_key: boolean;
@@ -54,15 +57,15 @@ function onKeydown(e: KeyboardEvent): void {
 </script>
 
 <template>
-    <Head title="Interview Simulator" />
+    <Head :title="t('interview.title')" />
 
     <AuthenticatedLayout>
         <template #header>
             <div class="flex items-center justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">Interview Simulator</h2>
+                <h2 class="text-xl font-semibold leading-tight text-gray-800">{{ t('interview.header') }}</h2>
                 <span v-if="store.session" class="text-sm text-gray-500 capitalize">
                     {{ store.session.difficulty }} ·
-                    {{ store.session.topic_tags.join(', ') || 'General' }}
+                    {{ store.session.topic_tags.join(', ') || t('interview.general_topic') }}
                 </span>
             </div>
         </template>
@@ -73,9 +76,10 @@ function onKeydown(e: KeyboardEvent): void {
                 <!-- No API key -->
                 <div v-if="!has_api_key" class="flex flex-1 items-center justify-center">
                     <div class="rounded-lg border-2 border-dashed border-gray-300 px-12 py-16 text-center">
-                        <p class="font-medium text-gray-600">Gemini API key required</p>
+                        <p class="font-medium text-gray-600">{{ t('interview.no_api_key_header') }}</p>
                         <p class="mt-1 text-sm text-gray-500">
-                            Add it in <Link :href="route('settings.edit')" class="text-indigo-600 underline">Settings</Link>.
+                            {{ t('interview.no_api_key_prefix') }}
+                            <Link :href="route('settings.edit')" class="text-indigo-600 underline">{{ t('interview.no_api_key_link') }}</Link>{{ t('interview.no_api_key_suffix') }}
                         </p>
                     </div>
                 </div>
@@ -102,11 +106,11 @@ function onKeydown(e: KeyboardEvent): void {
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
                             </svg>
-                            {{ store.loading ? 'Starting interview…' : 'Start Interview' }}
+                            {{ store.loading ? t('interview.start_loading') : t('interview.start_button') }}
                         </button>
                         <p class="mt-2 text-xs text-gray-500">
-                            Difficulty: <span class="font-medium capitalize">{{ preferred_difficulty }}</span>
-                            · <Link :href="route('settings.edit')" class="text-indigo-600 underline">change</Link>
+                            {{ t('interview.difficulty_prefix') }} <span class="font-medium capitalize">{{ preferred_difficulty }}</span>
+                            · <Link :href="route('settings.edit')" class="text-indigo-600 underline">{{ t('interview.difficulty_change') }}</Link>
                         </p>
                     </div>
 
@@ -154,7 +158,7 @@ function onKeydown(e: KeyboardEvent): void {
 
                     <!-- Report queued banner -->
                     <div v-if="store.reportQueued" class="mt-2 rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
-                        Report generation started. Refresh the page in a moment to see your evaluation.
+                        {{ t('interview.report_queued') }}
                     </div>
 
                     <!-- Input (only while active) -->
@@ -165,7 +169,7 @@ function onKeydown(e: KeyboardEvent): void {
                                 :disabled="store.sending"
                                 @keydown="onKeydown"
                                 rows="2"
-                                placeholder="Your answer… (Enter to send, Shift+Enter for new line)"
+                                :placeholder="t('interview.input_placeholder')"
                                 class="flex-1 resize-none rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50"
                             />
                             <button
@@ -174,7 +178,7 @@ function onKeydown(e: KeyboardEvent): void {
                                 @click="submit"
                                 class="self-end rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
                             >
-                                Send
+                                {{ t('interview.send') }}
                             </button>
                         </div>
                         <div class="mt-1 flex justify-end">
@@ -184,7 +188,7 @@ function onKeydown(e: KeyboardEvent): void {
                                 @click="store.finishSession()"
                                 class="text-xs text-gray-400 underline hover:text-gray-600 disabled:opacity-50"
                             >
-                                {{ store.finishing ? 'Finishing…' : 'Finish & generate report' }}
+                                {{ store.finishing ? t('interview.finishing') : t('interview.finish') }}
                             </button>
                         </div>
                     </template>
