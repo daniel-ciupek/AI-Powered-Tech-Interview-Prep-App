@@ -1,7 +1,21 @@
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
+
+const fileRevision = (path) => createHash('md5').update(readFileSync(path)).digest('hex');
+
+const extraPrecache = [
+    '/offline.html',
+    '/icons/icon-192.png',
+    '/icons/icon-512.png',
+    '/icons/icon-maskable-512.png',
+    '/icons/apple-touch-icon.png',
+    '/icons/favicon-32.png',
+    '/favicon.ico',
+].map((url) => ({ url, revision: fileRevision('public' + url) }));
 
 export default defineConfig({
     plugins: [
@@ -20,15 +34,6 @@ export default defineConfig({
         VitePWA({
             registerType: 'autoUpdate',
             injectRegister: false,
-            includeAssets: [
-                'favicon.ico',
-                'icons/icon-192.png',
-                'icons/icon-512.png',
-                'icons/icon-maskable-512.png',
-                'icons/apple-touch-icon.png',
-                'icons/favicon-32.png',
-                'offline.html',
-            ],
             manifest: {
                 name: 'PrepMind',
                 short_name: 'PrepMind',
@@ -63,6 +68,7 @@ export default defineConfig({
             },
             workbox: {
                 inlineWorkboxRuntime: true,
+                additionalManifestEntries: extraPrecache,
                 navigateFallback: '/offline.html',
                 navigateFallbackDenylist: [
                     /^\/api\//,
