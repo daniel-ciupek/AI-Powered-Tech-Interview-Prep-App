@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import { useTheme } from '@/composables/useTheme';
 import { Link } from '@inertiajs/vue3';
+
+useTheme();
 </script>
 
 <template>

@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import ApiKeyInput from '@/Components/ApiKeyInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { useTheme, type ThemePreference } from '@/composables/useTheme';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
+import { watch } from 'vue';
 
 const { t } = useI18n();
+const { setPreference } = useTheme();
 
 interface Settings {
     preferred_difficulty: 'junior' | 'mid' | 'senior';
@@ -27,6 +30,11 @@ const form = useForm<Settings>({
 function submit(): void {
     form.patch(route('settings.update'));
 }
+
+watch(
+    () => form.theme,
+    (value) => setPreference(value as ThemePreference),
+);
 
 const difficulties = ['junior', 'mid', 'senior'] as const;
 const themes = ['light', 'dark', 'system'] as const;
