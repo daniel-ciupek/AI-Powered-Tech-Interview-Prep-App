@@ -6,6 +6,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createPinia } from 'pinia';
 import { createApp, DefineComponent, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
+import { i18n } from './i18n';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -21,6 +22,7 @@ createInertiaApp({
             .use(plugin)
             .use(createPinia())
             .use(ZiggyVue)
+            .use(i18n)
             .mount(el);
     },
     progress: {
