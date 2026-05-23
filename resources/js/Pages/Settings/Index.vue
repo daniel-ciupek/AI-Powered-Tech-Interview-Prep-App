@@ -45,7 +45,7 @@ const themes = ['light', 'dark', 'system'] as const;
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+            <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                 {{ t('settings.title') }}
             </h2>
         </template>
@@ -62,7 +62,7 @@ const themes = ['light', 'dark', 'system'] as const;
                 >
                     <p
                         v-if="status === 'settings-updated'"
-                        class="rounded-md bg-green-50 px-4 py-3 text-sm font-medium text-green-700"
+                        class="rounded-md bg-green-50 px-4 py-3 text-sm font-medium text-green-700 dark:bg-green-900/30 dark:text-green-300"
                     >
                         {{ t('settings.saved') }}
                     </p>
@@ -71,17 +71,17 @@ const themes = ['light', 'dark', 'system'] as const;
                 <form @submit.prevent="submit" class="space-y-6">
 
                     <!-- Interview Preferences -->
-                    <div class="bg-white p-6 shadow sm:rounded-lg">
-                        <h3 class="text-lg font-medium text-gray-900">
+                    <div class="bg-white p-6 shadow sm:rounded-lg dark:bg-gray-800 dark:shadow-gray-900/30">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                             {{ t('settings.interview.header') }}
                         </h3>
-                        <p class="mt-1 text-sm text-gray-600">
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                             {{ t('settings.interview.intro') }}
                         </p>
 
                         <!-- Difficulty -->
                         <div class="mt-6">
-                            <label class="block text-sm font-medium text-gray-700">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 {{ t('settings.interview.difficulty_label') }}
                             </label>
                             <div class="mt-2 flex gap-3">
@@ -90,8 +90,8 @@ const themes = ['light', 'dark', 'system'] as const;
                                     :key="d"
                                     class="flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition"
                                     :class="form.preferred_difficulty === d
-                                        ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-                                        : 'border-gray-300 text-gray-700 hover:border-indigo-400'"
+                                        ? 'border-indigo-600 bg-indigo-50 text-indigo-700 dark:border-indigo-400 dark:bg-indigo-900/30 dark:text-indigo-300'
+                                        : 'border-gray-300 text-gray-700 hover:border-indigo-400 dark:border-gray-600 dark:text-gray-300 dark:hover:border-indigo-400'"
                                 >
                                     <input
                                         type="radio"
@@ -102,7 +102,7 @@ const themes = ['light', 'dark', 'system'] as const;
                                     {{ t(`settings.difficulty.${d}`) }}
                                 </label>
                             </div>
-                            <p v-if="form.errors.preferred_difficulty" class="mt-1 text-sm text-red-600">
+                            <p v-if="form.errors.preferred_difficulty" class="mt-1 text-sm text-red-600 dark:text-red-400">
                                 {{ form.errors.preferred_difficulty }}
                             </p>
                         </div>
@@ -111,7 +111,7 @@ const themes = ['light', 'dark', 'system'] as const;
                         <div class="mt-6">
                             <label
                                 for="daily_goal"
-                                class="block text-sm font-medium text-gray-700"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                             >
                                 {{ t('settings.interview.daily_goal_label') }}
                             </label>
@@ -121,20 +121,20 @@ const themes = ['light', 'dark', 'system'] as const;
                                 min="1"
                                 max="50"
                                 v-model.number="form.daily_goal"
-                                class="mt-1 block w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
                             />
-                            <p v-if="form.errors.daily_goal" class="mt-1 text-sm text-red-600">
+                            <p v-if="form.errors.daily_goal" class="mt-1 text-sm text-red-600 dark:text-red-400">
                                 {{ form.errors.daily_goal }}
                             </p>
                         </div>
                     </div>
 
                     <!-- Appearance -->
-                    <div class="bg-white p-6 shadow sm:rounded-lg">
-                        <h3 class="text-lg font-medium text-gray-900">
+                    <div class="bg-white p-6 shadow sm:rounded-lg dark:bg-gray-800 dark:shadow-gray-900/30">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                             {{ t('settings.appearance.header') }}
                         </h3>
-                        <p class="mt-1 text-sm text-gray-600">
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                             {{ t('settings.appearance.intro') }}
                         </p>
 
@@ -144,8 +144,8 @@ const themes = ['light', 'dark', 'system'] as const;
                                 :key="themeOption"
                                 class="flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition"
                                 :class="form.theme === themeOption
-                                    ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-                                    : 'border-gray-300 text-gray-700 hover:border-indigo-400'"
+                                    ? 'border-indigo-600 bg-indigo-50 text-indigo-700 dark:border-indigo-400 dark:bg-indigo-900/30 dark:text-indigo-300'
+                                    : 'border-gray-300 text-gray-700 hover:border-indigo-400 dark:border-gray-600 dark:text-gray-300 dark:hover:border-indigo-400'"
                             >
                                 <input
                                     type="radio"
@@ -156,13 +156,13 @@ const themes = ['light', 'dark', 'system'] as const;
                                 {{ t(`settings.theme.${themeOption}`) }}
                             </label>
                         </div>
-                        <p v-if="form.errors.theme" class="mt-1 text-sm text-red-600">
+                        <p v-if="form.errors.theme" class="mt-1 text-sm text-red-600 dark:text-red-400">
                             {{ form.errors.theme }}
                         </p>
                     </div>
 
                     <!-- API Key -->
-                    <div class="bg-white p-6 shadow sm:rounded-lg">
+                    <div class="bg-white p-6 shadow sm:rounded-lg dark:bg-gray-800 dark:shadow-gray-900/30">
                         <ApiKeyInput :has-api-key="has_api_key" />
                     </div>
 
@@ -171,7 +171,7 @@ const themes = ['light', 'dark', 'system'] as const;
                         <button
                             type="submit"
                             :disabled="form.processing"
-                            class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
+                            class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
                         >
                             {{ t('settings.submit') }}
                         </button>
