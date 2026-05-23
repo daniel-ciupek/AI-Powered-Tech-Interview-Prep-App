@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
     hasApiKey: boolean;
@@ -27,17 +30,17 @@ function remove(): void {
 
 <template>
     <div>
-        <h3 class="text-lg font-medium text-gray-900">Gemini API Key</h3>
+        <h3 class="text-lg font-medium text-gray-900">{{ t('settings.api_key.header') }}</h3>
         <p class="mt-1 text-sm text-gray-600">
-            Your key is stored encrypted and never exposed.
-            Get one at
+            {{ t('settings.api_key.intro_prefix') }}
+            {{ t('settings.api_key.intro_link_prefix') }}
             <a
                 href="https://aistudio.google.com/apikey"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="text-indigo-600 underline hover:text-indigo-500"
             >
-                Google AI Studio
+                {{ t('settings.api_key.intro_link_text') }}
             </a>.
         </p>
 
@@ -47,14 +50,14 @@ function remove(): void {
                 <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
-                API key configured
+                {{ t('settings.api_key.configured') }}
             </span>
             <button
                 type="button"
                 @click="showForm = true"
                 class="text-sm text-indigo-600 underline hover:text-indigo-500"
             >
-                Change
+                {{ t('settings.api_key.change') }}
             </button>
             <form @submit.prevent="remove">
                 <button
@@ -62,7 +65,7 @@ function remove(): void {
                     :disabled="removeForm.processing"
                     class="text-sm text-red-600 underline hover:text-red-500 disabled:opacity-50"
                 >
-                    Remove
+                    {{ t('settings.api_key.remove') }}
                 </button>
             </form>
         </div>
@@ -71,7 +74,7 @@ function remove(): void {
         <form v-if="showForm" @submit.prevent="save" class="mt-4 space-y-3">
             <div>
                 <label for="api_key" class="block text-sm font-medium text-gray-700">
-                    API Key
+                    {{ t('settings.api_key.label') }}
                 </label>
                 <input
                     id="api_key"
@@ -92,7 +95,7 @@ function remove(): void {
                     :disabled="saveForm.processing || saveForm.api_key.length === 0"
                     class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
                 >
-                    Save Key
+                    {{ t('settings.api_key.save') }}
                 </button>
                 <button
                     v-if="hasApiKey"
@@ -100,14 +103,14 @@ function remove(): void {
                     @click="showForm = false; saveForm.reset()"
                     class="text-sm text-gray-500 hover:text-gray-700"
                 >
-                    Cancel
+                    {{ t('settings.api_key.cancel') }}
                 </button>
             </div>
         </form>
 
         <!-- No key set yet -->
         <p v-if="!hasApiKey && !showForm" class="mt-3 text-sm text-gray-500">
-            No API key set.
+            {{ t('settings.api_key.none_set') }}
         </p>
     </div>
 </template>

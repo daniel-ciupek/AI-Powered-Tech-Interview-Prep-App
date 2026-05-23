@@ -2,6 +2,9 @@
 import ApiKeyInput from '@/Components/ApiKeyInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 interface Settings {
     preferred_difficulty: 'junior' | 'mid' | 'senior';
@@ -25,26 +28,17 @@ function submit(): void {
     form.patch(route('settings.update'));
 }
 
-const difficulties = [
-    { value: 'junior', label: 'Junior' },
-    { value: 'mid', label: 'Mid' },
-    { value: 'senior', label: 'Senior' },
-] as const;
-
-const themes = [
-    { value: 'light', label: 'Light' },
-    { value: 'dark', label: 'Dark' },
-    { value: 'system', label: 'System' },
-] as const;
+const difficulties = ['junior', 'mid', 'senior'] as const;
+const themes = ['light', 'dark', 'system'] as const;
 </script>
 
 <template>
-    <Head title="Settings" />
+    <Head :title="t('settings.title')" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Settings
+                {{ t('settings.title') }}
             </h2>
         </template>
 
@@ -62,7 +56,7 @@ const themes = [
                         v-if="status === 'settings-updated'"
                         class="rounded-md bg-green-50 px-4 py-3 text-sm font-medium text-green-700"
                     >
-                        Settings saved.
+                        {{ t('settings.saved') }}
                     </p>
                 </Transition>
 
@@ -71,33 +65,33 @@ const themes = [
                     <!-- Interview Preferences -->
                     <div class="bg-white p-6 shadow sm:rounded-lg">
                         <h3 class="text-lg font-medium text-gray-900">
-                            Interview Preferences
+                            {{ t('settings.interview.header') }}
                         </h3>
                         <p class="mt-1 text-sm text-gray-600">
-                            Adjust the difficulty level and your daily practice goal.
+                            {{ t('settings.interview.intro') }}
                         </p>
 
                         <!-- Difficulty -->
                         <div class="mt-6">
                             <label class="block text-sm font-medium text-gray-700">
-                                Preferred Difficulty
+                                {{ t('settings.interview.difficulty_label') }}
                             </label>
                             <div class="mt-2 flex gap-3">
                                 <label
                                     v-for="d in difficulties"
-                                    :key="d.value"
+                                    :key="d"
                                     class="flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition"
-                                    :class="form.preferred_difficulty === d.value
+                                    :class="form.preferred_difficulty === d
                                         ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
                                         : 'border-gray-300 text-gray-700 hover:border-indigo-400'"
                                 >
                                     <input
                                         type="radio"
-                                        :value="d.value"
+                                        :value="d"
                                         v-model="form.preferred_difficulty"
                                         class="sr-only"
                                     />
-                                    {{ d.label }}
+                                    {{ t(`settings.difficulty.${d}`) }}
                                 </label>
                             </div>
                             <p v-if="form.errors.preferred_difficulty" class="mt-1 text-sm text-red-600">
@@ -111,7 +105,7 @@ const themes = [
                                 for="daily_goal"
                                 class="block text-sm font-medium text-gray-700"
                             >
-                                Daily Goal (questions per day)
+                                {{ t('settings.interview.daily_goal_label') }}
                             </label>
                             <input
                                 id="daily_goal"
@@ -130,28 +124,28 @@ const themes = [
                     <!-- Appearance -->
                     <div class="bg-white p-6 shadow sm:rounded-lg">
                         <h3 class="text-lg font-medium text-gray-900">
-                            Appearance
+                            {{ t('settings.appearance.header') }}
                         </h3>
                         <p class="mt-1 text-sm text-gray-600">
-                            Choose the colour theme for the interface.
+                            {{ t('settings.appearance.intro') }}
                         </p>
 
                         <div class="mt-4 flex gap-3">
                             <label
-                                v-for="t in themes"
-                                :key="t.value"
+                                v-for="themeOption in themes"
+                                :key="themeOption"
                                 class="flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition"
-                                :class="form.theme === t.value
+                                :class="form.theme === themeOption
                                     ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
                                     : 'border-gray-300 text-gray-700 hover:border-indigo-400'"
                             >
                                 <input
                                     type="radio"
-                                    :value="t.value"
+                                    :value="themeOption"
                                     v-model="form.theme"
                                     class="sr-only"
                                 />
-                                {{ t.label }}
+                                {{ t(`settings.theme.${themeOption}`) }}
                             </label>
                         </div>
                         <p v-if="form.errors.theme" class="mt-1 text-sm text-red-600">
@@ -171,7 +165,7 @@ const themes = [
                             :disabled="form.processing"
                             class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
                         >
-                            Save Settings
+                            {{ t('settings.submit') }}
                         </button>
                     </div>
                 </form>

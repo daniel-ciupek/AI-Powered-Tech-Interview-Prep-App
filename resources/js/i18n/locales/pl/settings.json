@@ -1,0 +1,38 @@
+{
+    "title": "Ustawienia",
+    "saved": "Ustawienia zapisane.",
+    "interview": {
+        "header": "Preferencje rozmowy",
+        "intro": "Dostosuj poziom trudności i cel codziennej praktyki.",
+        "difficulty_label": "Preferowany poziom",
+        "daily_goal_label": "Cel dzienny (pytań dziennie)"
+    },
+    "difficulty": {
+        "junior": "Junior",
+        "mid": "Mid",
+        "senior": "Senior"
+    },
+    "appearance": {
+        "header": "Wygląd",
+        "intro": "Wybierz kolorystykę interfejsu."
+    },
+    "theme": {
+        "light": "Jasny",
+        "dark": "Ciemny",
+        "system": "Systemowy"
+    },
+    "api_key": {
+        "header": "Klucz Gemini API",
+        "intro_prefix": "Klucz jest przechowywany w postaci zaszyfrowanej i nigdy nie jest pokazywany.",
+        "intro_link_prefix": "Pobierz klucz z",
+        "intro_link_text": "Google AI Studio",
+        "configured": "Klucz API skonfigurowany",
+        "change": "Zmień",
+        "remove": "Usuń",
+        "label": "Klucz API",
+        "save": "Zapisz klucz",
+        "cancel": "Anuluj",
+        "none_set": "Brak ustawionego klucza API."
+    },
+    "submit": "Zapisz ustawienia"
+}

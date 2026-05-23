@@ -1,0 +1,38 @@
+{
+    "title": "Settings",
+    "saved": "Settings saved.",
+    "interview": {
+        "header": "Interview Preferences",
+        "intro": "Adjust the difficulty level and your daily practice goal.",
+        "difficulty_label": "Preferred Difficulty",
+        "daily_goal_label": "Daily Goal (questions per day)"
+    },
+    "difficulty": {
+        "junior": "Junior",
+        "mid": "Mid",
+        "senior": "Senior"
+    },
+    "appearance": {
+        "header": "Appearance",
+        "intro": "Choose the colour theme for the interface."
+    },
+    "theme": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+    },
+    "api_key": {
+        "header": "Gemini API Key",
+        "intro_prefix": "Your key is stored encrypted and never exposed.",
+        "intro_link_prefix": "Get one at",
+        "intro_link_text": "Google AI Studio",
+        "configured": "API key configured",
+        "change": "Change",
+        "remove": "Remove",
+        "label": "API Key",
+        "save": "Save Key",
+        "cancel": "Cancel",
+        "none_set": "No API key set."
+    },
+    "submit": "Save Settings"
+}
