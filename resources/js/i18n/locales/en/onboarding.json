@@ -1,0 +1,42 @@
+{
+    "title": "Onboarding",
+    "step": "Step {current} of {total}",
+    "next": "Next",
+    "back": "Back",
+    "finish": "Finish and open dashboard",
+    "skip": "Skip onboarding",
+    "welcome": {
+        "header": "Welcome to PrepMind!",
+        "intro": "We'll help you prep for tech interviews with AI as your coach.",
+        "feature_questions": "Generate technical questions tailored to your level.",
+        "feature_study": "Review knowledge with a spaced repetition algorithm (SM-2).",
+        "feature_interview": "Simulate real interviews with a conversational AI.",
+        "byok_note": "The app uses your own Google Gemini API key. We don't charge you — you only pay Google for what you use."
+    },
+    "api_key": {
+        "header": "Connect your Gemini API key",
+        "intro": "The app uses Gemini to generate questions and run interviews. Your key is encrypted and never leaves your account.",
+        "instructions_intro": "How to get a key:",
+        "step1": "Go to",
+        "step1_link": "Google AI Studio",
+        "step2": "Sign in with Google and click \"Create API key\".",
+        "step3": "Copy the key (starts with \"AIza…\") and paste it below.",
+        "save_skipped": "You can add the key later in Settings.",
+        "key_present": "Key is set ✓"
+    },
+    "preferences": {
+        "header": "Set your level",
+        "intro": "Tell us how you'd rate yourself and how many questions you'd like per day.",
+        "difficulty_label": "Difficulty",
+        "difficulty_hint": "You can change this anytime in Settings.",
+        "daily_goal_label": "Daily goal",
+        "daily_goal_suffix": "questions / day",
+        "saving": "Saving…"
+    },
+    "ready": {
+        "header": "All set!",
+        "intro": "Your dashboard will show your streak and remind you when to come back for reviews.",
+        "tip_study": "Start with \"Start study session\" on the dashboard.",
+        "tip_interview": "Or fire up the interview simulator right away."
+    }
+}

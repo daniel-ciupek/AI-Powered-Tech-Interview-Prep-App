@@ -25,6 +25,7 @@ use Illuminate\Notifications\Notifiable;
  * @property int $streak_count
  * @property Carbon|null $last_studied_at
  * @property Theme $theme
+ * @property Carbon|null $onboarded_at
  */
 #[Fillable(['name', 'email', 'password', 'preferred_difficulty', 'daily_goal', 'theme'])]
 #[Hidden(['password', 'remember_token', 'gemini_api_key_encrypted'])]
@@ -64,6 +65,7 @@ class User extends Authenticatable
             'last_studied_at' => 'datetime',
             'daily_goal' => 'integer',
             'streak_count' => 'integer',
+            'onboarded_at' => 'datetime',
         ];
     }
 }

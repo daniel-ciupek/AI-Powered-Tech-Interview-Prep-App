@@ -39,7 +39,13 @@ class UserFactory extends Factory
             'streak_count' => 0,
             'last_studied_at' => null,
             'theme' => Theme::System,
+            'onboarded_at' => now(),
         ];
+    }
+
+    public function notOnboarded(): static
+    {
+        return $this->state(['onboarded_at' => null]);
     }
 
     /**

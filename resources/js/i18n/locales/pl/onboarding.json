@@ -1,0 +1,42 @@
+{
+    "title": "Wprowadzenie",
+    "step": "Krok {current} z {total}",
+    "next": "Dalej",
+    "back": "Wstecz",
+    "finish": "Zakończ i przejdź do pulpitu",
+    "skip": "Pomiń wprowadzenie",
+    "welcome": {
+        "header": "Witaj w PrepMind!",
+        "intro": "Pomożemy Ci przygotować się do rozmów rekrutacyjnych z AI jako trenerem.",
+        "feature_questions": "Generuj pytania techniczne dostosowane do Twojego poziomu.",
+        "feature_study": "Powtarzaj wiedzę dzięki algorytmowi spaced repetition (SM-2).",
+        "feature_interview": "Symuluj realne rozmowy z konwersacyjnym AI.",
+        "byok_note": "Aplikacja używa Twojego własnego klucza Google Gemini API. Nie obciążamy Cię — płacisz tylko za to, co zużyjesz w Google."
+    },
+    "api_key": {
+        "header": "Podłącz klucz Gemini API",
+        "intro": "Aplikacja korzysta z modelu Gemini, aby generować pytania i prowadzić rozmowy. Klucz jest szyfrowany i nigdy nie opuszcza Twojego konta.",
+        "instructions_intro": "Jak zdobyć klucz:",
+        "step1": "Wejdź na",
+        "step1_link": "Google AI Studio",
+        "step2": "Zaloguj się kontem Google i kliknij \"Create API key\".",
+        "step3": "Skopiuj klucz (zaczyna się od „AIza…”) i wklej poniżej.",
+        "save_skipped": "Możesz dodać klucz później w Ustawieniach.",
+        "key_present": "Klucz jest skonfigurowany ✓"
+    },
+    "preferences": {
+        "header": "Dopasuj poziom",
+        "intro": "Powiedz nam, na jakim poziomie się czujesz i ile pytań chcesz robić dziennie.",
+        "difficulty_label": "Poziom trudności",
+        "difficulty_hint": "Możesz to zmienić w każdej chwili w Ustawieniach.",
+        "daily_goal_label": "Cel dzienny",
+        "daily_goal_suffix": "pytań / dzień",
+        "saving": "Zapisywanie…"
+    },
+    "ready": {
+        "header": "Wszystko gotowe!",
+        "intro": "Pulpit pokaże Twoją serię nauki i podpowie, kiedy wracać po powtórki.",
+        "tip_study": "Zacznij od „Rozpocznij sesję nauki” na pulpicie.",
+        "tip_interview": "Lub od razu odpal symulator rozmowy."
+    }
+}
