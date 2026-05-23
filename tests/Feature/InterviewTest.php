@@ -54,6 +54,27 @@ test('start interview creates session and initial ai message', function () {
     ]);
 });
 
+test('start interview accepts custom free-text tags', function () {
+    Http::fake(['*' => Http::response(interviewGeminiResponse(), 200)]);
+
+    $user = User::factory()->create([
+        'gemini_api_key_encrypted' => Crypt::encryptString('fake-key'),
+    ]);
+
+    $response = $this->actingAs($user)
+        ->postJson('/api/interview/start', ['tags' => ['symfony messenger', 'postman']])
+        ->assertStatus(201);
+
+    expect($response->json('data.topic_tags'))->toBe(['symfony messenger', 'postman']);
+
+    Http::assertSent(static function ($request): bool {
+        $systemPrompt = $request->data()['systemInstruction']['parts'][0]['text'] ?? '';
+
+        return str_contains($systemPrompt, 'symfony messenger')
+            && str_contains($systemPrompt, 'postman');
+    });
+});
+
 test('send message requires authentication', function () {
     $session = InterviewSession::factory()->create();
 

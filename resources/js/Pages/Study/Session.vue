@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import QuestionCard from '@/Components/QuestionCard.vue';
-import TagSelector from '@/Components/TagSelector.vue';
+import FreeTextTagInput from '@/Components/FreeTextTagInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted, ref } from 'vue';
@@ -193,11 +193,11 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                     <template v-else>
                         <!-- Tag selector -->
                         <div class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-                            <TagSelector
-                                :tags="availableTags"
-                                :selected-tags="selectedTags"
+                            <FreeTextTagInput
+                                v-model="selectedTags"
+                                :suggestions="availableTags"
                                 :max-tags="5"
-                                @update:selected-tags="selectedTags = $event"
+                                :max-length="50"
                             />
                         </div>
 

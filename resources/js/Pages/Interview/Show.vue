@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TagSelector from '@/Components/TagSelector.vue';
+import FreeTextTagInput from '@/Components/FreeTextTagInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useInterviewSession } from '@/stores/interviewSession';
 import { Head, Link } from '@inertiajs/vue3';
@@ -87,11 +87,11 @@ function onKeydown(e: KeyboardEvent): void {
                 <!-- Setup screen -->
                 <div v-else-if="!store.session" class="flex flex-1 flex-col items-center justify-center gap-6">
                     <div class="w-full rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-                        <TagSelector
-                            :tags="availableTags"
-                            :selected-tags="selectedTags"
+                        <FreeTextTagInput
+                            v-model="selectedTags"
+                            :suggestions="availableTags"
                             :max-tags="5"
-                            @update:selected-tags="selectedTags = $event"
+                            :max-length="50"
                         />
                     </div>
 
