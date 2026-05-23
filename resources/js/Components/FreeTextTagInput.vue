@@ -82,20 +82,20 @@ function onKeydown(event: KeyboardEvent): void {
 
 <template>
     <div>
-        <p class="mb-2 text-sm font-medium text-gray-700">
+        <p class="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
             {{ t('common.tags.label') }}
-            <span class="font-normal text-gray-400">
+            <span class="font-normal text-gray-400 dark:text-gray-500">
                 {{ t('common.tags.hint', { max: maxTags }) }}
             </span>
         </p>
 
         <div
-            class="flex flex-wrap gap-2 rounded-lg border border-gray-300 bg-white p-2 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition"
+            class="flex flex-wrap gap-2 rounded-lg border border-gray-300 bg-white p-2 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition dark:border-gray-600 dark:bg-gray-700"
         >
             <span
                 v-for="tag in modelValue"
                 :key="tag"
-                class="inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-3 py-1 text-xs font-medium text-white"
+                class="inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-3 py-1 text-xs font-medium text-white dark:bg-indigo-500"
             >
                 {{ tag }}
                 <button
@@ -122,7 +122,7 @@ function onKeydown(event: KeyboardEvent): void {
                 :disabled="limitReached"
                 :maxlength="maxLength"
                 autocomplete="off"
-                class="flex-1 min-w-[8rem] border-0 bg-transparent p-1 text-sm outline-none focus:ring-0 disabled:opacity-50"
+                class="flex-1 min-w-[8rem] border-0 bg-transparent p-1 text-sm outline-none focus:ring-0 disabled:opacity-50 dark:text-gray-100 dark:placeholder-gray-400"
                 @keydown="onKeydown"
                 @blur="commit"
             />
@@ -132,7 +132,7 @@ function onKeydown(event: KeyboardEvent): void {
             </datalist>
         </div>
 
-        <p v-if="warning" class="mt-2 text-xs text-amber-600">
+        <p v-if="warning" class="mt-2 text-xs text-amber-600 dark:text-amber-400">
             {{ warning }}
         </p>
     </div>

@@ -22,17 +22,17 @@ const props = defineProps<{
 const answerVisible = ref(props.showAnswerByDefault ?? false);
 
 const difficultyClasses = {
-    junior: 'bg-green-100 text-green-800',
-    mid: 'bg-yellow-100 text-yellow-800',
-    senior: 'bg-red-100 text-red-800',
+    junior: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
+    mid: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300',
+    senior: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
 } as const;
 </script>
 
 <template>
-    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-900/30">
         <!-- Header -->
         <div class="flex items-start justify-between gap-4">
-            <p class="text-base font-medium text-gray-900 leading-relaxed">
+            <p class="text-base font-medium text-gray-900 leading-relaxed dark:text-gray-100">
                 {{ question.content }}
             </p>
             <span
@@ -48,7 +48,7 @@ const difficultyClasses = {
             <span
                 v-for="kw in question.expected_keywords"
                 :key="kw"
-                class="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600"
+                class="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-300"
             >
                 {{ kw }}
             </span>
@@ -59,7 +59,7 @@ const difficultyClasses = {
             <button
                 type="button"
                 @click="answerVisible = !answerVisible"
-                class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                class="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
             >
                 {{ answerVisible ? t('questions.card.hide_answer') : t('questions.card.show_answer') }}
             </button>
@@ -72,7 +72,7 @@ const difficultyClasses = {
             >
                 <div
                     v-if="answerVisible && question.expected_answer"
-                    class="mt-3 rounded-md bg-indigo-50 p-4 text-sm text-gray-700 leading-relaxed"
+                    class="mt-3 rounded-md bg-indigo-50 p-4 text-sm text-gray-700 leading-relaxed dark:bg-indigo-900/30 dark:text-gray-200"
                 >
                     {{ question.expected_answer }}
                 </div>
@@ -80,7 +80,7 @@ const difficultyClasses = {
         </div>
 
         <!-- Meta -->
-        <p class="mt-3 text-xs text-gray-400">
+        <p class="mt-3 text-xs text-gray-400 dark:text-gray-500">
             {{ question.source === 'ai_generated' ? t('questions.card.source_ai') : t('questions.card.source_user') }}
             · {{ new Date(question.created_at).toLocaleDateString(locale) }}
         </p>
