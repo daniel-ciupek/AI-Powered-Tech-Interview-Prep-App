@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SpeakButton from '@/Components/SpeakButton.vue';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -32,9 +33,12 @@ const difficultyClasses = {
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-900/30">
         <!-- Header -->
         <div class="flex items-start justify-between gap-4">
-            <p class="text-base font-medium text-gray-900 leading-relaxed dark:text-gray-100">
-                {{ question.content }}
-            </p>
+            <div class="flex flex-1 items-start gap-2">
+                <SpeakButton :text="question.content" class="mt-0.5 shrink-0" />
+                <p class="text-base font-medium text-gray-900 leading-relaxed dark:text-gray-100">
+                    {{ question.content }}
+                </p>
+            </div>
             <span
                 class="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold"
                 :class="difficultyClasses[question.difficulty]"
@@ -72,9 +76,10 @@ const difficultyClasses = {
             >
                 <div
                     v-if="answerVisible && question.expected_answer"
-                    class="mt-3 rounded-md bg-indigo-50 p-4 text-sm text-gray-700 leading-relaxed dark:bg-indigo-900/30 dark:text-gray-200"
+                    class="mt-3 flex items-start gap-2 rounded-md bg-indigo-50 p-4 text-sm text-gray-700 leading-relaxed dark:bg-indigo-900/30 dark:text-gray-200"
                 >
-                    {{ question.expected_answer }}
+                    <SpeakButton :text="question.expected_answer" class="mt-0.5 shrink-0" />
+                    <span>{{ question.expected_answer }}</span>
                 </div>
             </Transition>
         </div>

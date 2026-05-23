@@ -19,5 +19,9 @@
         "remove": "Usuń tag {tag}",
         "limit_reached": "Osiągnięto limit {max} tagów.",
         "too_long": "Tag może mieć maks. {max} znaków."
+    },
+    "tts": {
+        "play": "Odczytaj na głos",
+        "stop": "Zatrzymaj odczyt"
     }
 }

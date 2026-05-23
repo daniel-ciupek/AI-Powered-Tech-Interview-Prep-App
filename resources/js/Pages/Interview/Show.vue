@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import FreeTextTagInput from '@/Components/FreeTextTagInput.vue';
+import SpeakButton from '@/Components/SpeakButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useInterviewSession } from '@/stores/interviewSession';
 import { Head, Link } from '@inertiajs/vue3';
@@ -126,7 +127,7 @@ function onKeydown(e: KeyboardEvent): void {
                         <div
                             v-for="msg in store.session.messages"
                             :key="msg.id"
-                            class="flex"
+                            class="flex items-end gap-2"
                             :class="msg.role === 'user' ? 'justify-end' : 'justify-start'"
                         >
                             <div
@@ -137,6 +138,11 @@ function onKeydown(e: KeyboardEvent): void {
                             >
                                 {{ msg.content }}
                             </div>
+                            <SpeakButton
+                                v-if="msg.role === 'assistant'"
+                                :text="msg.content"
+                                class="mb-0.5 shrink-0"
+                            />
                         </div>
 
                         <!-- Typing indicator -->
