@@ -132,6 +132,12 @@ Git hooks (Husky + lint-staged + commitlint + gitleaks) enforce style,
 secret scanning and Conventional Commits on every commit; pre-push
 re-runs the full Pest suite.
 
+## Deployment
+
+See [DEPLOY.md](DEPLOY.md) for the full production setup — Ubuntu 24.04 VPS
+with native PHP-FPM, nginx, Postgres 16, Redis 7, supervisor for queues,
+and a releases-style symlink deploy with one-line rollback.
+
 ## Internationalization
 
 PrepMind is bilingual (Polish-first, English fallback) end-to-end.
