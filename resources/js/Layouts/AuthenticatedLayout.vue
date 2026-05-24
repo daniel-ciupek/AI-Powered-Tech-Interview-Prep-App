@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -10,9 +10,15 @@ import { Link } from '@inertiajs/vue3';
 
 withDefaults(defineProps<{ minimal?: boolean }>(), { minimal: false });
 
-useTheme();
+const { effective } = useTheme();
 
 const showingNavigationDropdown = ref(false);
+
+const minimalBg = computed(() =>
+    effective.value === 'dark'
+        ? 'linear-gradient(135deg, #1a0533 0%, #0d1f0f 55%, #032d1a 100%)'
+        : 'linear-gradient(135deg, #f0fdf4 0%, #ffffff 55%, #ecfdf5 100%)',
+);
 </script>
 
 <template>
@@ -23,37 +29,39 @@ const showingNavigationDropdown = ref(false);
     <div
         v-if="minimal"
         class="relative min-h-screen overflow-hidden"
-        style="background: linear-gradient(135deg, #1a0533 0%, #0d1f0f 55%, #032d1a 100%);"
+        :style="{ background: minimalBg }"
     >
         <!-- Depth blob: white glow in centre -->
         <div
             aria-hidden="true"
             class="pointer-events-none absolute inset-0 z-0"
-            style="background: radial-gradient(ellipse 80% 50% at 50% 40%, rgba(255,255,255,0.04) 0%, transparent 70%);"
+            :style="effective === 'dark'
+                ? 'background: radial-gradient(ellipse 80% 50% at 50% 40%, rgba(255,255,255,0.04) 0%, transparent 70%);'
+                : 'background: radial-gradient(ellipse 80% 50% at 50% 40%, rgba(16,185,129,0.06) 0%, transparent 70%);'"
         />
         <!-- Blob purple top-right -->
         <div
             aria-hidden="true"
-            class="pointer-events-none absolute z-0 h-[600px] w-[600px] rounded-full"
-            style="top:-15%; right:-10%; background: radial-gradient(circle, #7a2bff 0%, transparent 65%); opacity:0.22; animation: blob-drift-1 22s ease-in-out infinite;"
+            class="pointer-events-none absolute z-0 h-[600px] w-[600px] rounded-full opacity-[0.07] dark:opacity-[0.22]"
+            style="top:-15%; right:-10%; background: radial-gradient(circle, #7a2bff 0%, transparent 65%); animation: blob-drift-1 22s ease-in-out infinite;"
         />
         <!-- Blob emerald bottom-left -->
         <div
             aria-hidden="true"
-            class="pointer-events-none absolute z-0 h-[500px] w-[500px] rounded-full"
-            style="bottom:-12%; left:-8%; background: radial-gradient(circle, #00c47a 0%, transparent 65%); opacity:0.2; animation: blob-drift-2 28s ease-in-out infinite;"
+            class="pointer-events-none absolute z-0 h-[500px] w-[500px] rounded-full opacity-[0.08] dark:opacity-[0.2]"
+            style="bottom:-12%; left:-8%; background: radial-gradient(circle, #00c47a 0%, transparent 65%); animation: blob-drift-2 28s ease-in-out infinite;"
         />
         <!-- Blob teal mid-left accent -->
         <div
             aria-hidden="true"
-            class="pointer-events-none absolute z-0 h-[300px] w-[300px] rounded-full"
-            style="top:35%; left:-5%; background: radial-gradient(circle, #00f0ff 0%, transparent 65%); opacity:0.12; animation: blob-drift-3 18s ease-in-out infinite;"
+            class="pointer-events-none absolute z-0 h-[300px] w-[300px] rounded-full opacity-[0.05] dark:opacity-[0.12]"
+            style="top:35%; left:-5%; background: radial-gradient(circle, #00f0ff 0%, transparent 65%); animation: blob-drift-3 18s ease-in-out infinite;"
         />
 
         <!-- Floating logo button (fixed, top-left) -->
         <Link
             :href="route('dashboard')"
-            class="fixed left-4 top-4 z-50 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/15 bg-white/10 shadow-lg shadow-black/30 backdrop-blur-md transition-all duration-200 hover:scale-110 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+            class="fixed left-4 top-4 z-50 flex h-12 w-12 items-center justify-center rounded-2xl border border-gray-200 bg-white/80 shadow-lg shadow-gray-200/60 backdrop-blur-md transition-all duration-200 hover:scale-110 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 dark:border-white/15 dark:bg-white/10 dark:shadow-black/30 dark:hover:bg-white/20"
             :title="$t('nav.dashboard')"
             aria-label="Powrót do pulpitu"
         >
