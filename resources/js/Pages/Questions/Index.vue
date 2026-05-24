@@ -25,8 +25,12 @@ interface PaginationLink {
 
 interface PaginatedQuestions {
     data: Question[];
-    links: PaginationLink[];
-    meta: { current_page: number; last_page: number; total: number };
+    meta: {
+        current_page: number;
+        last_page: number;
+        total: number;
+        links: PaginationLink[];
+    };
 }
 
 const props = defineProps<{
@@ -60,7 +64,8 @@ const ENTITY_MAP: Record<string, string> = {
     '&amp;': '&',
 };
 
-function decodeLabel(label: string): string {
+function decodeLabel(label: string | null | undefined): string {
+    if (!label) return '';
     return label.replace(/&[a-z]+;/gi, (entity) => ENTITY_MAP[entity] ?? entity).replace(/\s+/g, ' ').trim();
 }
 </script>
@@ -133,7 +138,7 @@ function decodeLabel(label: string): string {
 
                 <!-- Pagination -->
                 <div v-if="questions.meta.last_page > 1" class="mt-8 flex justify-center gap-1">
-                    <template v-for="link in questions.links" :key="link.label">
+                    <template v-for="link in questions.meta.links" :key="link.label">
                         <Link
                             v-if="link.url"
                             :href="link.url"
