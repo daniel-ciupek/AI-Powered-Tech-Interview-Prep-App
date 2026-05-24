@@ -26,13 +26,18 @@ const submit = () => {
     <GuestLayout>
         <Head :title="t('auth.confirm.title')" />
 
-        <div class="mb-4 text-sm text-gray-600">
-            {{ t('auth.confirm.intro') }}
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
+                {{ t('auth.confirm.title') }}
+            </h1>
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                {{ t('auth.confirm.intro') }}
+            </p>
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="space-y-5">
             <div>
-                <InputLabel for="password" :value="t('auth.fields.password')" />
+                <InputLabel for="password" :value="t('auth.fields.password')" class="mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300" />
                 <TextInput
                     id="password"
                     type="password"
@@ -45,15 +50,17 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
-            <div class="mt-4 flex justify-end">
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    {{ t('auth.confirm.submit') }}
-                </PrimaryButton>
-            </div>
+            <PrimaryButton
+                class="w-full justify-center"
+                :class="{ 'opacity-50 cursor-not-allowed': form.processing }"
+                :disabled="form.processing"
+            >
+                <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                </svg>
+                {{ t('auth.confirm.submit') }}
+            </PrimaryButton>
         </form>
     </GuestLayout>
 </template>

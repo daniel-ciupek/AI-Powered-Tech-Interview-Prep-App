@@ -74,35 +74,42 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
 <template>
     <Head :title="t('onboarding.title')" />
 
-    <div class="flex min-h-screen flex-col bg-gradient-to-br from-indigo-50 via-white to-amber-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
-        <header class="mx-auto flex w-full max-w-2xl items-center justify-between px-4 py-6 sm:px-6">
-            <Link href="/" class="flex items-center gap-2">
-                <ApplicationLogo class="h-14 w-14 fill-current text-indigo-600 dark:text-indigo-400" />
-                <span class="text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-200">
+    <div class="relative flex min-h-screen flex-col overflow-hidden bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-gray-900 dark:via-emerald-950/20 dark:to-gray-900">
+
+        <!-- Decorative blobs -->
+        <div aria-hidden="true" class="pointer-events-none absolute -top-32 -right-32 h-[500px] w-[500px] rounded-full bg-emerald-200/25 blur-3xl dark:bg-emerald-900/15" />
+        <div aria-hidden="true" class="pointer-events-none absolute -bottom-32 -left-32 h-[400px] w-[400px] rounded-full bg-teal-200/25 blur-3xl dark:bg-teal-900/10" />
+
+        <!-- Header -->
+        <header class="relative z-10 mx-auto flex w-full max-w-2xl items-center justify-between px-4 py-6 sm:px-6">
+            <Link href="/" class="flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-xl p-1">
+                <ApplicationLogo class="h-12 w-12 fill-current text-emerald-600 dark:text-emerald-400" />
+                <span class="text-sm font-bold tracking-tight text-gray-900 dark:text-gray-100">
                     Wirtualny Nauczyciel
                 </span>
             </Link>
-            <p class="text-xs text-gray-500 dark:text-gray-400">
+            <p class="text-xs font-medium text-gray-400 dark:text-gray-500">
                 {{ t('onboarding.step', { current: step, total: totalSteps }) }}
             </p>
         </header>
 
         <!-- Progress bar -->
-        <div class="mx-auto w-full max-w-2xl px-4 sm:px-6">
-            <div class="h-1 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+        <div class="relative z-10 mx-auto w-full max-w-2xl px-4 sm:px-6">
+            <div class="h-1.5 w-full overflow-hidden rounded-full bg-gray-200/60 dark:bg-gray-800/60">
                 <div
-                    class="h-full rounded-full bg-indigo-600 transition-all duration-300 dark:bg-indigo-400"
+                    class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 shadow-sm shadow-emerald-500/30 transition-all duration-500 ease-out"
                     :style="{ width: `${(step / totalSteps) * 100}%` }"
                 />
             </div>
         </div>
 
-        <main class="mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 py-8 sm:px-6">
-            <div class="rounded-2xl border border-gray-200 bg-white/80 p-8 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-800/80">
+        <!-- Main card -->
+        <main class="relative z-10 mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 py-8 sm:px-6">
+            <div class="rounded-2xl border border-white/40 bg-white/82 p-8 shadow-xl shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/60 dark:shadow-emerald-950/30">
 
                 <!-- Step 1: Welcome -->
-                <section v-if="step === 1" class="space-y-5">
-                    <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                <section v-if="step === 1" class="space-y-5 animate-fade-in-up">
+                    <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
                         {{ t('onboarding.welcome.header') }}
                     </h1>
                     <p class="text-gray-600 dark:text-gray-300">
@@ -110,33 +117,33 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                     </p>
                     <ul class="space-y-3">
                         <li class="flex items-start gap-3">
-                            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">1</span>
+                            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-xs font-bold text-white shadow-sm">1</span>
                             <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('onboarding.welcome.feature_questions') }}</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">2</span>
+                            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-xs font-bold text-white shadow-sm">2</span>
                             <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('onboarding.welcome.feature_study') }}</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">3</span>
+                            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-xs font-bold text-white shadow-sm">3</span>
                             <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('onboarding.welcome.feature_interview') }}</span>
                         </li>
                     </ul>
-                    <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-200">
+                    <div class="rounded-xl border border-amber-200/60 bg-amber-50/60 p-4 text-sm text-amber-800 backdrop-blur-sm dark:border-amber-800/40 dark:bg-amber-900/20 dark:text-amber-200">
                         {{ t('onboarding.welcome.byok_note') }}
                     </div>
                 </section>
 
                 <!-- Step 2: API key -->
-                <section v-else-if="step === 2" class="space-y-5">
-                    <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                <section v-else-if="step === 2" class="space-y-5 animate-fade-in-up">
+                    <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
                         {{ t('onboarding.api_key.header') }}
                     </h1>
                     <p class="text-gray-600 dark:text-gray-300">
                         {{ t('onboarding.api_key.intro') }}
                     </p>
 
-                    <div class="rounded-lg bg-gray-50 p-4 text-sm dark:bg-gray-900/50">
+                    <div class="rounded-xl border border-gray-200/60 bg-gray-50/60 p-4 text-sm backdrop-blur-sm dark:border-gray-700/40 dark:bg-slate-800/40">
                         <p class="font-medium text-gray-700 dark:text-gray-200">{{ t('onboarding.api_key.instructions_intro') }}</p>
                         <ol class="mt-2 space-y-1.5 text-gray-600 dark:text-gray-300">
                             <li>
@@ -145,7 +152,7 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                                     href="https://aistudio.google.com/apikey"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="text-indigo-600 underline hover:text-indigo-500 dark:text-indigo-400"
+                                    class="text-emerald-600 underline hover:text-emerald-500 dark:text-emerald-400"
                                 >{{ t('onboarding.api_key.step1_link') }}</a>.
                             </li>
                             <li>2. {{ t('onboarding.api_key.step2') }}</li>
@@ -153,7 +160,7 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                         </ol>
                     </div>
 
-                    <div v-if="apiKeyPresent" class="rounded-md bg-green-50 px-4 py-3 text-sm font-medium text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                    <div v-if="apiKeyPresent" class="rounded-xl border border-emerald-200/60 bg-emerald-50/60 px-4 py-3 text-sm font-medium text-emerald-700 dark:border-emerald-800/40 dark:bg-emerald-900/20 dark:text-emerald-300">
                         {{ t('onboarding.api_key.key_present') }}
                     </div>
 
@@ -167,7 +174,7 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                             autocomplete="off"
                             v-model="apiKeyForm.api_key"
                             placeholder="AIza..."
-                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500"
+                            class="block w-full rounded-xl border border-gray-200/60 bg-white/70 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 backdrop-blur-sm shadow-sm transition-all duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-gray-700/60 dark:bg-slate-800/50 dark:text-gray-100 dark:placeholder-gray-500"
                         />
                         <p v-if="apiKeyForm.errors.api_key" class="text-sm text-red-600 dark:text-red-400">
                             {{ apiKeyForm.errors.api_key }}
@@ -175,7 +182,7 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                         <button
                             type="submit"
                             :disabled="apiKeyForm.processing || apiKeyForm.api_key.length === 0"
-                            class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                            class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-teal-700 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                         >
                             {{ t('settings.api_key.save') }}
                         </button>
@@ -187,8 +194,8 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                 </section>
 
                 <!-- Step 3: Preferences -->
-                <section v-else-if="step === 3" class="space-y-6">
-                    <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                <section v-else-if="step === 3" class="space-y-6 animate-fade-in-up">
+                    <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
                         {{ t('onboarding.preferences.header') }}
                     </h1>
                     <p class="text-gray-600 dark:text-gray-300">
@@ -204,10 +211,10 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                                 <label
                                     v-for="d in difficulties"
                                     :key="d"
-                                    class="flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition"
+                                    class="flex cursor-pointer items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium transition-all duration-150"
                                     :class="prefsForm.preferred_difficulty === d
-                                        ? 'border-indigo-600 bg-indigo-50 text-indigo-700 dark:border-indigo-400 dark:bg-indigo-900/30 dark:text-indigo-300'
-                                        : 'border-gray-300 text-gray-700 hover:border-indigo-400 dark:border-gray-600 dark:text-gray-300'"
+                                        ? 'border-emerald-500 bg-emerald-50/80 text-emerald-700 shadow-sm shadow-emerald-500/20 dark:border-emerald-500 dark:bg-emerald-900/30 dark:text-emerald-300'
+                                        : 'border-gray-200/60 text-gray-700 hover:border-emerald-400 dark:border-gray-700/60 dark:text-gray-300 dark:hover:border-emerald-500'"
                                 >
                                     <input type="radio" :value="d" v-model="prefsForm.preferred_difficulty" class="sr-only" />
                                     {{ t(`settings.difficulty.${d}`) }}
@@ -229,7 +236,7 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                                     min="1"
                                     max="50"
                                     v-model.number="prefsForm.daily_goal"
-                                    class="block w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                                    class="block w-24 rounded-xl border border-gray-200/60 bg-white/70 px-4 py-2.5 text-sm text-gray-900 backdrop-blur-sm shadow-sm transition-all duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-gray-700/60 dark:bg-slate-800/50 dark:text-gray-100"
                                 />
                                 <span class="text-sm text-gray-500 dark:text-gray-400">
                                     {{ t('onboarding.preferences.daily_goal_suffix') }}
@@ -243,13 +250,13 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                 </section>
 
                 <!-- Step 4: Ready -->
-                <section v-else class="space-y-5 text-center">
+                <section v-else class="space-y-5 text-center animate-fade-in-up">
                     <div class="flex justify-center">
-                        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-3xl dark:bg-green-900/40">
+                        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 text-3xl shadow-lg shadow-emerald-200/40 dark:from-emerald-900/40 dark:to-teal-900/40 dark:shadow-emerald-900/30">
                             🎉
                         </div>
                     </div>
-                    <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                    <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
                         {{ t('onboarding.ready.header') }}
                     </h1>
                     <p class="text-gray-600 dark:text-gray-300">
@@ -257,23 +264,23 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                     </p>
                     <ul class="space-y-2 text-left">
                         <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                            <span class="text-indigo-500 dark:text-indigo-400">→</span>
+                            <span class="font-semibold text-emerald-500 dark:text-emerald-400">→</span>
                             {{ t('onboarding.ready.tip_study') }}
                         </li>
                         <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                            <span class="text-indigo-500 dark:text-indigo-400">→</span>
+                            <span class="font-semibold text-emerald-500 dark:text-emerald-400">→</span>
                             {{ t('onboarding.ready.tip_interview') }}
                         </li>
                     </ul>
                 </section>
 
                 <!-- Nav row -->
-                <div class="mt-8 flex items-center justify-between border-t border-gray-200 pt-6 dark:border-gray-700">
+                <div class="mt-8 flex items-center justify-between border-t border-gray-200/50 pt-6 dark:border-gray-700/50">
                     <button
                         type="button"
                         :disabled="step === 1"
                         @click="goBack"
-                        class="text-sm font-medium text-gray-500 hover:text-gray-700 disabled:invisible dark:text-gray-400 dark:hover:text-gray-200"
+                        class="text-sm font-medium text-gray-500 transition-colors duration-150 hover:text-gray-700 disabled:invisible focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:text-gray-400 dark:hover:text-gray-200"
                     >
                         ← {{ t('onboarding.back') }}
                     </button>
@@ -282,7 +289,7 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                         <button
                             type="button"
                             @click="goNext"
-                            class="rounded-md bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                            class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-teal-700 hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                         >
                             {{ t('onboarding.next') }} →
                         </button>
@@ -291,7 +298,7 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                         <button
                             type="button"
                             @click="goNext"
-                            class="rounded-md bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                            class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-teal-700 hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                         >
                             {{ apiKeyPresent ? t('onboarding.next') : t('onboarding.skip') }} →
                         </button>
@@ -301,8 +308,12 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                             type="button"
                             :disabled="prefsForm.processing"
                             @click="preferencesForm?.requestSubmit()"
-                            class="rounded-md bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                            class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-teal-700 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                         >
+                            <svg v-if="prefsForm.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                            </svg>
                             {{ prefsForm.processing ? t('onboarding.preferences.saving') : t('onboarding.next') }} →
                         </button>
                     </template>
@@ -311,8 +322,12 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                             type="button"
                             :disabled="completing"
                             @click="finish"
-                            class="rounded-md bg-green-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 disabled:opacity-50 dark:bg-green-500 dark:hover:bg-green-400"
+                            class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-teal-700 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                         >
+                            <svg v-if="completing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                            </svg>
                             {{ t('onboarding.finish') }}
                         </button>
                     </template>

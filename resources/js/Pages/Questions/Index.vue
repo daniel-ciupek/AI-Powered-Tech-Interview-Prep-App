@@ -75,14 +75,14 @@ function decodeLabel(label: string | null | undefined): string {
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex items-center justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+            <div class="flex items-center justify-between gap-4">
+                <h2 class="text-xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
                     {{ t('questions.header') }}
                 </h2>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2.5">
                     <Link
                         :href="route('study.session')"
-                        class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                        class="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-teal-700 hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                     >
                         {{ t('questions.study_session') }}
                     </Link>
@@ -90,8 +90,12 @@ function decodeLabel(label: string | null | undefined): string {
                         type="button"
                         :disabled="generating || !has_api_key"
                         @click="generate"
-                        class="rounded-md border border-indigo-600 px-4 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 disabled:opacity-50 dark:border-indigo-400 dark:text-indigo-300 dark:hover:bg-indigo-900/30"
+                        class="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/50 bg-white/70 px-4 py-2 text-sm font-semibold text-emerald-700 backdrop-blur-sm transition-all duration-200 hover:border-emerald-500 hover:bg-emerald-50/80 hover:scale-[1.02] active:scale-[0.97] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:border-emerald-600/50 dark:bg-slate-800/50 dark:text-emerald-300 dark:hover:bg-emerald-900/20"
                     >
+                        <svg v-if="generating" class="h-3.5 w-3.5 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                        </svg>
                         {{ generating ? t('questions.generating') : t('questions.generate') }}
                     </button>
                 </div>
@@ -99,31 +103,37 @@ function decodeLabel(label: string | null | undefined): string {
         </template>
 
         <div class="py-10">
-            <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-3xl space-y-5 px-4 sm:px-6 lg:px-8">
 
                 <!-- No API key warning -->
                 <div
                     v-if="!has_api_key"
-                    class="mb-6 rounded-md bg-amber-50 border border-amber-200 p-4 text-sm text-amber-800 dark:bg-amber-900/30 dark:border-amber-700 dark:text-amber-200"
+                    class="rounded-xl border border-amber-200/60 bg-amber-50/60 p-4 text-sm text-amber-800 backdrop-blur-sm dark:border-amber-800/40 dark:bg-amber-900/20 dark:text-amber-200"
                 >
                     {{ t('questions.no_api_key') }}
-                    <Link :href="route('settings.edit')" class="underline font-medium">{{ t('questions.go_to_settings') }}</Link>{{ t('questions.go_to_settings_suffix') }}
+                    <Link :href="route('settings.edit')" class="font-semibold underline decoration-amber-400 hover:text-amber-900 dark:hover:text-amber-100">{{ t('questions.go_to_settings') }}</Link>{{ t('questions.go_to_settings_suffix') }}
                 </div>
 
                 <!-- Error -->
-                <p v-if="generateError" class="mb-4 rounded-md bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                <div
+                    v-if="generateError"
+                    class="rounded-xl border border-red-200/60 bg-red-50/60 px-4 py-3 text-sm text-red-700 backdrop-blur-sm dark:border-red-800/40 dark:bg-red-950/20 dark:text-red-300"
+                >
                     {{ generateError }}
-                </p>
+                </div>
 
                 <!-- Empty state -->
                 <div
                     v-if="questions.data.length === 0"
-                    class="rounded-lg border-2 border-dashed border-gray-300 py-16 text-center dark:border-gray-700"
+                    class="rounded-2xl border border-dashed border-gray-200/80 bg-white/40 px-6 py-16 text-center backdrop-blur-sm dark:border-gray-700/60 dark:bg-slate-900/20"
                 >
-                    <p class="text-gray-500 dark:text-gray-400">{{ t('questions.empty_state') }}</p>
+                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100/80 text-2xl dark:bg-slate-800/60">
+                        📋
+                    </div>
+                    <p class="font-medium text-gray-600 dark:text-gray-400">{{ t('questions.empty_state') }}</p>
                     <p class="mt-1 text-sm text-gray-400 dark:text-gray-500">
                         {{ t('questions.empty_state_hint_prefix') }}
-                        <span class="font-medium">{{ t('questions.empty_state_hint_button') }}</span>{{ t('questions.empty_state_hint_suffix') }}
+                        <span class="font-semibold text-gray-600 dark:text-gray-300">{{ t('questions.empty_state_hint_button') }}</span>{{ t('questions.empty_state_hint_suffix') }}
                     </p>
                 </div>
 
@@ -137,19 +147,19 @@ function decodeLabel(label: string | null | undefined): string {
                 </div>
 
                 <!-- Pagination -->
-                <div v-if="questions.meta.last_page > 1" class="mt-8 flex justify-center gap-1">
+                <div v-if="questions.meta.last_page > 1" class="mt-8 flex flex-wrap justify-center gap-1.5">
                     <template v-for="link in questions.meta.links" :key="link.label">
                         <Link
                             v-if="link.url"
                             :href="link.url"
-                            class="rounded px-3 py-1.5 text-sm"
+                            class="rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                             :class="link.active
-                                ? 'bg-indigo-600 text-white dark:bg-indigo-500'
-                                : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'"
+                                ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-sm shadow-emerald-500/25'
+                                : 'border border-gray-200/60 bg-white/70 text-gray-600 backdrop-blur-sm hover:border-emerald-400/60 hover:text-emerald-700 dark:border-gray-700/60 dark:bg-slate-800/50 dark:text-gray-300 dark:hover:text-emerald-300'"
                         >{{ decodeLabel(link.label) }}</Link>
                         <span
                             v-else
-                            class="rounded px-3 py-1.5 text-sm text-gray-400 dark:text-gray-500"
+                            class="rounded-lg px-3 py-1.5 text-sm text-gray-300 dark:text-gray-600"
                         >{{ decodeLabel(link.label) }}</span>
                     </template>
                 </div>

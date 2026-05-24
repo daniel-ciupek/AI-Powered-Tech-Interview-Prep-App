@@ -19,35 +19,26 @@ defineProps<{
 
     <AuthenticatedLayout>
         <template #header>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
-            >
+            <h2 class="text-xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
                 {{ t('profile.title') }}
             </h2>
         </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                <div
-                    class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800 dark:shadow-gray-900/30"
-                >
+        <div class="py-10">
+            <div class="mx-auto max-w-2xl space-y-5 px-4 sm:px-6 lg:px-8">
+                <div class="rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/20">
                     <UpdateProfileInformationForm
                         :must-verify-email="mustVerifyEmail"
                         :status="status"
-                        class="max-w-xl"
                     />
                 </div>
 
-                <div
-                    class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800 dark:shadow-gray-900/30"
-                >
-                    <UpdatePasswordForm class="max-w-xl" />
+                <div class="rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/20">
+                    <UpdatePasswordForm />
                 </div>
 
-                <div
-                    class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800 dark:shadow-gray-900/30"
-                >
-                    <DeleteUserForm class="max-w-xl" />
+                <div class="rounded-2xl border border-red-100/60 bg-white/82 p-6 shadow-lg shadow-red-100/20 backdrop-blur-md dark:border-red-900/20 dark:bg-slate-900/40 dark:shadow-red-950/10">
+                    <DeleteUserForm />
                 </div>
             </div>
         </div>

@@ -46,10 +46,10 @@ const iconSize = computed(() => (props.size === 'md' ? 'h-5 w-5' : 'h-4 w-4'));
         :aria-pressed="isSpeaking"
         :class="[
             sizeClass,
-            'inline-flex items-center justify-center rounded-full transition',
+            'inline-flex items-center justify-center rounded-full transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500',
             isSpeaking
-                ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-300 dark:hover:bg-indigo-900/60'
-                : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-200',
+                ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300 dark:hover:bg-emerald-900/60'
+                : 'text-gray-400 hover:bg-gray-100/80 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-slate-700/60 dark:hover:text-gray-300',
         ]"
     >
         <!-- Speaker icon -->

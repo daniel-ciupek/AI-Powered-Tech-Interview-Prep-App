@@ -34,14 +34,32 @@ const submit = () => {
     <GuestLayout>
         <Head :title="t('auth.login.title')" />
 
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+        <!-- Success status -->
+        <div
+            v-if="status"
+            class="mb-5 rounded-xl border border-emerald-200/60 bg-emerald-50/80 px-4 py-3 text-sm font-medium text-emerald-700 dark:border-emerald-800/40 dark:bg-emerald-900/20 dark:text-emerald-300"
+        >
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" :value="t('auth.fields.email')" />
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
+                {{ t('auth.login.title') }}
+            </h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {{ t('auth.login.no_account') }}
+                <Link
+                    :href="route('register')"
+                    class="ml-1 font-medium text-emerald-600 hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"
+                >
+                    {{ t('auth.login.register_here') }}
+                </Link>
+            </p>
+        </div>
 
+        <form @submit.prevent="submit" class="space-y-5">
+            <div>
+                <InputLabel for="email" :value="t('auth.fields.email')" class="mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300" />
                 <TextInput
                     id="email"
                     type="email"
@@ -51,13 +69,11 @@ const submit = () => {
                     autofocus
                     autocomplete="username"
                 />
-
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" :value="t('auth.fields.password')" />
-
+            <div>
+                <InputLabel for="password" :value="t('auth.fields.password')" class="mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300" />
                 <TextInput
                     id="password"
                     type="password"
@@ -66,44 +82,35 @@ const submit = () => {
                     required
                     autocomplete="current-password"
                 />
-
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
-            <div class="mt-4 block">
-                <label class="flex items-center">
+            <div class="flex items-center justify-between">
+                <label class="flex cursor-pointer items-center gap-2">
                     <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600">{{ t('auth.login.remember_me') }}</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ t('auth.login.remember_me') }}</span>
                 </label>
-            </div>
 
-            <div class="mt-4 flex items-center justify-end">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-200"
+                    class="text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:text-gray-400 dark:hover:text-gray-200"
                 >
                     {{ t('auth.login.forgot_password') }}
                 </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    {{ t('auth.login.submit') }}
-                </PrimaryButton>
             </div>
 
-            <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-                {{ t('auth.login.no_account') }}
-                <Link
-                    :href="route('register')"
-                    class="ms-1 font-medium text-indigo-600 underline hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
-                >
-                    {{ t('auth.login.register_here') }}
-                </Link>
-            </p>
+            <PrimaryButton
+                class="w-full justify-center"
+                :class="{ 'opacity-50 cursor-not-allowed': form.processing }"
+                :disabled="form.processing"
+            >
+                <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                </svg>
+                {{ t('auth.login.submit') }}
+            </PrimaryButton>
         </form>
     </GuestLayout>
 </template>

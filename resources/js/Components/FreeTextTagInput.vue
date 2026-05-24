@@ -90,17 +90,17 @@ function onKeydown(event: KeyboardEvent): void {
         </p>
 
         <div
-            class="flex flex-wrap gap-2 rounded-lg border border-gray-300 bg-white p-2 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition dark:border-gray-600 dark:bg-gray-700"
+            class="flex flex-wrap gap-2 rounded-xl border border-gray-200/60 bg-white/70 p-2.5 backdrop-blur-sm transition-all duration-200 focus-within:border-transparent focus-within:ring-2 focus-within:ring-emerald-500 dark:border-gray-700/60 dark:bg-slate-800/50"
         >
             <span
                 v-for="tag in modelValue"
                 :key="tag"
-                class="inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-3 py-1 text-xs font-medium text-white dark:bg-indigo-500"
+                class="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 px-3 py-1 text-xs font-medium text-white shadow-sm shadow-emerald-500/20"
             >
                 {{ tag }}
                 <button
                     type="button"
-                    class="rounded-full text-indigo-100 transition hover:text-white focus:outline-none"
+                    class="rounded-full text-emerald-100 transition-colors duration-150 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
                     :aria-label="t('common.tags.remove', { tag })"
                     @click="remove(tag)"
                 >
@@ -122,7 +122,7 @@ function onKeydown(event: KeyboardEvent): void {
                 :disabled="limitReached"
                 :maxlength="maxLength"
                 autocomplete="off"
-                class="flex-1 min-w-[8rem] border-0 bg-transparent p-1 text-sm outline-none focus:ring-0 disabled:opacity-50 dark:text-gray-100 dark:placeholder-gray-400"
+                class="min-w-[8rem] flex-1 border-0 bg-transparent p-1 text-sm text-gray-700 outline-none focus:ring-0 disabled:opacity-50 dark:text-gray-100 dark:placeholder-gray-500"
                 @keydown="onKeydown"
                 @blur="commit"
             />

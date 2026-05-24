@@ -23,19 +23,19 @@ const props = defineProps<{
 const answerVisible = ref(props.showAnswerByDefault ?? false);
 
 const difficultyClasses = {
-    junior: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
-    mid: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300',
-    senior: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
+    junior: 'bg-emerald-100/80 text-emerald-800 border border-emerald-200/60 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-700/40',
+    mid: 'bg-amber-100/80 text-amber-800 border border-amber-200/60 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700/40',
+    senior: 'bg-red-100/80 text-red-800 border border-red-200/60 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700/40',
 } as const;
 </script>
 
 <template>
-    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-900/30">
+    <div class="group relative rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-100/60 dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30 dark:hover:shadow-emerald-950/50">
         <!-- Header -->
         <div class="flex items-start justify-between gap-4">
-            <div class="flex flex-1 items-start gap-2">
+            <div class="flex flex-1 items-start gap-3">
                 <SpeakButton :text="question.content" class="mt-0.5 shrink-0" />
-                <p class="text-base font-medium text-gray-900 leading-relaxed dark:text-gray-100">
+                <p class="text-base font-medium leading-relaxed text-gray-900 dark:text-gray-100">
                     {{ question.content }}
                 </p>
             </div>
@@ -52,7 +52,7 @@ const difficultyClasses = {
             <span
                 v-for="kw in question.expected_keywords"
                 :key="kw"
-                class="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                class="rounded-lg border border-gray-200/60 bg-gray-100/70 px-2 py-0.5 text-xs text-gray-600 backdrop-blur-sm dark:border-gray-700/40 dark:bg-slate-800/60 dark:text-gray-400"
             >
                 {{ kw }}
             </span>
@@ -63,7 +63,7 @@ const difficultyClasses = {
             <button
                 type="button"
                 @click="answerVisible = !answerVisible"
-                class="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                class="text-sm font-medium text-emerald-600 transition-colors duration-150 hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:text-emerald-400 dark:hover:text-emerald-300 dark:focus-visible:ring-offset-slate-900"
             >
                 {{ answerVisible ? t('questions.card.hide_answer') : t('questions.card.show_answer') }}
             </button>
@@ -76,7 +76,7 @@ const difficultyClasses = {
             >
                 <div
                     v-if="answerVisible && question.expected_answer"
-                    class="mt-3 flex items-start gap-2 rounded-md bg-indigo-50 p-4 text-sm text-gray-700 leading-relaxed dark:bg-indigo-900/30 dark:text-gray-200"
+                    class="mt-3 flex items-start gap-3 rounded-xl border border-emerald-200/40 bg-emerald-50/60 p-4 text-sm leading-relaxed text-gray-700 backdrop-blur-sm dark:border-emerald-800/30 dark:bg-emerald-950/20 dark:text-gray-200"
                 >
                     <SpeakButton :text="question.expected_answer" class="mt-0.5 shrink-0" />
                     <span>{{ question.expected_answer }}</span>

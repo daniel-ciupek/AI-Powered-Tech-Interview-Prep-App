@@ -63,8 +63,10 @@ function onKeydown(e: KeyboardEvent): void {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex items-center justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">{{ t('interview.header') }}</h2>
-                <span v-if="store.session" class="text-sm text-gray-500 capitalize dark:text-gray-400">
+                <h2 class="text-xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
+                    {{ t('interview.header') }}
+                </h2>
+                <span v-if="store.session" class="rounded-full border border-emerald-200/60 bg-emerald-50/60 px-3 py-1 text-xs font-semibold capitalize text-emerald-700 backdrop-blur-sm dark:border-emerald-800/40 dark:bg-emerald-900/20 dark:text-emerald-300">
                     {{ store.session.difficulty }} ·
                     {{ store.session.topic_tags.join(', ') || t('interview.general_topic') }}
                 </span>
@@ -76,18 +78,31 @@ function onKeydown(e: KeyboardEvent): void {
 
                 <!-- No API key -->
                 <div v-if="!has_api_key" class="flex flex-1 items-center justify-center">
-                    <div class="rounded-lg border-2 border-dashed border-gray-300 px-12 py-16 text-center dark:border-gray-700">
-                        <p class="font-medium text-gray-600 dark:text-gray-300">{{ t('interview.no_api_key_header') }}</p>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    <div class="rounded-2xl border border-amber-200/60 bg-amber-50/60 px-10 py-14 text-center backdrop-blur-sm dark:border-amber-800/40 dark:bg-amber-900/10">
+                        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-2xl dark:bg-amber-900/40">
+                            🔑
+                        </div>
+                        <p class="font-semibold text-amber-800 dark:text-amber-200">{{ t('interview.no_api_key_header') }}</p>
+                        <p class="mt-1 text-sm text-amber-700 dark:text-amber-300">
                             {{ t('interview.no_api_key_prefix') }}
-                            <Link :href="route('settings.edit')" class="text-indigo-600 underline dark:text-indigo-400">{{ t('interview.no_api_key_link') }}</Link>{{ t('interview.no_api_key_suffix') }}
+                            <Link :href="route('settings.edit')" class="font-medium underline decoration-amber-400 hover:text-amber-900 dark:hover:text-amber-100">{{ t('interview.no_api_key_link') }}</Link>{{ t('interview.no_api_key_suffix') }}
                         </p>
                     </div>
                 </div>
 
                 <!-- Setup screen -->
                 <div v-else-if="!store.session" class="flex flex-1 flex-col items-center justify-center gap-6">
-                    <div class="w-full rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-900/30">
+                    <!-- Info header -->
+                    <div class="w-full text-center">
+                        <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 text-2xl shadow-lg shadow-emerald-200/40 dark:from-emerald-900/40 dark:to-teal-900/40 dark:shadow-emerald-900/30">
+                            🤝
+                        </div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('interview.difficulty_prefix') }} <span class="font-semibold capitalize text-gray-800 dark:text-gray-200">{{ preferred_difficulty }}</span>
+                            · <Link :href="route('settings.edit')" class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300">{{ t('interview.difficulty_change') }}</Link>
+                        </p>
+                    </div>
+
+                    <div class="w-full rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/50">
                         <FreeTextTagInput
                             v-model="selectedTags"
                             :suggestions="availableTags"
@@ -96,45 +111,55 @@ function onKeydown(e: KeyboardEvent): void {
                         />
                     </div>
 
-                    <div class="text-center">
-                        <button
-                            type="button"
-                            :disabled="store.loading"
-                            @click="startInterview"
-                            class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 transition dark:bg-indigo-500 dark:hover:bg-indigo-400"
-                        >
-                            <svg v-if="store.loading" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
-                            </svg>
-                            {{ store.loading ? t('interview.start_loading') : t('interview.start_button') }}
-                        </button>
-                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                            {{ t('interview.difficulty_prefix') }} <span class="font-medium capitalize">{{ preferred_difficulty }}</span>
-                            · <Link :href="route('settings.edit')" class="text-indigo-600 underline dark:text-indigo-400">{{ t('interview.difficulty_change') }}</Link>
-                        </p>
-                    </div>
+                    <button
+                        type="button"
+                        :disabled="store.loading"
+                        @click="startInterview"
+                        class="inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-8 py-3 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all duration-200 hover:from-emerald-600 hover:to-teal-700 hover:scale-[1.02] hover:shadow-emerald-500/40 active:scale-[0.97] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                    >
+                        <svg v-if="store.loading" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                        </svg>
+                        <svg v-else class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{ store.loading ? t('interview.start_loading') : t('interview.start_button') }}
+                    </button>
 
-                    <p v-if="store.error" class="rounded-md bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                    <div
+                        v-if="store.error"
+                        class="w-full rounded-xl border border-red-200/60 bg-red-50/60 px-4 py-3 text-sm text-red-700 backdrop-blur-sm dark:border-red-800/40 dark:bg-red-950/20 dark:text-red-300"
+                    >
                         {{ store.error }}
-                    </p>
+                    </div>
                 </div>
 
                 <!-- Chat -->
                 <template v-else>
                     <!-- Messages -->
-                    <div class="flex-1 space-y-4 overflow-y-auto rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-900/30">
+                    <div class="flex-1 space-y-3 overflow-y-auto rounded-2xl border border-white/30 bg-white/70 p-4 shadow-lg shadow-gray-200/30 backdrop-blur-md dark:border-white/8 dark:bg-slate-900/60 dark:shadow-black/30">
                         <div
                             v-for="msg in store.session.messages"
                             :key="msg.id"
                             class="flex items-end gap-2"
                             :class="msg.role === 'user' ? 'justify-end' : 'justify-start'"
                         >
+                            <!-- AI avatar -->
                             <div
-                                class="max-w-[80%] rounded-lg px-4 py-2.5 text-sm leading-relaxed"
+                                v-if="msg.role === 'assistant'"
+                                class="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-xs font-bold text-white shadow-sm"
+                                aria-hidden="true"
+                            >
+                                AI
+                            </div>
+
+                            <div
+                                class="max-w-[80%] rounded-xl px-4 py-2.5 text-sm leading-relaxed"
                                 :class="msg.role === 'user'
-                                    ? 'bg-indigo-600 text-white dark:bg-indigo-500'
-                                    : 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100'"
+                                    ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-sm shadow-emerald-500/20'
+                                    : 'border border-gray-200/60 bg-white/90 text-gray-900 shadow-sm backdrop-blur-sm dark:border-gray-700/40 dark:bg-slate-800/60 dark:text-gray-100'"
                             >
                                 {{ msg.content }}
                             </div>
@@ -147,10 +172,10 @@ function onKeydown(e: KeyboardEvent): void {
 
                         <!-- Typing indicator -->
                         <div v-if="store.sending" class="flex justify-start">
-                            <div class="flex items-center gap-1 rounded-lg bg-gray-100 px-4 py-3 dark:bg-gray-700">
-                                <span class="h-2 w-2 animate-bounce rounded-full bg-gray-400 dark:bg-gray-500" style="animation-delay:0ms"/>
-                                <span class="h-2 w-2 animate-bounce rounded-full bg-gray-400 dark:bg-gray-500" style="animation-delay:150ms"/>
-                                <span class="h-2 w-2 animate-bounce rounded-full bg-gray-400 dark:bg-gray-500" style="animation-delay:300ms"/>
+                            <div class="flex items-center gap-1.5 rounded-xl border border-gray-200/60 bg-white/90 px-4 py-3 backdrop-blur-sm dark:border-gray-700/40 dark:bg-slate-800/60">
+                                <span class="h-2 w-2 animate-bounce rounded-full bg-emerald-400 dark:bg-emerald-500" style="animation-delay:0ms" aria-hidden="true"/>
+                                <span class="h-2 w-2 animate-bounce rounded-full bg-emerald-400 dark:bg-emerald-500" style="animation-delay:150ms" aria-hidden="true"/>
+                                <span class="h-2 w-2 animate-bounce rounded-full bg-emerald-400 dark:bg-emerald-500" style="animation-delay:300ms" aria-hidden="true"/>
                             </div>
                         </div>
 
@@ -158,12 +183,18 @@ function onKeydown(e: KeyboardEvent): void {
                     </div>
 
                     <!-- Error -->
-                    <p v-if="store.error" class="mt-2 rounded-md bg-red-50 px-4 py-2 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                    <div
+                        v-if="store.error"
+                        class="mt-2 rounded-xl border border-red-200/60 bg-red-50/60 px-4 py-2 text-sm text-red-700 backdrop-blur-sm dark:border-red-800/40 dark:bg-red-950/20 dark:text-red-300"
+                    >
                         {{ store.error }}
-                    </p>
+                    </div>
 
                     <!-- Report queued banner -->
-                    <div v-if="store.reportQueued" class="mt-2 rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-300">
+                    <div
+                        v-if="store.reportQueued"
+                        class="mt-2 rounded-xl border border-emerald-200/60 bg-emerald-50/60 px-4 py-3 text-sm text-emerald-800 backdrop-blur-sm dark:border-emerald-800/40 dark:bg-emerald-900/20 dark:text-emerald-300"
+                    >
                         {{ t('interview.report_queued') }}
                     </div>
 
@@ -176,23 +207,26 @@ function onKeydown(e: KeyboardEvent): void {
                                 @keydown="onKeydown"
                                 rows="2"
                                 :placeholder="t('interview.input_placeholder')"
-                                class="flex-1 resize-none rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400"
+                                class="flex-1 resize-none rounded-xl border border-gray-200/60 bg-white/70 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 backdrop-blur-sm shadow-sm transition-all duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 dark:border-gray-700/60 dark:bg-slate-800/50 dark:text-gray-100 dark:placeholder-gray-500"
                             />
                             <button
                                 type="button"
                                 :disabled="store.sending || !inputText.trim()"
                                 @click="submit"
-                                class="self-end rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                                class="self-end rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-teal-700 hover:scale-[1.02] active:scale-[0.97] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                                aria-label="{{ t('interview.send') }}"
                             >
-                                {{ t('interview.send') }}
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                </svg>
                             </button>
                         </div>
-                        <div class="mt-1 flex justify-end">
+                        <div class="mt-1.5 flex justify-end">
                             <button
                                 type="button"
                                 :disabled="store.finishing || store.sending"
                                 @click="store.finishSession()"
-                                class="text-xs text-gray-400 underline hover:text-gray-600 disabled:opacity-50 dark:text-gray-500 dark:hover:text-gray-300"
+                                class="text-xs text-gray-400 underline decoration-dotted transition-colors duration-150 hover:text-gray-600 disabled:opacity-50 dark:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                             >
                                 {{ store.finishing ? t('interview.finishing') : t('interview.finish') }}
                             </button>
