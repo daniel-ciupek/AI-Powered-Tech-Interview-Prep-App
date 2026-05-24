@@ -100,7 +100,7 @@ function onKeydown(e: KeyboardEvent): void {
 
 <template>
     <section
-        class="rounded-2xl border border-emerald-200/60 bg-white/70 shadow-sm backdrop-blur-sm dark:border-emerald-500/30 dark:bg-slate-800/75 dark:shadow-xl dark:shadow-black/40"
+        class="rounded-2xl border border-emerald-200/60 bg-white/70 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-black/45 dark:backdrop-blur-2xl dark:saturate-150 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_8px_32px_rgba(16,185,129,0.18)]"
         :aria-label="t('study.chat.title')"
     >
         <button
@@ -130,8 +130,10 @@ function onKeydown(e: KeyboardEvent): void {
         <div v-if="expanded" class="border-t border-emerald-200/40 px-5 py-4 dark:border-emerald-700/20">
 
             <!-- Messages -->
-            <div
+            <TransitionGroup
                 v-if="messages.length > 0"
+                name="msg"
+                tag="div"
                 class="max-h-80 space-y-3 overflow-y-auto pr-1"
             >
                 <div
@@ -141,10 +143,10 @@ function onKeydown(e: KeyboardEvent): void {
                     :class="msg.role === 'user' ? 'justify-end' : 'justify-start'"
                 >
                     <div
-                        class="max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2 text-sm leading-relaxed"
+                        class="max-w-[85%] whitespace-pre-wrap px-4 py-2 text-sm leading-relaxed"
                         :class="msg.role === 'user'
-                            ? 'bg-emerald-600 text-white dark:bg-emerald-500/90'
-                            : 'bg-emerald-50 text-gray-900 dark:bg-white/10 dark:text-gray-100 dark:border dark:border-white/10'"
+                            ? 'rounded-2xl rounded-br-sm bg-emerald-600 text-white dark:bg-emerald-500/90'
+                            : 'rounded-2xl rounded-bl-sm bg-emerald-50 text-gray-900 dark:bg-white/10 dark:text-gray-100 dark:border dark:border-white/10'"
                     >{{ msg.content }}</div>
                     <SpeakButton
                         v-if="msg.role === 'assistant'"
@@ -154,16 +156,16 @@ function onKeydown(e: KeyboardEvent): void {
                 </div>
 
                 <!-- Typing indicator -->
-                <div v-if="sending" class="flex justify-start">
-                    <div class="flex items-center gap-1 rounded-2xl bg-emerald-50 px-4 py-3 dark:bg-emerald-900/30">
+                <div v-if="sending" key="typing" class="flex justify-start">
+                    <div class="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-emerald-50 px-4 py-3 dark:bg-emerald-900/30">
                         <span class="h-2 w-2 animate-bounce rounded-full bg-emerald-400" style="animation-delay:0ms" />
                         <span class="h-2 w-2 animate-bounce rounded-full bg-emerald-400" style="animation-delay:150ms" />
                         <span class="h-2 w-2 animate-bounce rounded-full bg-emerald-400" style="animation-delay:300ms" />
                     </div>
                 </div>
 
-                <div ref="chatBottom" />
-            </div>
+                <div key="bottom" ref="chatBottom" />
+            </TransitionGroup>
 
             <!-- Empty state -->
             <p v-else class="text-sm text-gray-500 dark:text-gray-400">

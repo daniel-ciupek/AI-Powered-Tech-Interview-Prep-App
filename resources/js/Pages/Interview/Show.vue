@@ -93,7 +93,7 @@ function onKeydown(e: KeyboardEvent): void {
                 <!-- Setup screen -->
                 <div v-else-if="!store.session" class="flex flex-1 flex-col items-center justify-center gap-6">
                     <!-- Info header -->
-                    <div class="w-full text-center">
+                    <div class="animate-spring-in w-full text-center" style="animation-delay: 0ms;">
                         <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 text-2xl shadow-lg shadow-emerald-200/40 dark:from-emerald-900/40 dark:to-teal-900/40 dark:shadow-emerald-900/30">
                             🤝
                         </div>
@@ -102,7 +102,7 @@ function onKeydown(e: KeyboardEvent): void {
                         </p>
                     </div>
 
-                    <div class="w-full rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/50">
+                    <div class="animate-spring-in w-full rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-black/45 dark:backdrop-blur-2xl dark:saturate-150 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_8px_32px_rgba(16,185,129,0.18)]" style="animation-delay: 80ms;">
                         <FreeTextTagInput
                             v-model="selectedTags"
                             :suggestions="availableTags"
@@ -115,7 +115,8 @@ function onKeydown(e: KeyboardEvent): void {
                         type="button"
                         :disabled="store.loading"
                         @click="startInterview"
-                        class="inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-8 py-3 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all duration-200 hover:from-emerald-600 hover:to-teal-700 hover:scale-[1.02] hover:shadow-emerald-500/40 active:scale-[0.97] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                        class="animate-spring-in btn-shimmer inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-8 py-3 text-base font-semibold text-white transition-all duration-200 hover:from-emerald-400 hover:to-teal-500 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(16,185,129,0.6)] active:scale-[0.95] active:shadow-[0_0_8px_rgba(16,185,129,0.2)] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                        style="box-shadow: 0 0 20px rgba(16,185,129,0.35); animation-delay: 160ms;"
                     >
                         <svg v-if="store.loading" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -139,7 +140,12 @@ function onKeydown(e: KeyboardEvent): void {
                 <!-- Chat -->
                 <template v-else>
                     <!-- Messages -->
-                    <div class="flex-1 space-y-3 overflow-y-auto rounded-2xl border border-white/30 bg-white/70 p-4 shadow-lg shadow-gray-200/30 backdrop-blur-md dark:border-white/8 dark:bg-slate-900/60 dark:shadow-black/30">
+                    <TransitionGroup
+                        name="msg"
+                        tag="div"
+                        class="animate-spring-in flex-1 space-y-3 overflow-y-auto rounded-2xl border border-white/30 bg-white/70 p-4 shadow-lg shadow-gray-200/30 backdrop-blur-md dark:border-white/10 dark:bg-black/45 dark:backdrop-blur-2xl dark:saturate-150 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_8px_32px_rgba(16,185,129,0.18)]"
+                        style="animation-delay: 0ms;"
+                    >
                         <div
                             v-for="msg in store.session.messages"
                             :key="msg.id"
@@ -156,10 +162,10 @@ function onKeydown(e: KeyboardEvent): void {
                             </div>
 
                             <div
-                                class="max-w-[80%] rounded-xl px-4 py-2.5 text-sm leading-relaxed"
+                                class="max-w-[80%] px-4 py-2.5 text-sm leading-relaxed"
                                 :class="msg.role === 'user'
-                                    ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-sm shadow-emerald-500/20'
-                                    : 'border border-gray-200/60 bg-white/90 text-gray-900 shadow-sm backdrop-blur-sm dark:border-gray-700/40 dark:bg-slate-800/60 dark:text-gray-100'"
+                                    ? 'rounded-2xl rounded-br-sm bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-sm shadow-emerald-500/20'
+                                    : 'rounded-2xl rounded-bl-sm border border-gray-200/60 bg-white/90 text-gray-900 shadow-sm backdrop-blur-sm dark:border-gray-700/40 dark:bg-slate-800/60 dark:text-gray-100'"
                             >
                                 {{ msg.content }}
                             </div>
@@ -171,16 +177,16 @@ function onKeydown(e: KeyboardEvent): void {
                         </div>
 
                         <!-- Typing indicator -->
-                        <div v-if="store.sending" class="flex justify-start">
-                            <div class="flex items-center gap-1.5 rounded-xl border border-gray-200/60 bg-white/90 px-4 py-3 backdrop-blur-sm dark:border-gray-700/40 dark:bg-slate-800/60">
+                        <div v-if="store.sending" key="typing" class="flex justify-start">
+                            <div class="flex items-center gap-1.5 rounded-2xl rounded-bl-sm border border-gray-200/60 bg-white/90 px-4 py-3 backdrop-blur-sm dark:border-gray-700/40 dark:bg-slate-800/60">
                                 <span class="h-2 w-2 animate-bounce rounded-full bg-emerald-400 dark:bg-emerald-500" style="animation-delay:0ms" aria-hidden="true"/>
                                 <span class="h-2 w-2 animate-bounce rounded-full bg-emerald-400 dark:bg-emerald-500" style="animation-delay:150ms" aria-hidden="true"/>
                                 <span class="h-2 w-2 animate-bounce rounded-full bg-emerald-400 dark:bg-emerald-500" style="animation-delay:300ms" aria-hidden="true"/>
                             </div>
                         </div>
 
-                        <div ref="chatBottom" />
-                    </div>
+                        <div key="bottom" ref="chatBottom" />
+                    </TransitionGroup>
 
                     <!-- Error -->
                     <div
@@ -213,8 +219,9 @@ function onKeydown(e: KeyboardEvent): void {
                                 type="button"
                                 :disabled="store.sending || !inputText.trim()"
                                 @click="submit"
-                                class="self-end rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-emerald-500/25 transition-all duration-200 hover:from-emerald-600 hover:to-teal-700 hover:scale-[1.02] active:scale-[0.97] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-                                aria-label="{{ t('interview.send') }}"
+                                class="btn-shimmer self-end rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:from-emerald-400 hover:to-teal-500 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(16,185,129,0.6)] active:scale-[0.95] active:shadow-[0_0_8px_rgba(16,185,129,0.2)] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                                style="box-shadow: 0 0 20px rgba(16,185,129,0.35);"
+                                :aria-label="t('interview.send')"
                             >
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

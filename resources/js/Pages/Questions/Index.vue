@@ -126,7 +126,8 @@ function decodeLabel(label: string | null | undefined): string {
                 <!-- Empty state -->
                 <div
                     v-if="questions.data.length === 0"
-                    class="rounded-2xl border border-dashed border-gray-200/80 bg-white/40 px-6 py-16 text-center backdrop-blur-sm dark:border-gray-700/60 dark:bg-slate-900/20"
+                    class="animate-spring-in rounded-2xl border border-dashed border-gray-200/80 bg-white/40 px-6 py-16 text-center backdrop-blur-sm dark:border-gray-700/60 dark:bg-slate-900/20"
+                    style="animation-delay: 80ms;"
                 >
                     <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100/80 text-2xl dark:bg-slate-800/60">
                         📋
@@ -139,7 +140,7 @@ function decodeLabel(label: string | null | undefined): string {
                 </div>
 
                 <!-- Questions list -->
-                <div v-else class="space-y-4">
+                <div v-else class="animate-spring-in space-y-4" style="animation-delay: 80ms;">
                     <div v-for="q in questions.data" :key="q.id" class="space-y-1">
                         <QuestionCard :question="q" />
                         <QuestionChat :question-id="q.id" />

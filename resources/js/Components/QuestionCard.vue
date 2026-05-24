@@ -30,7 +30,7 @@ const difficultyClasses = {
 </script>
 
 <template>
-    <div class="group relative rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-100/60 dark:border-white/20 dark:bg-slate-800/75 dark:shadow-xl dark:shadow-black/50 dark:hover:border-white/30 dark:hover:shadow-black/70">
+    <div class="group relative rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md transition-all duration-200 hover:-translate-y-1 hover:border-white/60 hover:shadow-[0_16px_48px_rgba(16,185,129,0.18)] dark:border-white/10 dark:bg-black/45 dark:backdrop-blur-2xl dark:saturate-150 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_8px_32px_rgba(16,185,129,0.18)] dark:hover:border-white/20 dark:hover:shadow-[0_16px_48px_rgba(16,185,129,0.30)]">
         <!-- Header -->
         <div class="flex items-start justify-between gap-4">
             <div class="flex flex-1 items-start gap-3">

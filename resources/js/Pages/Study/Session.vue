@@ -160,20 +160,24 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
 
                     <!-- ── REVIEW MODE ─────────────────────────────────── -->
                     <template v-if="dueItems.length > 0 && !sessionComplete">
-                        <QuestionCard
-                            v-if="currentQuestion()"
-                            :question="currentQuestion()!"
-                            :show-answer-by-default="false"
-                        />
+                        <div class="animate-spring-in" style="animation-delay: 0ms;">
+                            <QuestionCard
+                                v-if="currentQuestion()"
+                                :question="currentQuestion()!"
+                                :show-answer-by-default="false"
+                            />
+                        </div>
 
-                        <QuestionChat
-                            v-if="currentQuestion()"
-                            :question-id="currentQuestion()!.id"
-                            :key="currentQuestion()!.id"
-                        />
+                        <div class="animate-spring-in" style="animation-delay: 80ms;">
+                            <QuestionChat
+                                v-if="currentQuestion()"
+                                :question-id="currentQuestion()!.id"
+                                :key="currentQuestion()!.id"
+                            />
+                        </div>
 
                         <!-- Review buttons -->
-                        <div class="flex gap-3">
+                        <div class="animate-spring-in flex gap-3" style="animation-delay: 160ms;">
                             <button
                                 type="button"
                                 :disabled="reviewing"
@@ -219,7 +223,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                     <!-- ── GENERATE MODE ───────────────────────────────── -->
                     <template v-else>
                         <!-- Tag selector -->
-                        <div class="rounded-2xl border border-white/40 bg-white/82 p-5 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40">
+                        <div class="animate-spring-in rounded-2xl border border-white/40 bg-white/82 p-5 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-black/45 dark:backdrop-blur-2xl dark:saturate-150 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_8px_32px_rgba(16,185,129,0.18)]" style="animation-delay: 0ms;">
                             <FreeTextTagInput
                                 v-model="selectedTags"
                                 :suggestions="availableTags"
@@ -229,12 +233,13 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                         </div>
 
                         <!-- Generate button -->
-                        <div class="text-center">
+                        <div class="animate-spring-in text-center" style="animation-delay: 80ms;">
                             <button
                                 type="button"
                                 :disabled="generating"
                                 @click="generateQuestion"
-                                class="inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-7 py-3 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all duration-200 hover:from-emerald-600 hover:to-teal-700 hover:scale-[1.02] hover:shadow-emerald-500/40 active:scale-[0.97] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+                                class="btn-shimmer inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-7 py-3 text-base font-semibold text-white transition-all duration-200 hover:from-emerald-400 hover:to-teal-500 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(16,185,129,0.6)] active:scale-[0.95] active:shadow-[0_0_8px_rgba(16,185,129,0.2)] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+                                style="box-shadow: 0 0 20px rgba(16,185,129,0.35);"
                             >
                                 <svg v-if="generating" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
