@@ -30,7 +30,7 @@ const difficultyClasses = {
 </script>
 
 <template>
-    <div class="group relative rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-100/60 dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30 dark:hover:shadow-emerald-950/50">
+    <div class="group relative rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-100/60 dark:border-white/20 dark:bg-slate-800/75 dark:shadow-xl dark:shadow-black/50 dark:hover:border-white/30 dark:hover:shadow-black/70">
         <!-- Header -->
         <div class="flex items-start justify-between gap-4">
             <div class="flex flex-1 items-start gap-3">
@@ -52,7 +52,7 @@ const difficultyClasses = {
             <span
                 v-for="kw in question.expected_keywords"
                 :key="kw"
-                class="rounded-lg border border-gray-200/60 bg-gray-100/70 px-2 py-0.5 text-xs text-gray-600 backdrop-blur-sm dark:border-gray-700/40 dark:bg-slate-800/60 dark:text-gray-400"
+                class="rounded-lg border border-gray-200/60 bg-gray-100/70 px-2 py-0.5 text-xs text-gray-600 backdrop-blur-sm dark:border-white/15 dark:bg-white/10 dark:text-gray-300"
             >
                 {{ kw }}
             </span>
@@ -76,7 +76,7 @@ const difficultyClasses = {
             >
                 <div
                     v-if="answerVisible && question.expected_answer"
-                    class="mt-3 flex items-start gap-3 rounded-xl border border-emerald-200/40 bg-emerald-50/60 p-4 text-sm leading-relaxed text-gray-700 backdrop-blur-sm dark:border-emerald-800/30 dark:bg-emerald-950/20 dark:text-gray-200"
+                    class="mt-3 flex items-start gap-3 rounded-xl border border-emerald-200/40 bg-emerald-50/60 p-4 text-sm leading-relaxed text-gray-700 backdrop-blur-sm dark:border-emerald-500/30 dark:bg-emerald-900/30 dark:text-gray-100"
                 >
                     <SpeakButton :text="question.expected_answer" class="mt-0.5 shrink-0" />
                     <span>{{ question.expected_answer }}</span>

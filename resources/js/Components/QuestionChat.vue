@@ -100,13 +100,13 @@ function onKeydown(e: KeyboardEvent): void {
 
 <template>
     <section
-        class="rounded-2xl border border-emerald-200/60 bg-white/70 shadow-sm backdrop-blur-sm dark:border-emerald-700/30 dark:bg-slate-900/40"
+        class="rounded-2xl border border-emerald-200/60 bg-white/70 shadow-sm backdrop-blur-sm dark:border-emerald-500/30 dark:bg-slate-800/75 dark:shadow-xl dark:shadow-black/40"
         :aria-label="t('study.chat.title')"
     >
         <button
             type="button"
             @click="expanded = !expanded"
-            class="flex w-full items-center justify-between rounded-2xl px-5 py-3 text-left transition hover:bg-emerald-50/60 dark:hover:bg-emerald-900/10"
+            class="flex w-full items-center justify-between rounded-2xl px-5 py-3 text-left transition hover:bg-emerald-50/60 dark:hover:bg-white/5"
             :aria-expanded="expanded"
         >
             <span class="flex items-center gap-2 text-sm font-semibold text-emerald-900 dark:text-emerald-100">
@@ -143,8 +143,8 @@ function onKeydown(e: KeyboardEvent): void {
                     <div
                         class="max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2 text-sm leading-relaxed"
                         :class="msg.role === 'user'
-                            ? 'bg-emerald-600 text-white dark:bg-emerald-500'
-                            : 'bg-emerald-50 text-gray-900 dark:bg-emerald-900/30 dark:text-gray-100'"
+                            ? 'bg-emerald-600 text-white dark:bg-emerald-500/90'
+                            : 'bg-emerald-50 text-gray-900 dark:bg-white/10 dark:text-gray-100 dark:border dark:border-white/10'"
                     >{{ msg.content }}</div>
                     <SpeakButton
                         v-if="msg.role === 'assistant'"
@@ -184,7 +184,7 @@ function onKeydown(e: KeyboardEvent): void {
                     :maxlength="INPUT_MAX"
                     @keydown="onKeydown"
                     rows="2"
-                    class="flex-1 resize-none rounded-lg border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400"
+                    class="flex-1 resize-none rounded-lg border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 disabled:opacity-50 dark:border-white/20 dark:bg-white/10 dark:text-gray-100 dark:placeholder-gray-400"
                 />
                 <button
                     type="button"
