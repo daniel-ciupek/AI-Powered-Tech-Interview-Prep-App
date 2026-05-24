@@ -101,7 +101,7 @@ class InterviewController extends Controller
 
         $interviewSession->update(['status' => SessionStatus::Completed, 'ended_at' => now()]);
 
-        GenerateInterviewReportJob::dispatch($interviewSession, $user);
+        GenerateInterviewReportJob::dispatchAfterResponse($interviewSession, $user);
 
         return response()->json(['message' => __('messages.report_queued')]);
     }
