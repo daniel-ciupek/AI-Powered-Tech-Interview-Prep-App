@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import QuestionCard from '@/Components/QuestionCard.vue';
+import QuestionChat from '@/Components/QuestionChat.vue';
 import FreeTextTagInput from '@/Components/FreeTextTagInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
@@ -157,6 +158,12 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                             :show-answer-by-default="false"
                         />
 
+                        <QuestionChat
+                            v-if="currentQuestion()"
+                            :question-id="currentQuestion()!.id"
+                            :key="currentQuestion()!.id"
+                        />
+
                         <!-- Review buttons -->
                         <div class="flex gap-4">
                             <button
@@ -226,8 +233,12 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                         </p>
 
                         <Transition enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0 translate-y-2">
-                            <div v-if="generatedQuestion">
+                            <div v-if="generatedQuestion" class="space-y-4">
                                 <QuestionCard :question="generatedQuestion" />
+                                <QuestionChat
+                                    :question-id="generatedQuestion.id"
+                                    :key="generatedQuestion.id"
+                                />
                                 <p class="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
                                     {{ t('study.come_back_tomorrow') }}
                                 </p>

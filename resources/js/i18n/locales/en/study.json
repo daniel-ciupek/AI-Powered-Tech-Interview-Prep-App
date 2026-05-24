@@ -19,5 +19,15 @@
     "difficulty_change": "change",
     "rate_limit": "Rate limit reached. Please wait a moment.",
     "generation_failed": "Generation failed.",
-    "come_back_tomorrow": "Come back tomorrow to review it!"
+    "come_back_tomorrow": "Come back tomorrow to review it!",
+    "chat": {
+        "title": "💬 Ask AI for details",
+        "placeholder": "E.g. \"Why?\", \"Give a PHP example\", \"Explain simpler\"…",
+        "send": "Send",
+        "sending": "Sending…",
+        "clear": "Clear conversation",
+        "empty": "Ask a question to get more details. Conversation is not saved.",
+        "error_rate_limit": "AI rate limit reached. Try again shortly.",
+        "error_generic": "Could not send the message. Please try again."
+    }
 }

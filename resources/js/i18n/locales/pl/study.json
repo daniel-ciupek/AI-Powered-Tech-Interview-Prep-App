@@ -19,5 +19,15 @@
     "difficulty_change": "zmień",
     "rate_limit": "Limit zapytań osiągnięty. Poczekaj chwilę.",
     "generation_failed": "Generowanie nie powiodło się.",
-    "come_back_tomorrow": "Wróć jutro, aby ją powtórzyć!"
+    "come_back_tomorrow": "Wróć jutro, aby ją powtórzyć!",
+    "chat": {
+        "title": "💬 Zapytaj AI o szczegóły",
+        "placeholder": "Np. „Dlaczego tak?”, „Daj przykład w PHP”, „Wyjaśnij prościej”…",
+        "send": "Wyślij",
+        "sending": "Wysyłam…",
+        "clear": "Wyczyść rozmowę",
+        "empty": "Zadaj pytanie, aby uzyskać więcej szczegółów. Rozmowa nie jest zapisywana.",
+        "error_rate_limit": "Limit zapytań do AI wyczerpany. Spróbuj za chwilę.",
+        "error_generic": "Nie udało się wysłać wiadomości. Spróbuj ponownie."
+    }
 }
