@@ -213,10 +213,16 @@ test('generate report job sends conversation history to gemini', function () {
 
     Http::assertSent(static function ($request): bool {
         $payload = $request->data();
-        $prompt = $payload['contents'][0]['parts'][0]['text'] ?? '';
+        $contents = $payload['contents'] ?? [];
 
-        return str_contains($prompt, 'unique-candidate-answer-marker')
-            && str_contains($prompt, 'Ogólna ocena');
+        // chat() format: each message is {role, parts:[{text}]}
+        $allText = implode(' ', array_map(
+            static fn ($c) => $c['parts'][0]['text'] ?? '',
+            $contents,
+        ));
+
+        return str_contains($allText, 'unique-candidate-answer-marker')
+            && str_contains($allText, 'Ogólna ocena');
     });
 });
 
