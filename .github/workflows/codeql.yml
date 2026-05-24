@@ -1,0 +1,43 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly scan: Monday 06:30 UTC. Catches issues even when no pushes happen.
+    - cron: '30 6 * * 1'
+
+# CodeQL has no official PHP analyzer — Larastan (level 8) and composer audit
+# cover the PHP side in ci.yml. This workflow scans the Vue + TS frontend.
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript-typescript']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@f411752efdf656cb71aa17b755b22c890960da1d # v3.35.5
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@f411752efdf656cb71aa17b755b22c890960da1d # v3.35.5
+        with:
+          category: '/language:${{ matrix.language }}'
