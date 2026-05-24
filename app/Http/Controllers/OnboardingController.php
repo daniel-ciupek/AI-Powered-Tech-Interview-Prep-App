@@ -22,6 +22,8 @@ class OnboardingController extends Controller
             return Redirect::route('dashboard');
         }
 
+        $request->session()->put('onboarding.viewed', true);
+
         return Inertia::render('Onboarding/Index', [
             'has_api_key' => $user->gemini_api_key_encrypted !== null,
             'settings' => [
@@ -35,6 +37,10 @@ class OnboardingController extends Controller
     {
         $user = $request->user();
         assert($user !== null);
+
+        if ($user->onboarded_at === null && ! $request->session()->pull('onboarding.viewed', false)) {
+            return Redirect::route('onboarding.show');
+        }
 
         $action($user);
 

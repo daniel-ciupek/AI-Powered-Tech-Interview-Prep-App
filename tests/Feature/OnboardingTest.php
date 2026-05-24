@@ -52,11 +52,23 @@ test('already-onboarded user visiting /onboarding is redirected to dashboard', f
 test('completing onboarding sets timestamp and redirects to dashboard', function () {
     $user = User::factory()->notOnboarded()->create();
 
+    $this->actingAs($user)->get('/onboarding')->assertOk();
+
     $this->actingAs($user)
         ->post('/onboarding/complete')
         ->assertRedirect(route('dashboard'));
 
     expect($user->fresh()->onboarded_at)->not->toBeNull();
+});
+
+test('completing onboarding without viewing wizard redirects back to onboarding', function () {
+    $user = User::factory()->notOnboarded()->create();
+
+    $this->actingAs($user)
+        ->post('/onboarding/complete')
+        ->assertRedirect(route('onboarding.show'));
+
+    expect($user->fresh()->onboarded_at)->toBeNull();
 });
 
 test('completing onboarding is idempotent', function () {

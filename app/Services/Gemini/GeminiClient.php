@@ -46,7 +46,7 @@ class GeminiClient
                 usleep($this->retryBaseMs * 1000 * (2 ** ($attempt - 1)));
             }
 
-            $response = Http::withQueryParameters(['key' => $this->apiKey])
+            $response = Http::withHeaders(['x-goog-api-key' => $this->apiKey])
                 ->timeout(30)
                 ->post($url, $payload);
 

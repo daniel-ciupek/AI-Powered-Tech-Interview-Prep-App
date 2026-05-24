@@ -20,6 +20,7 @@ const props = defineProps<{
 const totalSteps = 4;
 const step = ref(1);
 const completing = ref(false);
+const preferencesForm = ref<HTMLFormElement | null>(null);
 
 const apiKeyForm = useForm({ api_key: '' });
 const prefsForm = useForm({
@@ -194,7 +195,7 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                         {{ t('onboarding.preferences.intro') }}
                     </p>
 
-                    <form @submit.prevent="savePreferences" class="space-y-6">
+                    <form ref="preferencesForm" @submit.prevent="savePreferences" class="space-y-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 {{ t('onboarding.preferences.difficulty_label') }}
@@ -238,14 +239,6 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                                 {{ prefsForm.errors.daily_goal }}
                             </p>
                         </div>
-
-                        <button
-                            type="submit"
-                            :disabled="prefsForm.processing"
-                            class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
-                        >
-                            {{ prefsForm.processing ? t('onboarding.preferences.saving') : t('onboarding.next') }}
-                        </button>
                     </form>
                 </section>
 
@@ -301,6 +294,16 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                             class="rounded-md bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400"
                         >
                             {{ apiKeyPresent ? t('onboarding.next') : t('onboarding.skip') }} →
+                        </button>
+                    </template>
+                    <template v-else-if="step === 3">
+                        <button
+                            type="button"
+                            :disabled="prefsForm.processing"
+                            @click="preferencesForm?.requestSubmit()"
+                            class="rounded-md bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                        >
+                            {{ prefsForm.processing ? t('onboarding.preferences.saving') : t('onboarding.next') }} →
                         </button>
                     </template>
                     <template v-else-if="step === 4">

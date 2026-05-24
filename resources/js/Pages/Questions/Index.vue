@@ -50,6 +50,19 @@ async function generate(): Promise<void> {
         generating.value = false;
     }
 }
+
+const ENTITY_MAP: Record<string, string> = {
+    '&laquo;': '«',
+    '&raquo;': '»',
+    '&lsaquo;': '‹',
+    '&rsaquo;': '›',
+    '&hellip;': '…',
+    '&amp;': '&',
+};
+
+function decodeLabel(label: string): string {
+    return label.replace(/&[a-z]+;/gi, (entity) => ENTITY_MAP[entity] ?? entity).replace(/\s+/g, ' ').trim();
+}
 </script>
 
 <template>
@@ -128,13 +141,11 @@ async function generate(): Promise<void> {
                             :class="link.active
                                 ? 'bg-indigo-600 text-white dark:bg-indigo-500'
                                 : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'"
-                            v-html="link.label"
-                        />
+                        >{{ decodeLabel(link.label) }}</Link>
                         <span
                             v-else
                             class="rounded px-3 py-1.5 text-sm text-gray-400 dark:text-gray-500"
-                            v-html="link.label"
-                        />
+                        >{{ decodeLabel(link.label) }}</span>
                     </template>
                 </div>
             </div>
