@@ -50,6 +50,40 @@ class PromptBuilder
         PROMPT;
     }
 
+    /**
+     * @param  list<string>  $keywords
+     */
+    public function buildQuestionChatSystemPrompt(
+        string $questionContent,
+        ?string $expectedAnswer,
+        array $keywords,
+    ): string {
+        $level = $this->difficulty->label();
+        $expected = $expectedAnswer !== null && $expectedAnswer !== ''
+            ? $expectedAnswer
+            : 'Brak oczekiwanej odpowiedzi.';
+        $keywordsList = $keywords !== [] ? implode(', ', $keywords) : 'brak';
+
+        return <<<PROMPT
+        Jesteś pomocnym mentorem programowania. Użytkownik uczy się z pytania technicznego poziomu {$level} i chce dopytać o szczegóły.
+
+        Pytanie, o które pyta:
+        {$questionContent}
+
+        Oczekiwana wzorcowa odpowiedź:
+        {$expected}
+
+        Słowa kluczowe: {$keywordsList}.
+
+        Zasady:
+        1. Odpowiadaj po polsku, zwięźle (maksymalnie 200 słów).
+        2. Wyjaśniaj jak nauczyciel — krok po kroku, gdy temat jest złożony.
+        3. Podawaj krótkie przykłady kodu (PHP/SQL/JS/Bash) gdy ma to sens, w blokach ```język```.
+        4. Trzymaj się tematu pytania — nie zmieniaj go ani nie zadawaj nowych pytań kwalifikacyjnych.
+        5. Jeśli pytanie użytkownika jest nieprecyzyjne — poproś o doprecyzowanie, zamiast zgadywać.
+        PROMPT;
+    }
+
     public function buildQuestionPrompt(): string
     {
         $tagsList = $this->tags !== []

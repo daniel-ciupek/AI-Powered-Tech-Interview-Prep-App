@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\InterviewController;
+use App\Http\Controllers\Api\QuestionChatController;
 use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\RepetitionController;
 use App\Http\Controllers\Api\StudySessionController;
@@ -14,6 +15,9 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::post('/questions/generate', [QuestionController::class, 'generate'])
         ->middleware('throttle:question-generate')
         ->name('api.questions.generate');
+    Route::post('/questions/{question}/chat', QuestionChatController::class)
+        ->middleware('throttle:question-chat')
+        ->name('api.questions.chat');
     Route::post('/repetitions/{repetition}/review', [RepetitionController::class, 'review'])
         ->name('api.repetitions.review');
     Route::get('/study/today', [StudySessionController::class, 'today'])
