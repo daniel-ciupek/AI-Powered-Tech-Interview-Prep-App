@@ -6,7 +6,7 @@
     "finish": "Zakończ i przejdź do pulpitu",
     "skip": "Pomiń wprowadzenie",
     "welcome": {
-        "header": "Witaj w PrepMind!",
+        "header": "Witaj w Wirtualnym Nauczycielu!",
         "intro": "Pomożemy Ci przygotować się do rozmów rekrutacyjnych z AI jako trenerem.",
         "feature_questions": "Generuj pytania techniczne dostosowane do Twojego poziomu.",
         "feature_study": "Powtarzaj wiedzę dzięki algorytmowi spaced repetition (SM-2).",

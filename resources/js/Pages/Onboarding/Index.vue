@@ -77,9 +77,9 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
     <div class="flex min-h-screen flex-col bg-gradient-to-br from-indigo-50 via-white to-amber-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
         <header class="mx-auto flex w-full max-w-2xl items-center justify-between px-4 py-6 sm:px-6">
             <Link href="/" class="flex items-center gap-2">
-                <ApplicationLogo class="h-8 w-8 fill-current text-indigo-600 dark:text-indigo-400" />
+                <ApplicationLogo class="h-14 w-14 fill-current text-indigo-600 dark:text-indigo-400" />
                 <span class="text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-200">
-                    PrepMind
+                    Wirtualny Nauczyciel
                 </span>
             </Link>
             <p class="text-xs text-gray-500 dark:text-gray-400">

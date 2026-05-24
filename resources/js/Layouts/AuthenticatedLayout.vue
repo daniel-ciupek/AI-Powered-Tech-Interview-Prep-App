@@ -22,8 +22,8 @@ const showingNavigationDropdown = ref(false);
                     <div class="flex items-center gap-8">
                         <!-- Logo -->
                         <Link :href="route('dashboard')" class="flex shrink-0 items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg">
-                            <ApplicationLogo class="block h-8 w-auto fill-current text-emerald-600 dark:text-emerald-400" />
-                            <span class="hidden text-sm font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:block">PrepMind</span>
+                            <ApplicationLogo class="block h-14 w-auto fill-current text-emerald-600 dark:text-emerald-400" />
+                            <span class="hidden text-sm font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:block">Wirtualny Nauczyciel</span>
                         </Link>
 
                         <!-- Navigation Links -->

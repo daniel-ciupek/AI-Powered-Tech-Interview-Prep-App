@@ -6,7 +6,7 @@
     "finish": "Finish and open dashboard",
     "skip": "Skip onboarding",
     "welcome": {
-        "header": "Welcome to PrepMind!",
+        "header": "Welcome to Wirtualny Nauczyciel!",
         "intro": "We'll help you prep for tech interviews with AI as your coach.",
         "feature_questions": "Generate technical questions tailored to your level.",
         "feature_study": "Review knowledge with a spaced repetition algorithm (SM-2).",
