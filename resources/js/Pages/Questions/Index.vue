@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import QuestionCard from '@/Components/QuestionCard.vue';
+import QuestionChat from '@/Components/QuestionChat.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
@@ -73,7 +74,7 @@ function decodeLabel(label: string | null | undefined): string {
 <template>
     <Head :title="t('questions.title')" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedLayout :minimal="true">
         <template #header>
             <div class="flex items-center justify-between gap-4">
                 <h2 class="text-xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
@@ -139,11 +140,10 @@ function decodeLabel(label: string | null | undefined): string {
 
                 <!-- Questions list -->
                 <div v-else class="space-y-4">
-                    <QuestionCard
-                        v-for="q in questions.data"
-                        :key="q.id"
-                        :question="q"
-                    />
+                    <div v-for="q in questions.data" :key="q.id" class="space-y-1">
+                        <QuestionCard :question="q" />
+                        <QuestionChat :question-id="q.id" />
+                    </div>
                 </div>
 
                 <!-- Pagination -->

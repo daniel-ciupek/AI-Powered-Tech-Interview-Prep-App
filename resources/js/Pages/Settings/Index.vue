@@ -44,7 +44,7 @@ const themes = ['light', 'dark', 'system'] as const;
 <template>
     <Head :title="t('settings.title')" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedLayout :minimal="true">
         <template #header>
             <h2 class="text-xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
                 {{ t('settings.title') }}
