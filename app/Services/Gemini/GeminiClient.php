@@ -14,7 +14,7 @@ class GeminiClient
 
     private const MAX_RETRIES = 3;
 
-    private const RETRYABLE_STATUSES = [429, 500, 502, 503];
+    private const RETRYABLE_STATUSES = [500, 502, 503];
 
     public function __construct(
         private readonly string $apiKey,
@@ -60,16 +60,12 @@ class GeminiClient
                 return $this->parseResponse($data);
             }
 
+            if ($response->status() === 429) {
+                throw new GeminiRateLimitException('Gemini API rate limit exceeded');
+            }
+
             if (in_array($response->status(), self::RETRYABLE_STATUSES, strict: true)) {
-                if ($response->status() === 429) {
-                    $lastException = new GeminiRateLimitException('Gemini API rate limit exceeded after retries');
-                    $waitMs = $this->parseRetryAfterMs($response->body());
-                    if ($waitMs > 0 && $attempt < self::MAX_RETRIES) {
-                        usleep($waitMs * 1000);
-                    }
-                } else {
-                    $lastException = new GeminiApiException("Gemini server error: {$response->status()}");
-                }
+                $lastException = new GeminiApiException("Gemini server error: {$response->status()}");
 
                 continue;
             }
@@ -126,16 +122,12 @@ class GeminiClient
                 return $this->parseResponse($data);
             }
 
+            if ($response->status() === 429) {
+                throw new GeminiRateLimitException('Gemini API rate limit exceeded');
+            }
+
             if (in_array($response->status(), self::RETRYABLE_STATUSES, strict: true)) {
-                if ($response->status() === 429) {
-                    $lastException = new GeminiRateLimitException('Gemini API rate limit exceeded after retries');
-                    $waitMs = $this->parseRetryAfterMs($response->body());
-                    if ($waitMs > 0 && $attempt < self::MAX_RETRIES) {
-                        usleep($waitMs * 1000);
-                    }
-                } else {
-                    $lastException = new GeminiApiException("Gemini server error: {$response->status()}");
-                }
+                $lastException = new GeminiApiException("Gemini server error: {$response->status()}");
 
                 continue;
             }
@@ -144,15 +136,6 @@ class GeminiClient
         }
 
         throw $lastException ?? new GeminiApiException('Max retries exceeded');
-    }
-
-    private function parseRetryAfterMs(string $body): int
-    {
-        if (preg_match('/retry in (\d+(?:\.\d+)?)s/i', $body, $matches)) {
-            return (int) ceil((float) $matches[1] * 1000) + 500;
-        }
-
-        return $this->retryBaseMs * 3;
     }
 
     /**
