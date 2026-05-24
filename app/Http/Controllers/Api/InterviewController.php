@@ -78,6 +78,16 @@ class InterviewController extends Controller
         }
     }
 
+    public function show(Request $request, InterviewSession $interviewSession): JsonResponse
+    {
+        $user = $request->user();
+        assert($user !== null);
+
+        Gate::authorize('view', $interviewSession);
+
+        return response()->json($this->sessionPayload($interviewSession));
+    }
+
     public function finish(Request $request, InterviewSession $interviewSession): JsonResponse
     {
         $user = $request->user();
@@ -105,6 +115,7 @@ class InterviewController extends Controller
                 'difficulty' => $session->difficulty->value,
                 'topic_tags' => $session->topic_tags,
                 'status' => $session->status->value,
+                'final_report' => $session->final_report,
                 'messages' => $session->messages->map(static fn ($m) => [
                     'id' => $m->id,
                     'role' => $m->role->value,

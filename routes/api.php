@@ -23,6 +23,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/study/today', [StudySessionController::class, 'today'])
         ->name('api.study.today');
 
+    Route::get('/interview/{interviewSession}', [InterviewController::class, 'show'])
+        ->name('api.interview.show');
     Route::post('/interview/start', [InterviewController::class, 'start'])
         ->middleware('throttle:interview-start')
         ->name('api.interview.start');

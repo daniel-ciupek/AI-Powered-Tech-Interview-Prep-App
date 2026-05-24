@@ -11,6 +11,8 @@
     "difficulty_prefix": "Poziom:",
     "difficulty_change": "zmień",
     "report_queued": "Generowanie raportu rozpoczęte. Odśwież stronę za chwilę, aby zobaczyć ocenę.",
+    "report_generating": "Generuję raport oceny… (może potrwać do 30 sekund)",
+    "report_title": "Raport z rozmowy",
     "input_placeholder": "Twoja odpowiedź… (Enter aby wysłać, Shift+Enter nowa linia)",
     "send": "Wyślij",
     "finish": "Zakończ i wygeneruj raport",

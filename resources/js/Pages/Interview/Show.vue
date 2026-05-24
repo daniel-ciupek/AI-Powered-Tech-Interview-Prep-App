@@ -196,12 +196,30 @@ function onKeydown(e: KeyboardEvent): void {
                         {{ store.error }}
                     </div>
 
-                    <!-- Report queued banner -->
+                    <!-- Report: generating (polling) -->
                     <div
-                        v-if="store.reportQueued"
-                        class="mt-2 rounded-xl border border-emerald-200/60 bg-emerald-50/60 px-4 py-3 text-sm text-emerald-800 backdrop-blur-sm dark:border-emerald-800/40 dark:bg-emerald-900/20 dark:text-emerald-300"
+                        v-if="store.reportQueued && !store.session.final_report"
+                        class="mt-2 flex items-center gap-3 rounded-xl border border-emerald-200/60 bg-emerald-50/60 px-4 py-3 text-sm text-emerald-800 backdrop-blur-sm dark:border-emerald-800/40 dark:bg-emerald-900/20 dark:text-emerald-300"
                     >
-                        {{ t('interview.report_queued') }}
+                        <svg class="h-4 w-4 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                        </svg>
+                        {{ t('interview.report_generating') }}
+                    </div>
+
+                    <!-- Report: ready -->
+                    <div
+                        v-if="store.session.final_report"
+                        class="mt-3 rounded-2xl border border-emerald-200/40 bg-white/80 p-5 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-emerald-500/20 dark:bg-black/45 dark:backdrop-blur-2xl dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_8px_32px_rgba(16,185,129,0.15)]"
+                    >
+                        <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold text-emerald-800 dark:text-emerald-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                            </svg>
+                            {{ t('interview.report_title') }}
+                        </h3>
+                        <pre class="whitespace-pre-wrap font-sans text-sm leading-relaxed text-gray-700 dark:text-gray-200">{{ store.session.final_report }}</pre>
                     </div>
 
                     <!-- Input (only while active) -->

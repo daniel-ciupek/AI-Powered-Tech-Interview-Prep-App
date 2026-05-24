@@ -13,6 +13,7 @@ export interface InterviewSessionData {
     difficulty: 'junior' | 'mid' | 'senior';
     topic_tags: string[];
     status: 'active' | 'completed' | 'abandoned';
+    final_report: string | null;
     messages: ChatMessage[];
 }
 
@@ -72,6 +73,45 @@ export const useInterviewSession = defineStore('interviewSession', () => {
 
     const finishing = ref(false);
     const reportQueued = ref(false);
+    const reportPolling = ref(false);
+
+    let pollTimer: ReturnType<typeof setInterval> | null = null;
+    let pollAttempts = 0;
+    const POLL_INTERVAL_MS = 3000;
+    const POLL_MAX_ATTEMPTS = 20; // 60 seconds total
+
+    function stopPolling(): void {
+        if (pollTimer !== null) {
+            clearInterval(pollTimer);
+            pollTimer = null;
+        }
+        reportPolling.value = false;
+        pollAttempts = 0;
+    }
+
+    async function pollForReport(): Promise<void> {
+        if (!session.value) return;
+        pollAttempts++;
+
+        if (pollAttempts > POLL_MAX_ATTEMPTS) {
+            stopPolling();
+            return;
+        }
+
+        try {
+            const res = await window.axios.get<{ data: InterviewSessionData }>(
+                `/api/interview/${session.value.id}`,
+            );
+            if (res.data.data.final_report) {
+                session.value.final_report = res.data.data.final_report;
+                session.value.status = res.data.data.status;
+                reportQueued.value = false;
+                stopPolling();
+            }
+        } catch {
+            // silent — keep polling
+        }
+    }
 
     async function finishSession(): Promise<void> {
         if (!session.value || finishing.value) return;
@@ -81,6 +121,9 @@ export const useInterviewSession = defineStore('interviewSession', () => {
             await window.axios.post(`/api/interview/${session.value.id}/finish`);
             session.value.status = 'completed';
             reportQueued.value = true;
+            reportPolling.value = true;
+            pollAttempts = 0;
+            pollTimer = setInterval(pollForReport, POLL_INTERVAL_MS);
         } catch (err: unknown) {
             const e = err as { response?: { data?: { message?: string } } };
             error.value = e.response?.data?.message ?? 'Failed to finish session.';
@@ -90,13 +133,27 @@ export const useInterviewSession = defineStore('interviewSession', () => {
     }
 
     function reset(): void {
+        stopPolling();
         session.value = null;
         loading.value = false;
         sending.value = false;
         finishing.value = false;
         reportQueued.value = false;
+        reportPolling.value = false;
         error.value = null;
     }
 
-    return { session, loading, sending, finishing, reportQueued, error, start, sendMessage, finishSession, reset };
+    return {
+        session,
+        loading,
+        sending,
+        finishing,
+        reportQueued,
+        reportPolling,
+        error,
+        start,
+        sendMessage,
+        finishSession,
+        reset,
+    };
 });
