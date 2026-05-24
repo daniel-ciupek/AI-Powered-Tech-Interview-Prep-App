@@ -2,11 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   CUSTOM @property — required for conic-gradient animation
+   (streak card rotating border). Must live at global scope.
+============================================================ */
+@property --streak-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
 @layer utilities {
+    /* ----------------------------------------------------------
+       Stagger fade-in-up — used by all dashboard sections
+    ---------------------------------------------------------- */
     @keyframes fade-in-up {
         0% {
             opacity: 0;
-            transform: translateY(8px);
+            transform: translateY(10px);
         }
         100% {
             opacity: 1;
@@ -15,6 +28,66 @@
     }
 
     .animate-fade-in-up {
-        animation: fade-in-up 0.4s ease-out both;
+        animation: fade-in-up 0.45s ease-out both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .animate-fade-in-up {
+            animation: none;
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    /* ----------------------------------------------------------
+       Shimmer utility (reusable outside dashboard)
+    ---------------------------------------------------------- */
+    @keyframes shimmer-slide {
+        0%   { transform: translateX(-120%); }
+        100% { transform: translateX(220%); }
+    }
+
+    /* ----------------------------------------------------------
+       Mesh-shift background animation (reusable)
+    ---------------------------------------------------------- */
+    @keyframes mesh-shift {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* ----------------------------------------------------------
+       Blob drift keyframes
+    ---------------------------------------------------------- */
+    @keyframes blob-drift-1 {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33%       { transform: translate(-30px, 40px) scale(1.08); }
+        66%       { transform: translate(20px, -20px) scale(0.95); }
+    }
+
+    @keyframes blob-drift-2 {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        40%       { transform: translate(40px, -30px) scale(1.1); }
+        70%       { transform: translate(-20px, 20px) scale(0.92); }
+    }
+
+    @keyframes blob-drift-3 {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        50%       { transform: translate(-40px, 30px) scale(1.12); }
+    }
+
+    /* ----------------------------------------------------------
+       Rotating conic-gradient border (streak card)
+    ---------------------------------------------------------- */
+    @keyframes rotate-border {
+        to { --streak-angle: 360deg; }
+    }
+
+    /* ----------------------------------------------------------
+       Streak flame pulse
+    ---------------------------------------------------------- */
+    @keyframes streak-pulse {
+        0%, 100% { transform: scale(1) rotate(-3deg); }
+        50%       { transform: scale(1.15) rotate(3deg); }
     }
 }
