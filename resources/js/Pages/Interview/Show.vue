@@ -191,9 +191,17 @@ function onKeydown(e: KeyboardEvent): void {
                     <!-- Error -->
                     <div
                         v-if="store.error"
-                        class="mt-2 rounded-xl border border-red-200/60 bg-red-50/60 px-4 py-2 text-sm text-red-700 backdrop-blur-sm dark:border-red-800/40 dark:bg-red-950/20 dark:text-red-300"
+                        class="mt-2 flex items-center justify-between gap-3 rounded-xl border border-red-200/60 bg-red-50/60 px-4 py-2 text-sm text-red-700 backdrop-blur-sm dark:border-red-800/40 dark:bg-red-950/20 dark:text-red-300"
                     >
-                        {{ store.error }}
+                        <span>{{ store.error }}</span>
+                        <button
+                            v-if="store.session.status === 'completed' && !store.session.final_report"
+                            type="button"
+                            @click="store.retryReport()"
+                            class="shrink-0 rounded-lg border border-red-300 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 transition hover:bg-red-100 dark:border-red-700/40 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/40"
+                        >
+                            {{ t('interview.retry_report') }}
+                        </button>
                     </div>
 
                     <!-- Report: generating (polling) -->

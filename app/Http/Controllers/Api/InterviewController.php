@@ -78,6 +78,22 @@ class InterviewController extends Controller
         }
     }
 
+    public function retryReport(Request $request, InterviewSession $interviewSession): JsonResponse
+    {
+        $user = $request->user();
+        assert($user !== null);
+
+        Gate::authorize('update', $interviewSession);
+
+        if ($interviewSession->final_report !== null) {
+            return response()->json($this->sessionPayload($interviewSession));
+        }
+
+        GenerateInterviewReportJob::dispatchAfterResponse($interviewSession, $user);
+
+        return response()->json(['message' => __('messages.report_queued')]);
+    }
+
     public function show(Request $request, InterviewSession $interviewSession): JsonResponse
     {
         $user = $request->user();

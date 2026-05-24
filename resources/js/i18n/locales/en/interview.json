@@ -13,6 +13,7 @@
     "report_queued": "Report generation started. Refresh the page in a moment to see your evaluation.",
     "report_generating": "Generating evaluation report… (may take up to 30 seconds)",
     "report_title": "Interview Report",
+    "retry_report": "Try again",
     "input_placeholder": "Your answer… (Enter to send, Shift+Enter for new line)",
     "send": "Send",
     "finish": "Finish & generate report",

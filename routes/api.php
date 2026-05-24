@@ -31,6 +31,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::post('/interview/{interviewSession}/message', [InterviewController::class, 'message'])
         ->middleware('throttle:interview-message')
         ->name('api.interview.message');
+    Route::post('/interview/{interviewSession}/retry-report', [InterviewController::class, 'retryReport'])
+        ->name('api.interview.retry-report');
     Route::post('/interview/{interviewSession}/finish', [InterviewController::class, 'finish'])
         ->middleware('throttle:interview-message')
         ->name('api.interview.finish');

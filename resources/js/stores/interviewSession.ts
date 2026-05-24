@@ -95,6 +95,8 @@ export const useInterviewSession = defineStore('interviewSession', () => {
 
         if (pollAttempts > POLL_MAX_ATTEMPTS) {
             stopPolling();
+            reportQueued.value = false;
+            error.value = 'Nie udało się wygenerować raportu (przekroczono limit czasu). Spróbuj wygenerować ponownie.';
             return;
         }
 
@@ -132,6 +134,23 @@ export const useInterviewSession = defineStore('interviewSession', () => {
         }
     }
 
+    async function retryReport(): Promise<void> {
+        if (!session.value) return;
+        error.value = null;
+        reportQueued.value = true;
+        reportPolling.value = true;
+        pollAttempts = 0;
+        try {
+            await window.axios.post(`/api/interview/${session.value.id}/retry-report`);
+            pollTimer = setInterval(pollForReport, POLL_INTERVAL_MS);
+        } catch (err: unknown) {
+            reportQueued.value = false;
+            reportPolling.value = false;
+            const e = err as { response?: { data?: { message?: string } } };
+            error.value = e.response?.data?.message ?? 'Nie udało się ponowić generowania raportu.';
+        }
+    }
+
     function reset(): void {
         stopPolling();
         session.value = null;
@@ -154,6 +173,7 @@ export const useInterviewSession = defineStore('interviewSession', () => {
         start,
         sendMessage,
         finishSession,
+        retryReport,
         reset,
     };
 });
