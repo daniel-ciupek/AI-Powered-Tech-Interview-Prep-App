@@ -21,6 +21,19 @@
         "dark": "Dark",
         "system": "System"
     },
+    "tts": {
+        "header": "Reader voice (TTS)",
+        "intro": "Pick the voice used for reading questions and AI replies. Saved locally in your browser.",
+        "label": "Voice",
+        "default": "Default (prefer Polish male)",
+        "group_pl": "Polish",
+        "group_other": "Other languages",
+        "preview": "Preview",
+        "preview_text": "Hi, this is how the selected voice sounds.",
+        "hint": "The available voices depend on your OS and browser. On Windows, add more under Settings → Time & Language → Speech.",
+        "no_voices": "Your system has no speech synthesis voices available.",
+        "unsupported": "Your browser does not support speech synthesis (Web Speech API)."
+    },
     "api_key": {
         "header": "Gemini API Key",
         "intro_prefix": "Your key is stored encrypted and never exposed.",

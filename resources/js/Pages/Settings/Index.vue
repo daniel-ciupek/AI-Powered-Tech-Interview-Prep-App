@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ApiKeyInput from '@/Components/ApiKeyInput.vue';
+import VoicePicker from '@/Components/VoicePicker.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useTheme, type ThemePreference } from '@/composables/useTheme';
 import { Head, useForm } from '@inertiajs/vue3';
@@ -159,6 +160,11 @@ const themes = ['light', 'dark', 'system'] as const;
                         <p v-if="form.errors.theme" class="mt-1 text-sm text-red-600 dark:text-red-400">
                             {{ form.errors.theme }}
                         </p>
+                    </div>
+
+                    <!-- TTS Voice -->
+                    <div class="bg-white p-6 shadow sm:rounded-lg dark:bg-gray-800 dark:shadow-gray-900/30">
+                        <VoicePicker />
                     </div>
 
                     <!-- API Key -->

@@ -21,6 +21,19 @@
         "dark": "Ciemny",
         "system": "Systemowy"
     },
+    "tts": {
+        "header": "Głos lektora (TTS)",
+        "intro": "Wybierz głos używany do odczytywania pytań i odpowiedzi AI. Ustawienie zapisywane lokalnie w przeglądarce.",
+        "label": "Głos",
+        "default": "Domyślny (preferuj męski PL)",
+        "group_pl": "Polskie",
+        "group_other": "Inne języki",
+        "preview": "Posłuchaj",
+        "preview_text": "Cześć, tak będzie brzmiał wybrany lektor.",
+        "hint": "Lista głosów zależy od systemu i przeglądarki. Na Windowsie dodatkowe głosy zainstalujesz w Ustawieniach systemu → Czas i język → Mowa.",
+        "no_voices": "Twój system nie udostępnia żadnych głosów do syntezy mowy.",
+        "unsupported": "Twoja przeglądarka nie obsługuje syntezy mowy (Web Speech API)."
+    },
     "api_key": {
         "header": "Klucz Gemini API",
         "intro_prefix": "Klucz jest przechowywany w postaci zaszyfrowanej i nigdy nie jest pokazywany.",
