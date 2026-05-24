@@ -28,13 +28,13 @@ const minimalBg = computed(() =>
     ═══════════════════════════════════════════════════════════ -->
     <div
         v-if="minimal"
-        class="relative min-h-screen overflow-hidden"
+        class="relative min-h-screen overflow-x-hidden"
         :style="{ background: minimalBg }"
     >
-        <!-- Depth blob: white glow in centre -->
+        <!-- Depth blob: white glow in centre (fixed = out of flow, won't cause scroll) -->
         <div
             aria-hidden="true"
-            class="pointer-events-none absolute inset-0 z-0"
+            class="pointer-events-none fixed inset-0 z-0"
             :style="effective === 'dark'
                 ? 'background: radial-gradient(ellipse 80% 50% at 50% 40%, rgba(255,255,255,0.04) 0%, transparent 70%);'
                 : 'background: radial-gradient(ellipse 80% 50% at 50% 40%, rgba(16,185,129,0.06) 0%, transparent 70%);'"
@@ -42,19 +42,19 @@ const minimalBg = computed(() =>
         <!-- Blob purple top-right -->
         <div
             aria-hidden="true"
-            class="pointer-events-none absolute z-0 h-[600px] w-[600px] rounded-full opacity-[0.07] dark:opacity-[0.22]"
+            class="pointer-events-none fixed z-0 h-[600px] w-[600px] rounded-full opacity-[0.07] dark:opacity-[0.22]"
             style="top:-15%; right:-10%; background: radial-gradient(circle, #7a2bff 0%, transparent 65%); animation: blob-drift-1 22s ease-in-out infinite;"
         />
         <!-- Blob emerald bottom-left -->
         <div
             aria-hidden="true"
-            class="pointer-events-none absolute z-0 h-[500px] w-[500px] rounded-full opacity-[0.08] dark:opacity-[0.2]"
+            class="pointer-events-none fixed z-0 h-[500px] w-[500px] rounded-full opacity-[0.08] dark:opacity-[0.2]"
             style="bottom:-12%; left:-8%; background: radial-gradient(circle, #00c47a 0%, transparent 65%); animation: blob-drift-2 28s ease-in-out infinite;"
         />
         <!-- Blob teal mid-left accent -->
         <div
             aria-hidden="true"
-            class="pointer-events-none absolute z-0 h-[300px] w-[300px] rounded-full opacity-[0.05] dark:opacity-[0.12]"
+            class="pointer-events-none fixed z-0 h-[300px] w-[300px] rounded-full opacity-[0.05] dark:opacity-[0.12]"
             style="top:35%; left:-5%; background: radial-gradient(circle, #00f0ff 0%, transparent 65%); animation: blob-drift-3 18s ease-in-out infinite;"
         />
 
