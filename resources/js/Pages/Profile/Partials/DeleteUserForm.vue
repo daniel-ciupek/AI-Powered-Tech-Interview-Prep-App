@@ -46,7 +46,7 @@ const closeModal = () => {
 <template>
     <section class="space-y-5">
         <header>
-            <h2 class="text-base font-bold text-gray-900 dark:text-gray-100">
+            <h2 class="text-base font-bold tracking-tight text-red-700 dark:text-red-400">
                 {{ t('profile.delete.header') }}
             </h2>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">

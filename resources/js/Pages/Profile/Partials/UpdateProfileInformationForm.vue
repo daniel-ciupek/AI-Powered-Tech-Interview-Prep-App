@@ -24,7 +24,7 @@ const form = useForm({
 <template>
     <section>
         <header>
-            <h2 class="text-base font-bold text-gray-900 dark:text-gray-100">
+            <h2 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-base font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
                 {{ t('profile.info.header') }}
             </h2>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">

@@ -46,7 +46,7 @@ const themes = ['light', 'dark', 'system'] as const;
 
     <AuthenticatedLayout :minimal="true">
         <template #header>
-            <h2 class="text-xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
+            <h2 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-xl font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
                 {{ t('settings.title') }}
             </h2>
         </template>
@@ -73,7 +73,7 @@ const themes = ['light', 'dark', 'system'] as const;
                 <form @submit.prevent="submit" class="space-y-5">
 
                     <!-- Interview Preferences -->
-                    <div class="rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/20">
+                    <div class="rounded-3xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30">
                         <h3 class="text-base font-bold tracking-tight text-gray-900 dark:text-gray-100">
                             {{ t('settings.interview.header') }}
                         </h3>
@@ -132,7 +132,7 @@ const themes = ['light', 'dark', 'system'] as const;
                     </div>
 
                     <!-- Appearance -->
-                    <div class="rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/20">
+                    <div class="rounded-3xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30">
                         <h3 class="text-base font-bold tracking-tight text-gray-900 dark:text-gray-100">
                             {{ t('settings.appearance.header') }}
                         </h3>
@@ -164,12 +164,12 @@ const themes = ['light', 'dark', 'system'] as const;
                     </div>
 
                     <!-- TTS Voice -->
-                    <div class="rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/20">
+                    <div class="rounded-3xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30">
                         <VoicePicker />
                     </div>
 
                     <!-- API Key -->
-                    <div class="rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/20">
+                    <div class="rounded-3xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30">
                         <ApiKeyInput :has-api-key="has_api_key" />
                     </div>
 

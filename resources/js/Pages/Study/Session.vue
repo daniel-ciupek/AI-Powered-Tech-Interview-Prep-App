@@ -129,7 +129,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
     <AuthenticatedLayout :minimal="true">
         <template #header>
             <div class="flex items-center justify-between">
-                <h2 class="text-xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
+                <h2 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-xl font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
                     {{ t('study.header') }}
                 </h2>
                 <span v-if="dueItems.length > 0 && !sessionComplete" class="rounded-full border border-emerald-200/60 bg-emerald-50/60 px-3 py-1 text-xs font-semibold text-emerald-700 backdrop-blur-sm dark:border-emerald-800/40 dark:bg-emerald-900/20 dark:text-emerald-300">
@@ -223,7 +223,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                     <!-- ── GENERATE MODE ───────────────────────────────── -->
                     <template v-else>
                         <!-- Tag selector -->
-                        <div class="animate-spring-in rounded-2xl border border-white/40 bg-white/82 p-5 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-black/45 dark:backdrop-blur-2xl dark:saturate-150 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_8px_32px_rgba(16,185,129,0.18)]" style="animation-delay: 0ms;">
+                        <div class="animate-spring-in rounded-3xl border border-white/40 bg-white/60 p-5 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30" style="animation-delay: 0ms;">
                             <FreeTextTagInput
                                 v-model="selectedTags"
                                 :suggestions="availableTags"

@@ -30,7 +30,7 @@ const submit = () => {
         <Head :title="t('auth.register.title')" />
 
         <div class="mb-6">
-            <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
+            <h1 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-2xl font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
                 {{ t('auth.register.title') }}
             </h1>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">

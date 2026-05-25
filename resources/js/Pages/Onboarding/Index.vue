@@ -74,18 +74,18 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
 <template>
     <Head :title="t('onboarding.title')" />
 
-    <div class="relative flex min-h-screen flex-col overflow-hidden bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 dark:from-gray-900 dark:via-emerald-950/20 dark:to-gray-900">
+    <div class="relative flex min-h-screen flex-col overflow-x-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-950 dark:via-slate-900 dark:to-emerald-950/40">
 
-        <!-- Decorative blobs -->
-        <div aria-hidden="true" class="pointer-events-none absolute -top-32 -right-32 h-[500px] w-[500px] rounded-full bg-emerald-200/25 blur-3xl dark:bg-emerald-900/15" />
-        <div aria-hidden="true" class="pointer-events-none absolute -bottom-32 -left-32 h-[400px] w-[400px] rounded-full bg-teal-200/25 blur-3xl dark:bg-teal-900/10" />
+        <!-- Decorative blobs (fixed so they don't scroll with content) -->
+        <div aria-hidden="true" class="pointer-events-none fixed -top-24 -right-24 h-96 w-96 rounded-full bg-emerald-300/30 blur-3xl dark:bg-emerald-500/10 -z-10" />
+        <div aria-hidden="true" class="pointer-events-none fixed -bottom-20 -left-20 h-80 w-80 rounded-full bg-teal-400/20 blur-3xl dark:bg-teal-500/10 -z-10" />
 
         <!-- Header -->
         <header class="relative z-10 mx-auto flex w-full max-w-2xl items-center justify-between px-4 py-6 sm:px-6">
             <Link href="/" class="flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-xl p-1">
                 <ApplicationLogo class="h-12 w-12 fill-current text-emerald-600 dark:text-emerald-400" />
-                <span class="text-sm font-bold tracking-tight text-gray-900 dark:text-gray-100">
-                    Wirtualny Nauczyciel
+                <span class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-sm font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
+                    PrepMind
                 </span>
             </Link>
             <p class="text-xs font-medium text-gray-400 dark:text-gray-500">
@@ -105,11 +105,11 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
 
         <!-- Main card -->
         <main class="relative z-10 mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 py-8 sm:px-6">
-            <div class="rounded-2xl border border-white/40 bg-white/82 p-8 shadow-xl shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/60 dark:shadow-emerald-950/30">
+            <div class="rounded-3xl border border-white/40 bg-white/60 p-8 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30">
 
                 <!-- Step 1: Welcome -->
                 <section v-if="step === 1" class="space-y-5 animate-fade-in-up">
-                    <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
+                    <h1 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-2xl font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
                         {{ t('onboarding.welcome.header') }}
                     </h1>
                     <p class="text-gray-600 dark:text-gray-300">
@@ -136,7 +136,7 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
 
                 <!-- Step 2: API key -->
                 <section v-else-if="step === 2" class="space-y-5 animate-fade-in-up">
-                    <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
+                    <h1 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-2xl font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
                         {{ t('onboarding.api_key.header') }}
                     </h1>
                     <p class="text-gray-600 dark:text-gray-300">
@@ -195,7 +195,7 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
 
                 <!-- Step 3: Preferences -->
                 <section v-else-if="step === 3" class="space-y-6 animate-fade-in-up">
-                    <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
+                    <h1 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-2xl font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
                         {{ t('onboarding.preferences.header') }}
                     </h1>
                     <p class="text-gray-600 dark:text-gray-300">
@@ -256,7 +256,7 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
                             🎉
                         </div>
                     </div>
-                    <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
+                    <h1 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-2xl font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
                         {{ t('onboarding.ready.header') }}
                     </h1>
                     <p class="text-gray-600 dark:text-gray-300">

@@ -63,7 +63,7 @@ function onKeydown(e: KeyboardEvent): void {
     <AuthenticatedLayout :minimal="true">
         <template #header>
             <div class="flex items-center justify-between">
-                <h2 class="text-xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-white dark:to-gray-300">
+                <h2 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-xl font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
                     {{ t('interview.header') }}
                 </h2>
                 <span v-if="store.session" class="rounded-full border border-emerald-200/60 bg-emerald-50/60 px-3 py-1 text-xs font-semibold capitalize text-emerald-700 backdrop-blur-sm dark:border-emerald-800/40 dark:bg-emerald-900/20 dark:text-emerald-300">
@@ -102,7 +102,7 @@ function onKeydown(e: KeyboardEvent): void {
                         </p>
                     </div>
 
-                    <div class="animate-spring-in w-full rounded-2xl border border-white/40 bg-white/82 p-6 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-white/10 dark:bg-black/45 dark:backdrop-blur-2xl dark:saturate-150 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_8px_32px_rgba(16,185,129,0.18)]" style="animation-delay: 80ms;">
+                    <div class="animate-spring-in w-full rounded-3xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30" style="animation-delay: 80ms;">
                         <FreeTextTagInput
                             v-model="selectedTags"
                             :suggestions="availableTags"
@@ -143,7 +143,7 @@ function onKeydown(e: KeyboardEvent): void {
                     <TransitionGroup
                         name="msg"
                         tag="div"
-                        class="animate-spring-in flex-1 space-y-3 overflow-y-auto rounded-2xl border border-white/30 bg-white/70 p-4 shadow-lg shadow-gray-200/30 backdrop-blur-md dark:border-white/10 dark:bg-black/45 dark:backdrop-blur-2xl dark:saturate-150 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_8px_32px_rgba(16,185,129,0.18)]"
+                        class="animate-spring-in flex-1 space-y-3 overflow-y-auto rounded-3xl border border-white/40 bg-white/60 p-4 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30"
                         style="animation-delay: 0ms;"
                     >
                         <div
@@ -219,7 +219,7 @@ function onKeydown(e: KeyboardEvent): void {
                     <!-- Report: ready -->
                     <div
                         v-if="store.session.final_report"
-                        class="mt-3 rounded-2xl border border-emerald-200/40 bg-white/80 p-5 shadow-lg shadow-emerald-100/30 backdrop-blur-md dark:border-emerald-500/20 dark:bg-black/45 dark:backdrop-blur-2xl dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_8px_32px_rgba(16,185,129,0.15)]"
+                        class="mt-3 rounded-3xl border border-white/40 bg-white/60 p-5 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30"
                     >
                         <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold text-emerald-800 dark:text-emerald-300">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
