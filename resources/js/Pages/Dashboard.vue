@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useAnimatedNumber } from '@/composables/useAnimatedNumber';
+import { useMilestoneConfetti } from '@/composables/useMilestoneConfetti';
+import { vCardTilt } from '@/directives/cardTilt';
+import { vMagneticButton } from '@/directives/magneticButton';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 interface Stats {
     streak: { current: number; last_studied_at: string | null; daily_goal: number };
@@ -38,13 +41,18 @@ const heatmapMax = computed(() =>
     props.stats.heatmap.reduce((max, cell) => (cell.count > max ? cell.count : max), 0),
 );
 
+const todayIso = computed(() => {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+});
+
 function lastStudiedLabel(): string {
     const iso = props.stats.streak.last_studied_at;
     if (!iso) return t('dashboard.streak.never');
-    return new Date(iso).toLocaleString(locale.value, {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-    });
+    return new Date(iso).toLocaleString(locale.value, { dateStyle: 'medium', timeStyle: 'short' });
 }
 
 const dowIndex = (date: string): number => {
@@ -65,45 +73,106 @@ const intensityClass = (count: number): string => {
 const heatmapTitle = (cell: { date: string; count: number }): string =>
     t('dashboard.heatmap.cell', { date: cell.date, count: cell.count });
 
-// Animated counters
-const { displayed: animStreak }     = useAnimatedNumber(() => props.stats.streak.current, 1400);
-const { displayed: animReviewed }   = useAnimatedNumber(() => props.stats.today.reviewed, 1000);
-const { displayed: animDue }        = useAnimatedNumber(() => props.stats.today.due_remaining, 1000);
-const { displayed: animRetention }  = useAnimatedNumber(() => retentionPercent.value ?? 0, 1200);
-const { displayed: animQuestions }  = useAnimatedNumber(() => props.stats.totals.questions, 1100);
-const { displayed: animReviews }    = useAnimatedNumber(() => props.stats.totals.reviews, 1200);
-const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals.interviews, 1000);
+// Animated counters — slightly longer durations for a more dramatic effect
+const { displayed: animStreak }     = useAnimatedNumber(() => props.stats.streak.current, 1800);
+const { displayed: animReviewed }   = useAnimatedNumber(() => props.stats.today.reviewed, 1400);
+const { displayed: animDue }        = useAnimatedNumber(() => props.stats.today.due_remaining, 1400);
+const { displayed: animRetention }  = useAnimatedNumber(() => retentionPercent.value ?? 0, 1600);
+const { displayed: animQuestions }  = useAnimatedNumber(() => props.stats.totals.questions, 1500);
+const { displayed: animReviews }    = useAnimatedNumber(() => props.stats.totals.reviews, 1600);
+const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals.interviews, 1400);
+
+// Spotlight / focus mode
+const focusedCard = ref<string | null>(null);
+
+function toggleFocus(cardId: string): void {
+    focusedCard.value = focusedCard.value === cardId ? null : cardId;
+}
+
+function clearFocus(): void {
+    focusedCard.value = null;
+}
+
+function spotlightClass(cardId: string): string {
+    if (!focusedCard.value) return '';
+    return focusedCard.value === cardId ? 'card-focused' : 'card-dimmed';
+}
+
+// Avatar initials
+const userName = computed(() => (page.props.auth.user as { name: string }).name ?? '');
+const initials = computed(() => {
+    const parts = userName.value.trim().split(/\s+/);
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    return parts[0].slice(0, 2).toUpperCase();
+});
+
+// Particles on streak when current streak is meaningful (> 6 days)
+const showStreakParticles = computed(() => props.stats.streak.current > 6);
+const particleIndices = computed(() => Array.from({ length: 14 }, (_, i) => i));
+
+// Background sparks — page-wide drifting particles (always on)
+const sparkIndices = Array.from({ length: 22 }, (_, i) => i);
+
+// Cursor spotlight — track mouse on dashboard root, update CSS variables
+const dashRoot = ref<HTMLElement | null>(null);
+function onDashMouseMove(e: MouseEvent): void {
+    if (!dashRoot.value) return;
+    const rect = dashRoot.value.getBoundingClientRect();
+    dashRoot.value.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+    dashRoot.value.style.setProperty('--my', `${e.clientY - rect.top}px`);
+}
+
+// Milestone confetti — fires once per milestone (7, 14, 30, 60, 100, 200, 365)
+onMounted(() => {
+    const { fire } = useMilestoneConfetti();
+    // small delay so user lands and sees aurora first, then party
+    window.setTimeout(() => fire(props.stats.streak.current), 650);
+});
 </script>
 
 <template>
     <Head :title="t('dashboard.title')" />
 
     <AuthenticatedLayout>
-        <!-- Page heading intentionally omitted — the Dashboard has its
-             own hero greeting and the white layout bar clashes with the
-             animated mesh background below. -->
 
         <!-- =====================================================================
-             ROOT: animated mesh-gradient background
+             ROOT: animated mesh-gradient background + cursor spotlight
         ====================================================================== -->
-        <div class="dashboard-root relative min-h-screen overflow-hidden">
+        <div
+            ref="dashRoot"
+            class="dashboard-root relative min-h-screen overflow-hidden"
+            @click="clearFocus"
+            @mousemove="onDashMouseMove"
+        >
 
             <!-- Mesh gradient background layer -->
             <div aria-hidden="true" class="dashboard-mesh-bg absolute inset-0 z-0" />
 
             <!-- Decorative blobs -->
-            <div
-                aria-hidden="true"
-                class="dashboard-blob-1 pointer-events-none absolute z-0 h-[520px] w-[520px] rounded-full"
-            />
-            <div
-                aria-hidden="true"
-                class="dashboard-blob-2 pointer-events-none absolute z-0 h-[400px] w-[400px] rounded-full"
-            />
-            <div
-                aria-hidden="true"
-                class="dashboard-blob-3 pointer-events-none absolute z-0 h-[300px] w-[300px] rounded-full"
-            />
+            <div aria-hidden="true" class="dashboard-blob-1 pointer-events-none absolute z-0 h-[520px] w-[520px] rounded-full" />
+            <div aria-hidden="true" class="dashboard-blob-2 pointer-events-none absolute z-0 h-[400px] w-[400px] rounded-full" />
+            <div aria-hidden="true" class="dashboard-blob-3 pointer-events-none absolute z-0 h-[300px] w-[300px] rounded-full" />
+            <div aria-hidden="true" class="dashboard-blob-4 pointer-events-none absolute z-0 h-[460px] w-[460px] rounded-full" />
+            <div aria-hidden="true" class="dashboard-blob-5 pointer-events-none absolute z-0 h-[360px] w-[360px] rounded-full" />
+
+            <!-- Background floating sparks (page-wide drifting particles) -->
+            <div aria-hidden="true" class="bg-sparks pointer-events-none absolute inset-0 z-0">
+                <span
+                    v-for="i in sparkIndices"
+                    :key="i"
+                    class="bg-spark"
+                    :data-color="['emerald', 'teal', 'cyan', 'violet', 'pink'][i % 5]"
+                    :style="{
+                        left: `${(i * 17 + 7) % 95}%`,
+                        top: `${(i * 23 + 11) % 88}%`,
+                        animationDelay: `${(i * 0.7) % 8}s`,
+                        animationDuration: `${6 + (i % 5) * 1.4}s`,
+                    }"
+                />
+            </div>
+
+            <!-- Cursor spotlight (follows mouse, illuminates dashboard) -->
+            <div aria-hidden="true" class="cursor-spotlight pointer-events-none absolute inset-0 z-[1]" />
 
             <!-- ================================================================
                  CONTENT
@@ -111,14 +180,30 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
             <div class="relative z-10 py-10">
                 <div class="mx-auto max-w-6xl space-y-6 px-4 sm:px-6 lg:px-8">
 
-                    <!-- Greeting -->
-                    <div class="animate-fade-in-up" style="animation-delay: 0ms;">
-                        <h3 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            {{ t('dashboard.greeting', { name: page.props.auth.user.name }) }}
-                        </h3>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">
-                            {{ t('dashboard.subtitle') }}
-                        </p>
+                    <!-- ── GREETING ──────────────────────────────────────── -->
+                    <div class="greeting-section animate-fade-in-up flex items-center gap-5" style="animation-delay: 0ms;">
+                        <!-- Avatar (3D tilt + glow) -->
+                        <div class="relative shrink-0">
+                            <div
+                                v-card-tilt="{ maxTilt: 14, scale: 1.06, perspective: 600 }"
+                                class="avatar-glow flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 shadow-lg shadow-emerald-500/30 dark:shadow-emerald-500/20"
+                            >
+                                <span class="select-none text-xl font-black text-white">{{ initials }}</span>
+                            </div>
+                            <div class="avatar-status absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white bg-emerald-400 dark:border-slate-900" />
+                        </div>
+                        <!-- Text -->
+                        <div>
+                            <p class="mb-0.5 text-xs font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+                                PrepMind
+                            </p>
+                            <h3 class="name-shimmer bg-gradient-to-r from-gray-900 via-emerald-600 to-teal-600 bg-clip-text text-3xl font-black leading-tight text-transparent dark:from-white dark:via-emerald-300 dark:to-teal-300">
+                                {{ t('dashboard.greeting', { name: userName }) }}
+                            </h3>
+                            <p class="mt-0.5 text-sm text-gray-500 dark:text-slate-400">
+                                {{ t('dashboard.subtitle') }}
+                            </p>
+                        </div>
                     </div>
 
                     <!-- No API key banner -->
@@ -143,42 +228,53 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
 
                     <!-- ===========================================================
                          BENTO GRID — main stats
-                         Mobile: single column
-                         sm:  2 columns
-                         lg:  4 columns, streak spans 2×2
+                         Mobile: single column | sm: 2 col | lg: 4 col (streak 2×2)
                     ============================================================ -->
-                    <div
-                        class="animate-fade-in-up grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-                        style="animation-delay: 80ms;"
-                    >
+                    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
                         <!-- ── STREAK HERO (2 col × 2 row on lg) ──────────────── -->
-                        <div class="streak-card glass-card relative overflow-hidden rounded-3xl p-6 sm:col-span-2 lg:col-span-2 lg:row-span-2">
-                            <!-- Rotating conic-gradient border layer -->
+                        <div
+                            v-card-tilt="{ maxTilt: 5, scale: 1.015 }"
+                            class="streak-card glass-card animate-fade-in-up relative cursor-pointer overflow-hidden rounded-3xl p-6 sm:col-span-2 lg:col-span-2 lg:row-span-2"
+                            style="animation-delay: 80ms;"
+                            :class="spotlightClass('streak')"
+                            @click.stop="toggleFocus('streak')"
+                        >
                             <div aria-hidden="true" class="streak-border-ring absolute inset-0 rounded-3xl" />
-                            <!-- Inner content surface -->
+
+                            <!-- Living particles (only when streak > 6) -->
+                            <div
+                                v-if="showStreakParticles"
+                                aria-hidden="true"
+                                class="streak-particles pointer-events-none absolute inset-x-0 bottom-0 h-40 overflow-hidden"
+                            >
+                                <span
+                                    v-for="i in particleIndices"
+                                    :key="i"
+                                    class="streak-particle absolute h-1.5 w-1.5 rounded-full"
+                                    :style="{
+                                        left: `${(i * 7.4 + 3) % 96}%`,
+                                        animationDelay: `${(i * 0.42) % 3.4}s`,
+                                        animationDuration: `${3 + (i % 4) * 0.6}s`,
+                                    }"
+                                />
+                            </div>
+
                             <div class="relative z-10 h-full">
-                                <!-- Flame icon -->
                                 <div class="mb-4 flex items-center gap-3">
-                                    <span
-                                        class="motion-safe:animate-streak-pulse select-none text-4xl"
-                                        role="img"
-                                        aria-label="streak flame"
-                                    >🔥</span>
+                                    <span class="motion-safe:animate-streak-pulse select-none text-4xl" role="img" aria-label="streak flame">🔥</span>
                                     <p class="text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-slate-400">
                                         {{ t('dashboard.streak.title') }}
                                     </p>
                                 </div>
 
-                                <!-- Big animated number -->
-                                <p class="streak-number bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-7xl font-black tabular-nums leading-none text-transparent dark:from-emerald-300 dark:via-teal-300 dark:to-cyan-300">
+                                <p class="streak-number number-breathe bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-7xl font-black tabular-nums leading-none text-transparent dark:from-emerald-300 dark:via-teal-300 dark:to-cyan-300">
                                     {{ animStreak }}
                                 </p>
                                 <p class="mt-1 text-base font-medium text-gray-600 dark:text-slate-300">
                                     {{ t('dashboard.streak.days', stats.streak.current) }}
                                 </p>
 
-                                <!-- Last studied -->
                                 <p class="mt-4 text-xs text-gray-400 dark:text-slate-500">
                                     {{
                                         stats.streak.last_studied_at
@@ -187,22 +283,15 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
                                     }}
                                 </p>
 
-                                <!-- Daily progress bar -->
                                 <div class="mt-5">
                                     <div class="mb-1.5 flex items-center justify-between text-xs">
                                         <span class="font-medium text-gray-500 dark:text-slate-400">
                                             {{ t('dashboard.streak.today_done', { done: animReviewed, goal: dailyGoal }) }}
                                         </span>
-                                        <span
-                                            v-if="goalMet"
-                                            class="font-semibold text-emerald-600 dark:text-emerald-400"
-                                        >
+                                        <span v-if="goalMet" class="font-semibold text-emerald-600 dark:text-emerald-400">
                                             {{ t('dashboard.streak.goal_met') }}
                                         </span>
-                                        <span
-                                            v-else
-                                            class="text-gray-400 dark:text-slate-500"
-                                        >{{ dailyProgress }}%</span>
+                                        <span v-else class="text-gray-400 dark:text-slate-500">{{ dailyProgress }}%</span>
                                     </div>
                                     <div class="h-2 w-full overflow-hidden rounded-full bg-gray-100/80 dark:bg-slate-700/60">
                                         <div
@@ -220,28 +309,41 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
                         </div>
 
                         <!-- ── TODAY REVIEWED ────────────────────────────────── -->
-                        <div class="glass-card metric-card relative overflow-hidden rounded-2xl p-5 group">
+                        <div
+                            v-card-tilt
+                            data-glow="sky"
+                            class="glass-card metric-card animate-fade-in-up group relative cursor-pointer overflow-hidden rounded-2xl p-5"
+                            style="animation-delay: 130ms;"
+                            :class="spotlightClass('today')"
+                            @click.stop="toggleFocus('today')"
+                        >
                             <div class="metric-card__accent bg-gradient-to-b from-sky-400 to-blue-500" />
                             <p class="pl-3 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-slate-400">
                                 {{ t('dashboard.today.title') }}
                             </p>
-                            <p class="mt-2 pl-3 text-4xl font-black tabular-nums text-gray-900 dark:text-white">
+                            <p class="number-breathe mt-2 pl-3 text-4xl font-black tabular-nums text-gray-900 dark:text-white">
                                 {{ animReviewed }}
                             </p>
                             <p class="mt-1 pl-3 text-xs text-gray-400 dark:text-slate-500">
                                 {{ t('dashboard.today.due_remaining') }}: <span class="font-semibold text-sky-600 dark:text-sky-400">{{ animDue }}</span>
                             </p>
-                            <!-- Hover sweep -->
                             <div aria-hidden="true" class="metric-card__sweep bg-gradient-to-br from-sky-500/10 to-blue-500/10" />
                         </div>
 
                         <!-- ── DUE REMAINING ──────────────────────────────────── -->
-                        <div class="glass-card metric-card relative overflow-hidden rounded-2xl p-5 group">
+                        <div
+                            v-card-tilt
+                            data-glow="amber"
+                            class="glass-card metric-card animate-fade-in-up group relative cursor-pointer overflow-hidden rounded-2xl p-5"
+                            style="animation-delay: 175ms;"
+                            :class="spotlightClass('due')"
+                            @click.stop="toggleFocus('due')"
+                        >
                             <div class="metric-card__accent bg-gradient-to-b from-amber-400 to-orange-500" />
                             <p class="pl-3 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-slate-400">
                                 {{ t('dashboard.today.due_remaining') }}
                             </p>
-                            <p class="mt-2 pl-3 text-4xl font-black tabular-nums text-gray-900 dark:text-white">
+                            <p class="number-breathe mt-2 pl-3 text-4xl font-black tabular-nums text-gray-900 dark:text-white">
                                 {{ animDue }}
                             </p>
                             <p class="mt-1 pl-3 text-xs text-gray-400 dark:text-slate-500">
@@ -250,16 +352,20 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
                             <div aria-hidden="true" class="metric-card__sweep bg-gradient-to-br from-amber-500/10 to-orange-500/10" />
                         </div>
 
-                        <!-- ── RETENTION ──────────────────────────────────────── -->
-                        <div class="glass-card metric-card relative overflow-hidden rounded-2xl p-5 group sm:col-span-2 lg:col-span-1">
+                        <!-- ── RETENTION (spans full bottom-right row on lg) ──── -->
+                        <div
+                            v-card-tilt="{ maxTilt: 5 }"
+                            data-glow="violet"
+                            class="glass-card metric-card animate-fade-in-up group relative cursor-pointer overflow-hidden rounded-2xl p-5 sm:col-span-2 lg:col-span-2"
+                            style="animation-delay: 220ms;"
+                            :class="spotlightClass('retention')"
+                            @click.stop="toggleFocus('retention')"
+                        >
                             <div class="metric-card__accent bg-gradient-to-b from-violet-400 to-purple-500" />
                             <p class="pl-3 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-slate-400">
                                 {{ t('dashboard.retention.title') }}
                             </p>
-                            <p
-                                v-if="retentionPercent !== null"
-                                class="mt-2 pl-3 text-4xl font-black tabular-nums text-gray-900 dark:text-white"
-                            >
+                            <p v-if="retentionPercent !== null" class="mt-2 pl-3 text-4xl font-black tabular-nums text-gray-900 dark:text-white">
                                 {{ animRetention }}<span class="text-xl text-gray-400 dark:text-slate-500">%</span>
                             </p>
                             <p v-else class="mt-2 pl-3 text-sm text-gray-500 dark:text-slate-400">
@@ -276,36 +382,39 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
                     <!-- ===========================================================
                          TOTALS ROW
                     ============================================================ -->
-                    <div
-                        class="animate-fade-in-up grid gap-4 sm:grid-cols-3"
-                        style="animation-delay: 140ms;"
-                    >
-                        <div class="glass-card total-card group relative overflow-hidden rounded-2xl px-5 py-4">
+                    <div class="grid gap-4 sm:grid-cols-3">
+                        <div
+                            v-card-tilt="{ maxTilt: 6 }"
+                            class="glass-card total-card animate-fade-in-up group relative cursor-pointer overflow-hidden rounded-2xl px-5 py-4"
+                            style="animation-delay: 265ms;"
+                            :class="spotlightClass('total-q')"
+                            @click.stop="toggleFocus('total-q')"
+                        >
                             <div class="total-card__glow" />
-                            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-slate-500">
-                                {{ t('dashboard.totals.questions') }}
-                            </p>
-                            <p class="mt-1 text-3xl font-black tabular-nums text-gray-900 dark:text-white">
-                                {{ animQuestions }}
-                            </p>
+                            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-slate-500">{{ t('dashboard.totals.questions') }}</p>
+                            <p class="number-breathe mt-1 text-3xl font-black tabular-nums text-gray-900 dark:text-white">{{ animQuestions }}</p>
                         </div>
-                        <div class="glass-card total-card group relative overflow-hidden rounded-2xl px-5 py-4">
+                        <div
+                            v-card-tilt="{ maxTilt: 6 }"
+                            class="glass-card total-card animate-fade-in-up group relative cursor-pointer overflow-hidden rounded-2xl px-5 py-4"
+                            style="animation-delay: 300ms;"
+                            :class="spotlightClass('total-r')"
+                            @click.stop="toggleFocus('total-r')"
+                        >
                             <div class="total-card__glow" />
-                            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-slate-500">
-                                {{ t('dashboard.totals.reviews') }}
-                            </p>
-                            <p class="mt-1 text-3xl font-black tabular-nums text-gray-900 dark:text-white">
-                                {{ animReviews }}
-                            </p>
+                            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-slate-500">{{ t('dashboard.totals.reviews') }}</p>
+                            <p class="number-breathe mt-1 text-3xl font-black tabular-nums text-gray-900 dark:text-white">{{ animReviews }}</p>
                         </div>
-                        <div class="glass-card total-card group relative overflow-hidden rounded-2xl px-5 py-4">
+                        <div
+                            v-card-tilt="{ maxTilt: 6 }"
+                            class="glass-card total-card animate-fade-in-up group relative cursor-pointer overflow-hidden rounded-2xl px-5 py-4"
+                            style="animation-delay: 335ms;"
+                            :class="spotlightClass('total-i')"
+                            @click.stop="toggleFocus('total-i')"
+                        >
                             <div class="total-card__glow" />
-                            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-slate-500">
-                                {{ t('dashboard.totals.interviews') }}
-                            </p>
-                            <p class="mt-1 text-3xl font-black tabular-nums text-gray-900 dark:text-white">
-                                {{ animInterviews }}
-                            </p>
+                            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-slate-500">{{ t('dashboard.totals.interviews') }}</p>
+                            <p class="number-breathe mt-1 text-3xl font-black tabular-nums text-gray-900 dark:text-white">{{ animInterviews }}</p>
                         </div>
                     </div>
 
@@ -314,7 +423,7 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
                     ============================================================ -->
                     <div
                         class="animate-fade-in-up glass-card rounded-2xl p-6"
-                        style="animation-delay: 200ms;"
+                        style="animation-delay: 380ms;"
                     >
                         <div class="flex items-center justify-between">
                             <h4 class="text-sm font-semibold text-gray-700 dark:text-slate-200">
@@ -338,7 +447,7 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
                                     :title="heatmapTitle(cell)"
                                     :aria-label="heatmapTitle(cell)"
                                     :style="{ gridRowStart: dowIndex(cell.date) + 1 }"
-                                    :class="intensityClass(cell.count)"
+                                    :class="[intensityClass(cell.count), { 'heatmap-today': cell.date === todayIso }]"
                                     class="h-4 w-4 cursor-default rounded-sm transition-colors duration-200 hover:scale-110 hover:brightness-110"
                                 />
                             </div>
@@ -348,15 +457,13 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
                     <!-- ===========================================================
                          QUICK ACTIONS
                     ============================================================ -->
-                    <div
-                        class="animate-fade-in-up grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-                        style="animation-delay: 260ms;"
-                    >
+                    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
-                        <!-- Study -->
                         <Link
+                            v-magnetic-button
                             :href="route('study.session')"
-                            class="action-card glass-card group relative overflow-hidden rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                            class="action-card glass-card animate-fade-in-up group relative overflow-hidden rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                            style="animation-delay: 420ms;"
                         >
                             <div aria-hidden="true" class="action-card__sweep bg-gradient-to-br from-emerald-500/15 to-teal-500/15" />
                             <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 transition-transform duration-200 group-hover:scale-110 group-hover:bg-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-300 dark:group-hover:bg-emerald-800/60">
@@ -372,10 +479,11 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
                             </p>
                         </Link>
 
-                        <!-- Interview -->
                         <Link
+                            v-magnetic-button
                             :href="route('interview.show')"
-                            class="action-card glass-card group relative overflow-hidden rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+                            class="action-card glass-card animate-fade-in-up group relative overflow-hidden rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+                            style="animation-delay: 455ms;"
                         >
                             <div aria-hidden="true" class="action-card__sweep bg-gradient-to-br from-violet-500/15 to-purple-500/15" />
                             <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-violet-100 text-violet-600 transition-transform duration-200 group-hover:scale-110 group-hover:bg-violet-200 dark:bg-violet-900/50 dark:text-violet-300 dark:group-hover:bg-violet-800/60">
@@ -388,10 +496,11 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
                             </p>
                         </Link>
 
-                        <!-- Questions -->
                         <Link
+                            v-magnetic-button
                             :href="route('questions.index')"
-                            class="action-card glass-card group relative overflow-hidden rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+                            class="action-card glass-card animate-fade-in-up group relative overflow-hidden rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+                            style="animation-delay: 490ms;"
                         >
                             <div aria-hidden="true" class="action-card__sweep bg-gradient-to-br from-cyan-500/15 to-sky-500/15" />
                             <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-100 text-cyan-600 transition-transform duration-200 group-hover:scale-110 group-hover:bg-cyan-200 dark:bg-cyan-900/50 dark:text-cyan-300 dark:group-hover:bg-cyan-800/60">
@@ -404,10 +513,11 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
                             </p>
                         </Link>
 
-                        <!-- Settings -->
                         <Link
+                            v-magnetic-button
                             :href="route('settings.edit')"
-                            class="action-card glass-card group relative overflow-hidden rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+                            class="action-card glass-card animate-fade-in-up group relative overflow-hidden rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+                            style="animation-delay: 525ms;"
                         >
                             <div aria-hidden="true" class="action-card__sweep bg-gradient-to-br from-slate-500/10 to-gray-500/10" />
                             <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-gray-600 transition-transform duration-200 group-hover:scale-110 group-hover:bg-gray-200 dark:bg-slate-700/60 dark:text-slate-300 dark:group-hover:bg-slate-600/60">
@@ -432,12 +542,93 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
 
 <style scoped>
 /* ===========================================================================
+   CURSOR SPOTLIGHT — radial gradient follows mouse across dashboard
+=========================================================================== */
+.cursor-spotlight {
+    background: radial-gradient(
+        circle 480px at var(--mx, 50%) var(--my, 50%),
+        rgba(16, 185, 129, 0.18) 0%,
+        rgba(20, 184, 166, 0.10) 25%,
+        rgba(6, 182, 212, 0.05) 45%,
+        transparent 65%
+    );
+    mix-blend-mode: screen;
+    transition: background 90ms linear;
+}
+
+.dark .cursor-spotlight {
+    background: radial-gradient(
+        circle 520px at var(--mx, 50%) var(--my, 50%),
+        rgba(16, 185, 129, 0.28) 0%,
+        rgba(20, 184, 166, 0.15) 25%,
+        rgba(6, 182, 212, 0.08) 45%,
+        transparent 65%
+    );
+    mix-blend-mode: screen;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cursor-spotlight { display: none; }
+}
+
+/* ===========================================================================
+   BACKGROUND SPARKS — drifting particles across the whole page
+=========================================================================== */
+.bg-sparks {
+    overflow: hidden;
+}
+
+.bg-spark {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    opacity: 0;
+    animation-name: spark-drift;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    pointer-events: none;
+}
+
+.bg-spark[data-color="emerald"] {
+    background: radial-gradient(circle, rgba(52, 211, 153, 1) 0%, rgba(16, 185, 129, 0.4) 50%, transparent 80%);
+    box-shadow: 0 0 10px rgba(52, 211, 153, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
+}
+.bg-spark[data-color="teal"] {
+    background: radial-gradient(circle, rgba(94, 234, 212, 1) 0%, rgba(20, 184, 166, 0.4) 50%, transparent 80%);
+    box-shadow: 0 0 10px rgba(94, 234, 212, 0.7), 0 0 22px rgba(20, 184, 166, 0.4);
+}
+.bg-spark[data-color="cyan"] {
+    background: radial-gradient(circle, rgba(103, 232, 249, 1) 0%, rgba(6, 182, 212, 0.4) 50%, transparent 80%);
+    box-shadow: 0 0 12px rgba(103, 232, 249, 0.75), 0 0 24px rgba(6, 182, 212, 0.45);
+}
+.bg-spark[data-color="violet"] {
+    background: radial-gradient(circle, rgba(196, 181, 253, 1) 0%, rgba(139, 92, 246, 0.4) 50%, transparent 80%);
+    box-shadow: 0 0 12px rgba(196, 181, 253, 0.7), 0 0 22px rgba(139, 92, 246, 0.4);
+}
+.bg-spark[data-color="pink"] {
+    background: radial-gradient(circle, rgba(249, 168, 212, 1) 0%, rgba(236, 72, 153, 0.4) 50%, transparent 80%);
+    box-shadow: 0 0 10px rgba(249, 168, 212, 0.6), 0 0 20px rgba(236, 72, 153, 0.3);
+}
+
+@keyframes spark-drift {
+    0%   { opacity: 0; transform: translate(0, 0) scale(0.3); }
+    10%  { opacity: 0.95; transform: translate(-12px, -8px) scale(1); }
+    35%  { opacity: 0.6; transform: translate(18px, -28px) scale(0.8); }
+    65%  { opacity: 0.85; transform: translate(-22px, -45px) scale(1.05); }
+    90%  { opacity: 0.3; transform: translate(12px, -72px) scale(0.6); }
+    100% { opacity: 0; transform: translate(0, -90px) scale(0.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bg-sparks { display: none; }
+}
+
+/* ===========================================================================
    MESH GRADIENT BACKGROUND
-   Multi-stop gradient that slowly animates background-position to give the
-   impression of a living mesh. Light and dark variants.
 =========================================================================== */
 .dashboard-root {
-    background-color: #f0fdf8; /* light base */
+    background-color: #f0fdf8;
 }
 
 .dark .dashboard-root {
@@ -484,10 +675,7 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .dashboard-mesh-bg {
-        animation: none;
-        background-position: 0% 50%;
-    }
+    .dashboard-mesh-bg { animation: none; background-position: 0% 50%; }
 }
 
 /* ===========================================================================
@@ -529,6 +717,32 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
     background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
 }
 
+.dashboard-blob-4 {
+    top: 55%;
+    right: -100px;
+    background: radial-gradient(circle, rgba(45, 212, 191, 0.30) 0%, transparent 70%);
+    filter: blur(56px);
+    animation: blob-drift-4 38s ease-in-out infinite;
+    animation-delay: -8s;
+}
+
+.dark .dashboard-blob-4 {
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.14) 0%, transparent 70%);
+}
+
+.dashboard-blob-5 {
+    top: 15%;
+    left: 30%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.22) 0%, transparent 70%);
+    filter: blur(52px);
+    animation: blob-drift-5 45s ease-in-out infinite;
+    animation-delay: -15s;
+}
+
+.dark .dashboard-blob-5 {
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+}
+
 @keyframes blob-drift-1 {
     0%, 100% { transform: translate(0, 0) scale(1); }
     33%       { transform: translate(-30px, 40px) scale(1.08); }
@@ -546,17 +760,46 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
     50%       { transform: translate(-40px, 30px) scale(1.12); }
 }
 
+@keyframes blob-drift-4 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    35%       { transform: translate(-50px, -25px) scale(1.08); }
+    70%       { transform: translate(30px, 35px) scale(0.92); }
+}
+
+@keyframes blob-drift-5 {
+    0%, 100% { transform: translate(0, 0) scale(0.98); }
+    25%       { transform: translate(35px, -40px) scale(1.05); }
+    60%       { transform: translate(-30px, 20px) scale(1.12); }
+    85%       { transform: translate(20px, 30px) scale(0.95); }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .dashboard-blob-1,
     .dashboard-blob-2,
-    .dashboard-blob-3 {
-        animation: none;
-    }
+    .dashboard-blob-3,
+    .dashboard-blob-4,
+    .dashboard-blob-5 { animation: none; }
+}
+
+/* ===========================================================================
+   AVATAR GLOW
+=========================================================================== */
+.avatar-glow {
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25), 0 8px 24px rgba(16, 185, 129, 0.30);
+    animation: avatar-pulse 3.5s ease-in-out infinite;
+}
+
+@keyframes avatar-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25), 0 8px 24px rgba(16, 185, 129, 0.30); }
+    50%       { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.15), 0 8px 32px rgba(16, 185, 129, 0.45); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .avatar-glow { animation: none; }
 }
 
 /* ===========================================================================
    GLASS CARD — base glassmorphism token
-   Strong backdrop-blur + gradient border via pseudo-element
 =========================================================================== */
 .glass-card {
     position: relative;
@@ -569,7 +812,11 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
         0 8px 24px -8px rgba(15, 118, 110, 0.18),
         0 2px 6px -2px rgba(15, 23, 42, 0.08),
         0 0 0 1px rgba(255, 255, 255, 0.4);
-    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    transition: transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                border-color 350ms ease,
+                opacity 350ms ease,
+                filter 350ms ease;
 }
 
 .dark .glass-card {
@@ -603,7 +850,46 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
 }
 
 /* ===========================================================================
-   STREAK CARD — conic-gradient rotating border
+   SPOTLIGHT / FOCUS MODE
+   Clicked card pops to front; all others dim and shrink
+=========================================================================== */
+.card-focused {
+    transform: translateY(-10px) scale(1.05) !important;
+    z-index: 20;
+    border-color: rgba(16, 185, 129, 0.65) !important;
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+        0 36px 72px -12px rgba(15, 118, 110, 0.50),
+        0 12px 28px -4px rgba(15, 23, 42, 0.20),
+        0 0 0 1.5px rgba(16, 185, 129, 0.40),
+        0 0 72px rgba(16, 185, 129, 0.30) !important;
+    transition: all 380ms cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.dark .card-focused {
+    border-color: rgba(16, 185, 129, 0.70) !important;
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.10) inset,
+        0 40px 80px -12px rgba(0, 0, 0, 0.90),
+        0 0 120px rgba(16, 185, 129, 0.40),
+        0 0 0 1.5px rgba(16, 185, 129, 0.50) !important;
+}
+
+.card-dimmed {
+    transform: scale(0.94) translateY(4px) !important;
+    opacity: 0.38 !important;
+    filter: blur(0.4px) saturate(0.6) !important;
+    pointer-events: none;
+    transition: all 380ms cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card-focused { transform: none !important; }
+    .card-dimmed  { transform: none !important; filter: none !important; }
+}
+
+/* ===========================================================================
+   STREAK CARD
 =========================================================================== */
 .streak-card {
     background: rgba(255, 255, 255, 0.88);
@@ -631,8 +917,6 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
         0 0 0 1px rgba(16, 185, 129, 0.35);
 }
 
-/* Rotating border via a pseudo-element underneath the card content.
-   We overlay a conic-gradient absolutely, then inset 2px to show the ring. */
 .streak-border-ring {
     z-index: 0;
     padding: 2px;
@@ -664,12 +948,10 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
     }
 }
 
-/* Large gradient number glow in dark */
 .dark .streak-number {
     filter: drop-shadow(0 0 20px rgba(52, 211, 153, 0.4));
 }
 
-/* Flame pulse */
 @keyframes streak-pulse {
     0%, 100% { transform: scale(1) rotate(-3deg); }
     50%       { transform: scale(1.15) rotate(3deg); }
@@ -680,9 +962,125 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .motion-safe\:animate-streak-pulse {
-        animation: none;
+    .motion-safe\:animate-streak-pulse { animation: none; }
+}
+
+/* ===========================================================================
+   LIVING HALO — breathing drop-shadow on metric & total cards
+   (independent of box-shadow & transform, so no conflict with hover/focus)
+=========================================================================== */
+.metric-card.animate-fade-in-up,
+.total-card.animate-fade-in-up {
+    animation:
+        fade-in-up 0.45s ease-out both,
+        card-aura 5s ease-in-out infinite;
+}
+
+@keyframes card-aura {
+    0%, 100% { filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.18)); }
+    50%       { filter: drop-shadow(0 4px 22px rgba(20, 184, 166, 0.32)); }
+}
+
+.dark .metric-card.animate-fade-in-up,
+.dark .total-card.animate-fade-in-up {
+    animation:
+        fade-in-up 0.45s ease-out both,
+        card-aura-dark 5s ease-in-out infinite;
+}
+
+@keyframes card-aura-dark {
+    0%, 100% { filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.22)); }
+    50%       { filter: drop-shadow(0 6px 28px rgba(20, 184, 166, 0.40)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .metric-card.animate-fade-in-up,
+    .total-card.animate-fade-in-up,
+    .dark .metric-card.animate-fade-in-up,
+    .dark .total-card.animate-fade-in-up {
+        animation: fade-in-up 0.45s ease-out both;
     }
+}
+
+/* ===========================================================================
+   LIVING TYPOGRAPHY — number weight breathe + name shimmer
+=========================================================================== */
+.number-breathe {
+    font-variation-settings: 'wght' 800;
+    animation: number-breathe 4.2s ease-in-out infinite;
+}
+
+@keyframes number-breathe {
+    0%, 100% { font-variation-settings: 'wght' 700; letter-spacing: 0; }
+    50%       { font-variation-settings: 'wght' 850; letter-spacing: -0.01em; }
+}
+
+.name-shimmer {
+    background-size: 220% auto;
+    animation: name-shimmer 7s linear infinite;
+}
+
+@keyframes name-shimmer {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 220% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .number-breathe,
+    .name-shimmer { animation: none; }
+}
+
+/* ===========================================================================
+   HEATMAP — today cell pulse
+=========================================================================== */
+.heatmap-today {
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.55), 0 0 12px rgba(16, 185, 129, 0.45);
+    animation: today-pulse 2.1s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes today-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.5), 0 0 8px rgba(16, 185, 129, 0.35);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.85), 0 0 18px rgba(16, 185, 129, 0.6);
+        transform: scale(1.18);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .heatmap-today { animation: none; transform: none; }
+}
+
+/* ===========================================================================
+   STREAK PARTICLES — sparks rising from streak card (always-on, > 6 days)
+=========================================================================== */
+.streak-particle {
+    bottom: 0;
+    background: radial-gradient(circle, rgba(94, 234, 212, 1) 0%, rgba(45, 212, 191, 0.6) 45%, transparent 80%);
+    box-shadow: 0 0 6px rgba(45, 212, 191, 0.7), 0 0 12px rgba(16, 185, 129, 0.4);
+    opacity: 0;
+    animation-name: particle-rise;
+    animation-timing-function: ease-out;
+    animation-iteration-count: infinite;
+}
+
+.dark .streak-particle {
+    background: radial-gradient(circle, rgba(110, 231, 183, 1) 0%, rgba(52, 211, 153, 0.7) 45%, transparent 80%);
+    box-shadow: 0 0 8px rgba(52, 211, 153, 0.85), 0 0 16px rgba(16, 185, 129, 0.55);
+}
+
+@keyframes particle-rise {
+    0%   { transform: translate(0, 0) scale(0.6); opacity: 0; }
+    15%  { opacity: 1; transform: translate(0, -8px) scale(1); }
+    60%  { transform: translate(calc(var(--drift, 6px)), -64px) scale(0.85); opacity: 0.8; }
+    100% { transform: translate(calc(var(--drift, -10px)), -120px) scale(0.3); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .streak-particles { display: none; }
 }
 
 /* ===========================================================================
@@ -714,13 +1112,11 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .progress-bar--shimmer::after {
-        animation: none;
-    }
+    .progress-bar--shimmer::after { animation: none; }
 }
 
 /* ===========================================================================
-   METRIC CARDS (today / due / retention)
+   METRIC CARDS
 =========================================================================== */
 .metric-card__accent {
     position: absolute;
@@ -739,9 +1135,7 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
     pointer-events: none;
 }
 
-.metric-card:hover .metric-card__sweep {
-    opacity: 1;
-}
+.metric-card:hover .metric-card__sweep { opacity: 1; }
 
 .dark .metric-card:hover {
     box-shadow:
@@ -751,7 +1145,7 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
 }
 
 /* ===========================================================================
-   TOTAL CARDS — subtle inner glow on hover
+   TOTAL CARDS
 =========================================================================== */
 .total-card__glow {
     position: absolute;
@@ -763,9 +1157,7 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
     pointer-events: none;
 }
 
-.total-card:hover .total-card__glow {
-    opacity: 1;
-}
+.total-card:hover .total-card__glow { opacity: 1; }
 
 .dark .total-card:hover {
     box-shadow:
@@ -791,9 +1183,7 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
     pointer-events: none;
 }
 
-.action-card:hover .action-card__sweep {
-    opacity: 1;
-}
+.action-card:hover .action-card__sweep { opacity: 1; }
 
 .action-card:hover {
     transform: translateY(-3px) scale(1.02);
@@ -802,5 +1192,140 @@ const { displayed: animInterviews } = useAnimatedNumber(() => props.stats.totals
 .action-card:active {
     transform: scale(0.97);
     transition-duration: 80ms;
+}
+
+/* ===========================================================================
+   PER-CARD COLOR HOVER HALOS (data-glow attribute)
+=========================================================================== */
+.metric-card[data-glow="sky"]:hover {
+    border-color: rgba(56, 189, 248, 0.55) !important;
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
+        0 20px 44px -12px rgba(14, 165, 233, 0.32),
+        0 0 0 1px rgba(56, 189, 248, 0.30),
+        0 0 48px rgba(56, 189, 248, 0.30) !important;
+}
+
+.dark .metric-card[data-glow="sky"]:hover {
+    border-color: rgba(56, 189, 248, 0.65) !important;
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+        0 24px 56px -12px rgba(0, 0, 0, 0.75),
+        0 0 64px rgba(56, 189, 248, 0.32) !important;
+}
+
+.metric-card[data-glow="amber"]:hover {
+    border-color: rgba(251, 191, 36, 0.55) !important;
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
+        0 20px 44px -12px rgba(245, 158, 11, 0.32),
+        0 0 0 1px rgba(251, 191, 36, 0.32),
+        0 0 48px rgba(251, 191, 36, 0.32) !important;
+}
+
+.dark .metric-card[data-glow="amber"]:hover {
+    border-color: rgba(251, 191, 36, 0.65) !important;
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+        0 24px 56px -12px rgba(0, 0, 0, 0.75),
+        0 0 64px rgba(251, 191, 36, 0.32) !important;
+}
+
+.metric-card[data-glow="violet"]:hover {
+    border-color: rgba(167, 139, 250, 0.55) !important;
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
+        0 20px 44px -12px rgba(139, 92, 246, 0.32),
+        0 0 0 1px rgba(167, 139, 250, 0.32),
+        0 0 48px rgba(167, 139, 250, 0.32) !important;
+}
+
+.dark .metric-card[data-glow="violet"]:hover {
+    border-color: rgba(167, 139, 250, 0.70) !important;
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+        0 24px 56px -12px rgba(0, 0, 0, 0.75),
+        0 0 64px rgba(167, 139, 250, 0.36) !important;
+}
+
+/* ===========================================================================
+   LIQUID FILL on action cards (replaces simple sweep)
+=========================================================================== */
+.action-card__sweep {
+    transform: translateY(100%) scale(1.4);
+    opacity: 0.65;
+    transition:
+        transform 720ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity 320ms ease;
+}
+
+.action-card:hover .action-card__sweep {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.action-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(
+        130deg,
+        transparent 20%,
+        rgba(255, 255, 255, 0.5) 48%,
+        rgba(255, 255, 255, 0.0) 52%,
+        transparent 80%
+    );
+    transform: translateX(-120%);
+    opacity: 0;
+    transition: transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 200ms ease;
+}
+
+.dark .action-card::after {
+    background: linear-gradient(
+        130deg,
+        transparent 20%,
+        rgba(255, 255, 255, 0.20) 48%,
+        rgba(255, 255, 255, 0.0) 52%,
+        transparent 80%
+    );
+}
+
+.action-card:hover::after {
+    transform: translateX(120%);
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .action-card__sweep,
+    .action-card::after { transition: none; transform: none; opacity: 0; }
+    .action-card:hover .action-card__sweep { transform: none; opacity: 0.4; }
+    .action-card:hover::after { transform: none; opacity: 0; }
+}
+
+/* ===========================================================================
+   GREETING — avatar status dot live pulse
+=========================================================================== */
+.avatar-status {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    animation: status-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.75), 0 0 6px rgba(34, 197, 94, 0.45); }
+    70%  { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0),  0 0 14px rgba(34, 197, 94, 0.5); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0),     0 0 6px rgba(34, 197, 94, 0.45); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .avatar-status { animation: none; }
+}
+
+/* ===========================================================================
+   GREETING SECTION — floating breathing
+=========================================================================== */
+.greeting-section {
+    will-change: transform;
 }
 </style>
