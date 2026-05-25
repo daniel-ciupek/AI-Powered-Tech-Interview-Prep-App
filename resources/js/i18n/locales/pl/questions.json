@@ -12,6 +12,9 @@
     "empty_state_hint_prefix": "Kliknij",
     "empty_state_hint_button": "+ Generuj",
     "empty_state_hint_suffix": ", aby utworzyć swoje pierwsze pytanie AI.",
+    "list_count": "pytań",
+    "back_to_list": "← Wróć do listy",
+    "select_question": "Wybierz pytanie z listy po lewej",
     "card": {
         "show_answer": "Pokaż odpowiedź",
         "hide_answer": "Ukryj odpowiedź",
