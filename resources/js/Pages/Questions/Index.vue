@@ -125,11 +125,11 @@ const difficultyBadge = {
 
             <!-- Left panel: question list -->
             <aside
-                class="flex w-72 flex-none flex-col border-r border-gray-200/60 bg-white/50 backdrop-blur-sm dark:border-white/10 dark:bg-slate-900/50"
+                class="flex w-72 flex-none flex-col border-r border-emerald-500/15 bg-white/35 backdrop-blur-2xl dark:border-emerald-400/10 dark:bg-slate-900/35"
                 :class="mobileShowDetail ? 'hidden md:flex' : 'flex'"
             >
                 <!-- List header with count -->
-                <div class="flex items-center justify-between border-b border-gray-200/60 px-4 py-3 dark:border-white/10">
+                <div class="flex items-center justify-between border-b border-emerald-500/12 px-4 py-3 dark:border-emerald-400/8">
                     <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                         {{ questions.meta.total }} {{ t('questions.list_count') }}
                     </span>
@@ -213,11 +213,11 @@ const difficultyBadge = {
 
             <!-- Right panel: detail -->
             <main
-                class="flex flex-1 flex-col overflow-hidden"
+                class="flex flex-1 flex-col overflow-hidden bg-white/20 backdrop-blur-sm dark:bg-slate-900/20"
                 :class="!mobileShowDetail && questions.data.length > 0 ? 'hidden md:flex' : 'flex'"
             >
                 <!-- Mobile back button -->
-                <div class="flex items-center border-b border-gray-200/60 px-4 py-2.5 md:hidden dark:border-white/10">
+                <div class="flex items-center border-b border-emerald-500/12 px-4 py-2.5 md:hidden dark:border-emerald-400/8">
                     <button
                         type="button"
                         @click="mobileShowDetail = false"

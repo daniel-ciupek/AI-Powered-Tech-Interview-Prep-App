@@ -102,7 +102,7 @@ function onKeydown(e: KeyboardEvent): void {
                         </p>
                     </div>
 
-                    <div class="animate-spring-in w-full rounded-3xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30" style="animation-delay: 80ms;">
+                    <div class="glass-card animate-spring-in w-full rounded-3xl p-6" style="animation-delay: 80ms;">
                         <FreeTextTagInput
                             v-model="selectedTags"
                             :suggestions="availableTags"
@@ -143,7 +143,7 @@ function onKeydown(e: KeyboardEvent): void {
                     <TransitionGroup
                         name="msg"
                         tag="div"
-                        class="animate-spring-in flex-1 space-y-3 overflow-y-auto rounded-3xl border border-white/40 bg-white/60 p-4 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30"
+                        class="glass-card animate-spring-in flex-1 space-y-3 overflow-y-auto rounded-3xl p-4"
                         style="animation-delay: 0ms;"
                     >
                         <div
@@ -219,7 +219,7 @@ function onKeydown(e: KeyboardEvent): void {
                     <!-- Report: ready -->
                     <div
                         v-if="store.session.final_report"
-                        class="mt-3 rounded-3xl border border-white/40 bg-white/60 p-5 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30"
+                        class="glass-card mt-3 rounded-3xl p-5"
                     >
                         <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold text-emerald-800 dark:text-emerald-300">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

@@ -64,7 +64,7 @@ const themes = ['light', 'dark', 'system'] as const;
                 >
                     <div
                         v-if="status === 'settings-updated'"
-                        class="rounded-xl border border-emerald-200/60 bg-emerald-50/80 px-4 py-3 text-sm font-medium text-emerald-700 backdrop-blur-sm dark:border-emerald-800/40 dark:bg-emerald-900/20 dark:text-emerald-300"
+                        class="glass-card animate-fade-in-up rounded-xl px-4 py-3 text-sm font-medium text-emerald-700 dark:text-emerald-300"
                     >
                         {{ t('settings.saved') }}
                     </div>
@@ -73,7 +73,7 @@ const themes = ['light', 'dark', 'system'] as const;
                 <form @submit.prevent="submit" class="space-y-5">
 
                     <!-- Interview Preferences -->
-                    <div class="rounded-3xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30">
+                    <div class="glass-card animate-fade-in-up rounded-3xl p-6" style="animation-delay: 60ms;">
                         <h3 class="text-base font-bold tracking-tight text-gray-900 dark:text-gray-100">
                             {{ t('settings.interview.header') }}
                         </h3>
@@ -132,7 +132,7 @@ const themes = ['light', 'dark', 'system'] as const;
                     </div>
 
                     <!-- Appearance -->
-                    <div class="rounded-3xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30">
+                    <div class="glass-card animate-fade-in-up rounded-3xl p-6" style="animation-delay: 120ms;">
                         <h3 class="text-base font-bold tracking-tight text-gray-900 dark:text-gray-100">
                             {{ t('settings.appearance.header') }}
                         </h3>
@@ -164,12 +164,12 @@ const themes = ['light', 'dark', 'system'] as const;
                     </div>
 
                     <!-- TTS Voice -->
-                    <div class="rounded-3xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30">
+                    <div class="glass-card animate-fade-in-up rounded-3xl p-6" style="animation-delay: 180ms;">
                         <VoicePicker />
                     </div>
 
                     <!-- API Key -->
-                    <div class="rounded-3xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30">
+                    <div class="glass-card animate-fade-in-up rounded-3xl p-6" style="animation-delay: 240ms;">
                         <ApiKeyInput :has-api-key="has_api_key" />
                     </div>
 

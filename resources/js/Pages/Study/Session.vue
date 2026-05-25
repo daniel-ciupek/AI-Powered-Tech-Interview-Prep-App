@@ -211,7 +211,8 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                     <!-- ── SESSION COMPLETE ────────────────────────────── -->
                     <div
                         v-else-if="sessionComplete"
-                        class="rounded-2xl border border-emerald-200/60 bg-emerald-50/60 px-6 py-12 text-center backdrop-blur-sm dark:border-emerald-800/40 dark:bg-emerald-900/10"
+                        class="glass-card animate-fade-in-up rounded-2xl px-6 py-12 text-center"
+                        style="border-color: rgba(16,185,129,0.30);"
                     >
                         <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 text-3xl shadow-lg shadow-emerald-200/40 dark:from-emerald-900/40 dark:to-teal-900/40">
                             🎯
@@ -223,7 +224,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                     <!-- ── GENERATE MODE ───────────────────────────────── -->
                     <template v-else>
                         <!-- Tag selector -->
-                        <div class="animate-spring-in rounded-3xl border border-white/40 bg-white/60 p-5 shadow-lg shadow-emerald-100/40 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 dark:shadow-emerald-950/30" style="animation-delay: 0ms;">
+                        <div class="glass-card animate-spring-in rounded-3xl p-5" style="animation-delay: 0ms;">
                             <FreeTextTagInput
                                 v-model="selectedTags"
                                 :suggestions="availableTags"

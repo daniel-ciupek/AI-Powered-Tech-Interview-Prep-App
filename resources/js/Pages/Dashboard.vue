@@ -799,57 +799,6 @@ onMounted(() => {
 }
 
 /* ===========================================================================
-   GLASS CARD — base glassmorphism token
-=========================================================================== */
-.glass-card {
-    position: relative;
-    background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(24px) saturate(200%);
-    -webkit-backdrop-filter: blur(24px) saturate(200%);
-    border: 1px solid rgba(16, 185, 129, 0.18);
-    box-shadow:
-        0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
-        0 8px 24px -8px rgba(15, 118, 110, 0.18),
-        0 2px 6px -2px rgba(15, 23, 42, 0.08),
-        0 0 0 1px rgba(255, 255, 255, 0.4);
-    transition: transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
-                border-color 350ms ease,
-                opacity 350ms ease,
-                filter 350ms ease;
-}
-
-.dark .glass-card {
-    background: rgba(15, 23, 42, 0.78);
-    border: 1px solid rgba(16, 185, 129, 0.22);
-    box-shadow:
-        0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
-        0 16px 32px -12px rgba(0, 0, 0, 0.6),
-        0 4px 12px -2px rgba(0, 0, 0, 0.35),
-        0 0 0 1px rgba(16, 185, 129, 0.08);
-}
-
-.glass-card:hover {
-    transform: translateY(-3px) scale(1.008);
-    border-color: rgba(16, 185, 129, 0.35);
-    box-shadow:
-        0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
-        0 20px 40px -12px rgba(15, 118, 110, 0.28),
-        0 6px 14px -4px rgba(15, 23, 42, 0.12),
-        0 0 0 1px rgba(16, 185, 129, 0.18);
-}
-
-.dark .glass-card:hover {
-    border-color: rgba(16, 185, 129, 0.45);
-    box-shadow:
-        0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
-        0 24px 48px -12px rgba(0, 0, 0, 0.75),
-        0 8px 16px -4px rgba(0, 0, 0, 0.45),
-        0 0 0 1px rgba(16, 185, 129, 0.25),
-        0 0 32px rgba(16, 185, 129, 0.15);
-}
-
-/* ===========================================================================
    SPOTLIGHT / FOCUS MODE
    Clicked card pops to front; all others dim and shrink
 =========================================================================== */
