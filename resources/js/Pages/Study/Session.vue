@@ -24,10 +24,15 @@ interface StudyItem {
     question: Question;
 }
 
+type Difficulty = 'junior' | 'mid' | 'senior';
+
 const props = defineProps<{
     has_api_key: boolean;
-    preferred_difficulty: 'junior' | 'mid' | 'senior';
+    preferred_difficulty: Difficulty;
 }>();
+
+// ─── Difficulty selector ──────────────────────────────────────────────────
+const selectedDifficulty = ref<Difficulty>(props.preferred_difficulty);
 
 // ─── Generate mode state ──────────────────────────────────────────────────
 const availableTags = ref<string[]>([]);
@@ -48,8 +53,12 @@ const currentQuestion = (): Question | null => currentItem()?.question ?? null;
 // ─── Load due questions ───────────────────────────────────────────────────
 async function loadDueQuestions(): Promise<void> {
     try {
-        const res = await window.axios.get<{ data: StudyItem[]; count: number }>('/api/study/today');
+        const res = await window.axios.get<{ data: StudyItem[]; count: number }>('/api/study/today', {
+            params: { difficulty: selectedDifficulty.value },
+        });
         dueItems.value = res.data.data;
+        currentIndex.value = 0;
+        sessionComplete.value = false;
     } catch {
         // silent — fall back to generate mode
     }
@@ -78,7 +87,7 @@ async function generateQuestion(): Promise<void> {
     try {
         const res = await window.axios.post<{ data: Question }>('/api/questions/generate', {
             tags: selectedTags.value,
-            difficulty: props.preferred_difficulty,
+            difficulty: selectedDifficulty.value,
         });
         generatedQuestion.value = res.data.data;
         await loadDueQuestions();
@@ -251,10 +260,20 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                                 </svg>
                                 {{ generating ? t('study.generating') : t('study.generate') }}
                             </button>
-                            <p class="mt-2.5 text-xs text-gray-500 dark:text-gray-400">
-                                {{ t('study.difficulty_prefix') }} <span class="font-semibold capitalize text-gray-700 dark:text-gray-200">{{ preferred_difficulty }}</span>
-                                · <Link :href="route('settings.edit')" class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300">{{ t('study.difficulty_change') }}</Link>
-                            </p>
+                            <div class="mt-3 flex items-center justify-center gap-1.5">
+                                <button
+                                    v-for="d in (['junior', 'mid', 'senior'] as Difficulty[])"
+                                    :key="d"
+                                    type="button"
+                                    class="rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                                    :class="selectedDifficulty === d
+                                        ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-sm shadow-emerald-500/25'
+                                        : 'bg-white/60 text-gray-500 hover:bg-emerald-50 hover:text-emerald-700 dark:bg-slate-800/50 dark:text-gray-400 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-300'"
+                                    @click="selectedDifficulty = d; loadDueQuestions()"
+                                >
+                                    {{ t(`study.difficulty.${d}`) }}
+                                </button>
+                            </div>
                         </div>
 
                         <div

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Difficulty;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\QuestionResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class StudySessionController extends Controller
 {
@@ -16,13 +18,22 @@ class StudySessionController extends Controller
         $user = $request->user();
         assert($user !== null);
 
-        $repetitions = $user->repetitions()
+        $validated = $request->validate([
+            'difficulty' => ['sometimes', 'nullable', Rule::enum(Difficulty::class)],
+        ]);
+
+        $query = $user->repetitions()
             ->with('question')
             ->where('next_review_at', '<=', now())
-            ->orderBy('next_review_at')
-            ->get();
+            ->orderBy('next_review_at');
 
-        $questions = $repetitions->map(static fn ($rep) => [
+        if (! empty($validated['difficulty'])) {
+            $query->whereHas('question', static function ($q) use ($validated): void {
+                $q->where('difficulty', $validated['difficulty']);
+            });
+        }
+
+        $questions = $query->get()->map(static fn ($rep) => [
             'repetition_id' => $rep->id,
             'question' => new QuestionResource($rep->question),
         ]);

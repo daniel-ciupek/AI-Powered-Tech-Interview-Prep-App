@@ -51,6 +51,7 @@ class QuestionsController extends Controller
                 $query->paginate(10)->withQueryString()
             ),
             'has_api_key' => $user->gemini_api_key_encrypted !== null,
+            'preferred_difficulty' => $user->preferred_difficulty->value,
             'selected_tags' => $selectedTags,
             'tag_suggestions' => $tagSuggestions,
         ]);

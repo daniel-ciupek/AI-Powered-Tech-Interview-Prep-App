@@ -17,6 +17,11 @@
     "generating": "Generating…",
     "difficulty_prefix": "Difficulty:",
     "difficulty_change": "change",
+    "difficulty": {
+        "junior": "Junior",
+        "mid": "Mid",
+        "senior": "Senior"
+    },
     "rate_limit": "Rate limit reached. Please wait a moment.",
     "generation_failed": "Generation failed.",
     "come_back_tomorrow": "Come back tomorrow to review it!",

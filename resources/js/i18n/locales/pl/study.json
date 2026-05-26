@@ -17,6 +17,11 @@
     "generating": "Generuję…",
     "difficulty_prefix": "Poziom:",
     "difficulty_change": "zmień",
+    "difficulty": {
+        "junior": "Junior",
+        "mid": "Mid",
+        "senior": "Senior"
+    },
     "rate_limit": "Limit zapytań osiągnięty. Poczekaj chwilę.",
     "generation_failed": "Generowanie nie powiodło się.",
     "come_back_tomorrow": "Wróć jutro, aby ją powtórzyć!",

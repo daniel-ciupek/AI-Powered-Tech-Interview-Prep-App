@@ -36,9 +36,12 @@ interface PaginatedQuestions {
     };
 }
 
+type Difficulty = 'junior' | 'mid' | 'senior';
+
 const props = defineProps<{
     questions: PaginatedQuestions;
     has_api_key: boolean;
+    preferred_difficulty: Difficulty;
     selected_tags: string[];
     tag_suggestions: string[];
 }>();
@@ -47,6 +50,7 @@ const generating = ref(false);
 const generateError = ref<string | null>(null);
 const selectedId = ref<number | null>(props.questions.data[0]?.id ?? null);
 const mobileShowDetail = ref(false);
+const selectedDifficulty = ref<Difficulty>(props.preferred_difficulty);
 
 // Local copy of active filter tags — synced back to URL on change
 const filterTags = ref<string[]>([...props.selected_tags]);
@@ -78,7 +82,7 @@ async function generate(): Promise<void> {
     generateError.value = null;
     const tags = filterTags.value;
     try {
-        const res = await window.axios.post<{ data: Question }>('/api/questions/generate', { tags });
+        const res = await window.axios.post<{ data: Question }>('/api/questions/generate', { tags, difficulty: selectedDifficulty.value });
         const newId = res.data.data.id;
         router.reload({
             only: ['questions', 'tag_suggestions'],
@@ -166,6 +170,41 @@ const difficultyBadge = {
                     />
                 </div>
 
+                <!-- Difficulty selector -->
+                <div class="flex items-center gap-1.5 border-b border-emerald-500/12 px-3 py-2.5 dark:border-emerald-400/8">
+                    <button
+                        v-for="d in (['junior', 'mid', 'senior'] as Difficulty[])"
+                        :key="d"
+                        type="button"
+                        class="flex-1 rounded-lg py-1.5 text-xs font-semibold capitalize transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                        :class="selectedDifficulty === d
+                            ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-sm shadow-emerald-500/25'
+                            : 'bg-white/60 text-gray-500 hover:bg-emerald-50 hover:text-emerald-700 dark:bg-slate-800/50 dark:text-gray-400 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-300'"
+                        @click="selectedDifficulty = d"
+                    >
+                        {{ t(`questions.card.difficulty.${d}`) }}
+                    </button>
+                </div>
+
+                <!-- Generate on topic CTA — always visible when tags selected -->
+                <div
+                    v-if="filterTags.length > 0 && has_api_key"
+                    class="border-b border-emerald-500/12 px-3 py-2.5 dark:border-emerald-400/8"
+                >
+                    <button
+                        type="button"
+                        :disabled="generating"
+                        class="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-3 py-2 text-xs font-semibold text-white shadow-sm shadow-emerald-500/25 transition-all duration-200 hover:scale-[1.01] hover:from-emerald-600 hover:to-teal-700 disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                        @click="generate()"
+                    >
+                        <svg v-if="generating" class="h-3 w-3 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                        </svg>
+                        {{ generating ? t('questions.generating') : t('questions.generate_on_topic', { topic: filterTags.join(', ') }) }}
+                    </button>
+                </div>
+
                 <!-- List header with count -->
                 <div class="flex items-center justify-between border-b border-emerald-500/12 px-4 py-2.5 dark:border-emerald-400/8">
                     <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
@@ -207,20 +246,6 @@ const difficultyBadge = {
                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
                         {{ filterTags.length > 0 ? t('questions.empty_state_filtered') : t('questions.empty_state') }}
                     </p>
-                    <!-- CTA when topics selected but no questions yet -->
-                    <button
-                        v-if="filterTags.length > 0 && has_api_key"
-                        type="button"
-                        :disabled="generating"
-                        class="mt-1 inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-emerald-500/25 transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-                        @click="generate()"
-                    >
-                        <svg v-if="generating" class="h-3.5 w-3.5 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                        </svg>
-                        {{ generating ? t('questions.generating') : t('questions.generate_on_topic', { topic: filterTags.join(', ') }) }}
-                    </button>
                     <p v-if="filterTags.length === 0" class="text-xs text-gray-400 dark:text-gray-500">
                         {{ t('questions.empty_state_hint_prefix') }}
                         <span class="font-semibold text-gray-600 dark:text-gray-300">{{ t('questions.empty_state_hint_button') }}</span>{{ t('questions.empty_state_hint_suffix') }}
