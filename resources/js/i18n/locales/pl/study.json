@@ -1,6 +1,6 @@
 {
-    "title": "Sesja nauki",
-    "header": "Sesja nauki",
+    "title": "Powtórki",
+    "header": "Powtórki",
     "due_counter": "{current} / {total} do powtórki",
     "no_api_key_header": "Wymagany klucz Gemini API",
     "no_api_key_prefix": "Dodaj go w",

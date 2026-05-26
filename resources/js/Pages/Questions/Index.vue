@@ -76,11 +76,17 @@ function applyTagFilter(tags: string[]): void {
 async function generate(): Promise<void> {
     generating.value = true;
     generateError.value = null;
+    const tags = filterTags.value;
     try {
-        await window.axios.post('/api/questions/generate', {
-            tags: filterTags.value,
+        const res = await window.axios.post<{ data: Question }>('/api/questions/generate', { tags });
+        const newId = res.data.data.id;
+        router.reload({
+            only: ['questions', 'tag_suggestions'],
+            onSuccess: () => {
+                selectedId.value = newId;
+                mobileShowDetail.value = true;
+            },
         });
-        router.reload({ only: ['questions', 'tag_suggestions'] });
     } catch (err: unknown) {
         const axiosErr = err as { response?: { data?: { message?: string } } };
         generateError.value = axiosErr.response?.data?.message ?? t('questions.generation_failed');
@@ -195,12 +201,26 @@ const difficultyBadge = {
                 <!-- Empty state -->
                 <div
                     v-if="questions.data.length === 0"
-                    class="flex flex-1 flex-col items-center justify-center gap-2 px-6 text-center"
+                    class="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center"
                 >
                     <div class="text-3xl">📋</div>
                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
                         {{ filterTags.length > 0 ? t('questions.empty_state_filtered') : t('questions.empty_state') }}
                     </p>
+                    <!-- CTA when topics selected but no questions yet -->
+                    <button
+                        v-if="filterTags.length > 0 && has_api_key"
+                        type="button"
+                        :disabled="generating"
+                        class="mt-1 inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-emerald-500/25 transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                        @click="generate()"
+                    >
+                        <svg v-if="generating" class="h-3.5 w-3.5 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                        </svg>
+                        {{ generating ? t('questions.generating') : t('questions.generate_on_topic', { topic: filterTags.join(', ') }) }}
+                    </button>
                     <p v-if="filterTags.length === 0" class="text-xs text-gray-400 dark:text-gray-500">
                         {{ t('questions.empty_state_hint_prefix') }}
                         <span class="font-semibold text-gray-600 dark:text-gray-300">{{ t('questions.empty_state_hint_button') }}</span>{{ t('questions.empty_state_hint_suffix') }}

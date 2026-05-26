@@ -39,9 +39,9 @@
         "no_activity": "No activity"
     },
     "cta": {
-        "study": "Start study session",
+        "study": "Go to Repetitions",
         "interview": "Interview simulator",
-        "questions": "Browse questions",
+        "questions": "Go to Learning",
         "settings": "Settings"
     },
     "no_api_key": {

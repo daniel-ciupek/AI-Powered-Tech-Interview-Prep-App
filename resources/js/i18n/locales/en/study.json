@@ -1,6 +1,6 @@
 {
-    "title": "Study Session",
-    "header": "Study Session",
+    "title": "Repetitions",
+    "header": "Repetitions",
     "due_counter": "{current} / {total} due",
     "no_api_key_header": "Gemini API key required",
     "no_api_key_prefix": "Add it in",

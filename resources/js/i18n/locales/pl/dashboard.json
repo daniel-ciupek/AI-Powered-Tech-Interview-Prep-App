@@ -39,9 +39,9 @@
         "no_activity": "Brak aktywności"
     },
     "cta": {
-        "study": "Rozpocznij sesję nauki",
+        "study": "Idź do Powtórek",
         "interview": "Symulator rozmowy",
-        "questions": "Przeglądaj pytania",
+        "questions": "Idź do Nauki",
         "settings": "Ustawienia"
     },
     "no_api_key": {
