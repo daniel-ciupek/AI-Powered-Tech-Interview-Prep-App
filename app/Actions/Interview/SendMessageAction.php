@@ -30,8 +30,10 @@ final class SendMessageAction
 
         $history = $session->messages()
             ->whereIn('role', [MessageRole::User->value, MessageRole::Assistant->value])
-            ->orderBy('created_at')
+            ->orderByDesc('created_at')
+            ->take(20)
             ->get()
+            ->reverse()
             ->map(static fn (InterviewMessage $m): array => [
                 'role' => $m->role->value,
                 'content' => $m->content,

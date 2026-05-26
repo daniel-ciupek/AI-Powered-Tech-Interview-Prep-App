@@ -194,9 +194,6 @@ onMounted(() => {
                         </div>
                         <!-- Text -->
                         <div>
-                            <p class="mb-0.5 text-xs font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
-                                PrepMind
-                            </p>
                             <h3 class="name-shimmer bg-gradient-to-r from-gray-900 via-emerald-600 to-teal-600 bg-clip-text text-3xl font-black leading-tight text-transparent dark:from-white dark:via-emerald-300 dark:to-teal-300">
                                 {{ t('dashboard.greeting', { name: userName }) }}
                             </h3>

@@ -20,9 +20,6 @@ useTheme();
                 class="flex flex-col items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-xl p-2"
             >
                 <ApplicationLogo class="h-16 w-16 fill-current text-emerald-600 drop-shadow-lg dark:text-emerald-400" />
-                <span class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-lg font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
-                    PrepMind
-                </span>
             </Link>
         </div>
 

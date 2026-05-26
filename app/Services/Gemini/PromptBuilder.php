@@ -68,12 +68,12 @@ class PromptBuilder
         Jesteś pomocnym mentorem programowania. Użytkownik uczy się z pytania technicznego poziomu {$level} i chce dopytać o szczegóły.
 
         Pytanie, o które pyta:
-        {$questionContent}
+        <question>{$questionContent}</question>
 
         Oczekiwana wzorcowa odpowiedź:
-        {$expected}
+        <expected_answer>{$expected}</expected_answer>
 
-        Słowa kluczowe: {$keywordsList}.
+        Słowa kluczowe: <keywords>{$keywordsList}</keywords>.
 
         Zasady:
         1. Odpowiadaj po polsku, zwięźle (maksymalnie 200 słów).
