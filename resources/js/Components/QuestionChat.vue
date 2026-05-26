@@ -142,7 +142,7 @@ function onKeydown(e: KeyboardEvent): void {
                 v-if="messages.length > 0"
                 name="msg"
                 tag="div"
-                class="max-h-80 space-y-3 overflow-y-auto pr-1"
+                class="max-h-52 space-y-3 overflow-y-auto pr-1 sm:max-h-80"
             >
                 <div
                     v-for="msg in messages"

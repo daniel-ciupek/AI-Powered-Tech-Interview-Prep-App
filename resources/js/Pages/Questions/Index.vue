@@ -123,9 +123,9 @@ const difficultyBadge = {
 <template>
     <Head :title="t('questions.title')" />
 
-    <AuthenticatedLayout :minimal="true">
+    <AuthenticatedLayout>
         <template #header>
-            <div class="flex items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                 <h2 class="bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-xl font-bold tracking-tight text-transparent dark:from-white dark:to-gray-300">
                     {{ t('questions.header') }}
                 </h2>
@@ -153,11 +153,11 @@ const difficultyBadge = {
         </template>
 
         <!-- Master-detail layout -->
-        <div class="flex h-[calc(100vh-3.5rem)] overflow-hidden">
+        <div class="flex h-[calc(100vh-8.5rem)] overflow-hidden">
 
             <!-- Left panel: question list -->
             <aside
-                class="flex w-72 flex-none flex-col border-r border-emerald-500/15 bg-white/35 backdrop-blur-2xl dark:border-emerald-400/10 dark:bg-slate-900/35"
+                class="flex w-full flex-none flex-col border-r border-emerald-500/15 bg-white/35 backdrop-blur-2xl md:w-72 dark:border-emerald-400/10 dark:bg-slate-900/35"
                 :class="mobileShowDetail ? 'hidden md:flex' : 'flex'"
             >
                 <!-- Tag filter -->
@@ -343,7 +343,7 @@ const difficultyBadge = {
                 <div
                     v-else
                     :key="selectedQuestion.id"
-                    class="flex flex-1 flex-col gap-4 overflow-y-auto p-6"
+                    class="flex flex-1 flex-col gap-4 overflow-y-auto p-4 sm:p-6"
                 >
                     <QuestionCard :question="selectedQuestion" />
                     <QuestionChat :question-id="selectedQuestion.id" :always-expanded="true" />

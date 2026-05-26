@@ -63,7 +63,7 @@ function onKeydown(e: KeyboardEvent): void {
 <template>
     <Head :title="t('interview.title')" />
 
-    <AuthenticatedLayout :minimal="true">
+    <AuthenticatedLayout>
         <template #header>
             <div class="flex items-center justify-between">
                 <h2 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-xl font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
@@ -76,7 +76,7 @@ function onKeydown(e: KeyboardEvent): void {
             </div>
         </template>
 
-        <div class="flex h-[calc(100vh-8rem)] flex-col py-6">
+        <div class="flex h-[calc(100dvh-8rem)] flex-col py-6">
             <div class="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 sm:px-6 lg:px-8">
 
                 <!-- No API key -->
@@ -176,7 +176,7 @@ function onKeydown(e: KeyboardEvent): void {
                             </div>
 
                             <div
-                                class="max-w-[80%] px-4 py-2.5 text-sm leading-relaxed"
+                                class="max-w-[90%] px-4 py-2.5 text-sm leading-relaxed sm:max-w-[80%]"
                                 :class="msg.role === 'user'
                                     ? 'rounded-2xl rounded-br-sm bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-sm shadow-emerald-500/20'
                                     : 'rounded-2xl rounded-bl-sm border border-gray-200/60 bg-white/90 text-gray-900 shadow-sm backdrop-blur-sm dark:border-gray-700/40 dark:bg-slate-800/60 dark:text-gray-100'"

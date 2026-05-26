@@ -76,9 +76,9 @@ const difficulties = ['junior', 'mid', 'senior'] as const;
 
     <div class="relative flex min-h-screen flex-col overflow-x-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-950 dark:via-slate-900 dark:to-emerald-950/40">
 
-        <!-- Decorative blobs (fixed so they don't scroll with content) -->
-        <div aria-hidden="true" class="pointer-events-none fixed -top-24 -right-24 h-96 w-96 rounded-full bg-emerald-300/30 blur-3xl dark:bg-emerald-500/10 -z-10" />
-        <div aria-hidden="true" class="pointer-events-none fixed -bottom-20 -left-20 h-80 w-80 rounded-full bg-teal-400/20 blur-3xl dark:bg-teal-500/10 -z-10" />
+        <!-- Decorative blobs (absolute so parent overflow-x-hidden clips them on mobile) -->
+        <div aria-hidden="true" class="pointer-events-none absolute -right-24 -top-24 -z-10 h-72 w-72 rounded-full bg-emerald-300/30 blur-3xl sm:h-96 sm:w-96 dark:bg-emerald-500/10" />
+        <div aria-hidden="true" class="pointer-events-none absolute -bottom-20 -left-20 -z-10 h-64 w-64 rounded-full bg-teal-400/20 blur-3xl sm:h-80 sm:w-80 dark:bg-teal-500/10" />
 
         <!-- Header -->
         <header class="relative z-10 mx-auto flex w-full max-w-2xl items-center justify-between px-4 py-6 sm:px-6">

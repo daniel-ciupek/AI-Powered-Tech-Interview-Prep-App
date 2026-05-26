@@ -181,7 +181,7 @@ onMounted(() => {
                 <div class="mx-auto max-w-6xl space-y-6 px-4 sm:px-6 lg:px-8">
 
                     <!-- ── GREETING ──────────────────────────────────────── -->
-                    <div class="greeting-section animate-fade-in-up flex items-center gap-5" style="animation-delay: 0ms;">
+                    <div class="greeting-section animate-fade-in-up flex items-center gap-3 sm:gap-5" style="animation-delay: 0ms;">
                         <!-- Avatar (3D tilt + glow) -->
                         <div class="relative shrink-0">
                             <div
@@ -194,7 +194,7 @@ onMounted(() => {
                         </div>
                         <!-- Text -->
                         <div>
-                            <h3 class="name-shimmer bg-gradient-to-r from-gray-900 via-emerald-600 to-teal-600 bg-clip-text text-3xl font-black leading-tight text-transparent dark:from-white dark:via-emerald-300 dark:to-teal-300">
+                            <h3 class="name-shimmer bg-gradient-to-r from-gray-900 via-emerald-600 to-teal-600 bg-clip-text text-2xl font-black leading-tight text-transparent sm:text-3xl dark:from-white dark:via-emerald-300 dark:to-teal-300">
                                 {{ t('dashboard.greeting', { name: userName }) }}
                             </h3>
                             <p class="mt-0.5 text-sm text-gray-500 dark:text-slate-400">
@@ -265,7 +265,7 @@ onMounted(() => {
                                     </p>
                                 </div>
 
-                                <p class="streak-number number-breathe bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-7xl font-black tabular-nums leading-none text-transparent dark:from-emerald-300 dark:via-teal-300 dark:to-cyan-300">
+                                <p class="streak-number number-breathe bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-5xl font-black tabular-nums leading-none text-transparent sm:text-6xl lg:text-7xl dark:from-emerald-300 dark:via-teal-300 dark:to-cyan-300">
                                     {{ animStreak }}
                                 </p>
                                 <p class="mt-1 text-base font-medium text-gray-600 dark:text-slate-300">
@@ -422,7 +422,7 @@ onMounted(() => {
                         class="animate-fade-in-up glass-card rounded-2xl p-6"
                         style="animation-delay: 380ms;"
                     >
-                        <div class="flex items-center justify-between">
+                        <div class="flex flex-wrap items-center justify-between gap-y-2">
                             <h4 class="text-sm font-semibold text-gray-700 dark:text-slate-200">
                                 {{ t('dashboard.heatmap.title') }}
                             </h4>
