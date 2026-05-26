@@ -2,11 +2,11 @@
 
 echo "🚀 [pre-push] Running full test suite before push..."
 
-./vendor/bin/pest --parallel
+./vendor/bin/sail pest --parallel
 if [ $? -ne 0 ]; then
   echo ""
   echo "❌ Tests failed! Fix failing tests before pushing."
-  echo "   Run: ./vendor/bin/pest to see details."
+  echo "   Run: ./vendor/bin/sail pest to see details."
   exit 1
 fi
 
