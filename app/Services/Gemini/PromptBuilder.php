@@ -34,13 +34,19 @@ class PromptBuilder
             ? implode(', ', $this->tags)
             : 'general programming';
 
-        $level = $this->difficulty->label();
+        $level = $this->difficulty->promptDescription();
 
         return <<<PROMPT
         Wcielasz się w rolę "Anny" — wymagającej, ale życzliwej starszej rekruterki technicznej.
-        Prowadzisz rozmowę kwalifikacyjną na poziomie {$level} na stanowisko Backend Developer (specjalizacja: {$tagsList}).
+        Prowadzisz rozmowę kwalifikacyjną na stanowisko Backend Developer (specjalizacja: {$tagsList}).
 
-        Zasady:
+        Poziom kandydata: {$level}
+
+        Zasady doboru pytań:
+        - Dostosuj KAŻDE pytanie ściśle do opisanego wyżej poziomu — ani za trudne, ani za łatwe.
+        - Pytaj o tematy zgodne z doświadczeniem opisanym w definicji poziomu.
+
+        Zasady prowadzenia rozmowy:
         1. Zadawaj pytania pojedynczo, czekaj na odpowiedź.
         2. Dopytuj głębiej: "dlaczego?", "jak zrobił(a)byś to inaczej?".
         3. Jeśli kandydat nie zna odpowiedzi — delikatnie naprowadź (ale odnotuj lukę).
@@ -58,14 +64,14 @@ class PromptBuilder
         ?string $expectedAnswer,
         array $keywords,
     ): string {
-        $level = $this->difficulty->label();
+        $level = $this->difficulty->promptDescription();
         $expected = $expectedAnswer !== null && $expectedAnswer !== ''
             ? $expectedAnswer
             : 'Brak oczekiwanej odpowiedzi.';
         $keywordsList = $keywords !== [] ? implode(', ', $keywords) : 'brak';
 
         return <<<PROMPT
-        Jesteś pomocnym mentorem programowania. Użytkownik uczy się z pytania technicznego poziomu {$level} i chce dopytać o szczegóły.
+        Jesteś pomocnym mentorem programowania. Użytkownik uczy się z pytania technicznego ({$level}) i chce dopytać o szczegóły.
 
         Pytanie, o które pyta:
         <question>{$questionContent}</question>
@@ -90,17 +96,19 @@ class PromptBuilder
             ? implode(', ', $this->tags)
             : 'general programming';
 
-        $level = $this->difficulty->label();
+        $level = $this->difficulty->promptDescription();
 
         return <<<PROMPT
         Jesteś wymagającą starszą rekruterką techniczną z 10-letnim doświadczeniem.
-        Prowadzisz rozmowę kwalifikacyjną na poziomie {$level}.
 
-        Wygeneruj JEDNO praktyczne pytanie obejmujące: {$tagsList}.
-        Pytanie ma być:
+        Poziom kandydata: {$level}
+
+        Wygeneruj JEDNO praktyczne pytanie rekrutacyjne obejmujące: {$tagsList}.
+        Pytanie MUSI być:
+        - ściśle dostosowane do opisanego wyżej poziomu (ani za trudne, ani za łatwe),
         - konkretne (nie ogólnikowe),
-        - sprawdzające zrozumienie, a nie wyuczone definicje,
-        - odpowiedź zajmuje 2–5 minut.
+        - sprawdzające realne zrozumienie, a nie wyuczone definicje,
+        - takie, że odpowiedź zajmuje 2–5 minut.
 
         Treść pytania i odpowiedzi po polsku. Klucze JSON pozostaw po angielsku.
         Odpowiedz WYŁĄCZNIE poprawnym JSON-em, bez markdown, bez komentarzy:
