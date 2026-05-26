@@ -21,8 +21,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property list<string> $expected_keywords
  * @property Difficulty $difficulty
  * @property QuestionSource $source
+ * @property list<string> $topic_tags
  */
-#[Fillable(['content', 'expected_answer', 'expected_keywords', 'difficulty', 'source'])]
+#[Fillable(['content', 'expected_answer', 'expected_keywords', 'difficulty', 'source', 'topic_tags'])]
 class Question extends Model
 {
     /** @use HasFactory<QuestionFactory> */
@@ -35,6 +36,7 @@ class Question extends Model
     {
         return [
             'expected_keywords' => 'array',
+            'topic_tags' => 'array',
             'difficulty' => Difficulty::class,
             'source' => QuestionSource::class,
         ];

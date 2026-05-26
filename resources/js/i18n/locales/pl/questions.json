@@ -12,6 +12,8 @@
     "empty_state_hint_prefix": "Kliknij",
     "empty_state_hint_button": "+ Generuj",
     "empty_state_hint_suffix": ", aby utworzyć swoje pierwsze pytanie AI.",
+    "clear_filter": "wyczyść filtr",
+    "empty_state_filtered": "Brak pytań dla wybranych tagów.",
     "list_count": "pytań",
     "back_to_list": "← Wróć do listy",
     "select_question": "Wybierz pytanie z listy po lewej",

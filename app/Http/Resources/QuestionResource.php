@@ -23,6 +23,7 @@ class QuestionResource extends JsonResource
             'expected_keywords' => $this->expected_keywords,
             'difficulty' => $this->difficulty->value,
             'source' => $this->source->value,
+            'topic_tags' => $this->topic_tags ?? [],
             'created_at' => $this->created_at?->toISOString(),
         ];
     }

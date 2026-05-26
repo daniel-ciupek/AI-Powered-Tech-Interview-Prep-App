@@ -96,6 +96,38 @@ test('generate returns 429 when gemini rate limits', function () {
         ->assertStatus(429);
 });
 
+test('generate saves topic_tags to the question', function () {
+    Http::fake(['*' => Http::response(geminiQuestionResponse(), 200)]);
+
+    $user = User::factory()->create([
+        'gemini_api_key_encrypted' => Crypt::encryptString('fake-api-key'),
+    ]);
+
+    $this->actingAs($user)
+        ->postJson('/api/questions/generate', ['tags' => ['laravel', 'php']])
+        ->assertStatus(201)
+        ->assertJsonPath('data.topic_tags', ['laravel', 'php']);
+
+    $question = $user->questions()->first();
+    expect($question)->not->toBeNull();
+    expect($question->topic_tags)->toBe(['laravel', 'php']);
+});
+
+test('generate without tags saves empty topic_tags', function () {
+    Http::fake(['*' => Http::response(geminiQuestionResponse(), 200)]);
+
+    $user = User::factory()->create([
+        'gemini_api_key_encrypted' => Crypt::encryptString('fake-api-key'),
+    ]);
+
+    $this->actingAs($user)
+        ->postJson('/api/questions/generate')
+        ->assertStatus(201)
+        ->assertJsonPath('data.topic_tags', []);
+
+    expect($user->questions()->first()->topic_tags)->toBe([]);
+});
+
 test('generate validates tags array', function () {
     $user = User::factory()->create([
         'gemini_api_key_encrypted' => Crypt::encryptString('fake-api-key'),

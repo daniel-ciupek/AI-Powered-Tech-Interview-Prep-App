@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FreeTextTagInput from '@/Components/FreeTextTagInput.vue';
 import QuestionCard from '@/Components/QuestionCard.vue';
 import QuestionChat from '@/Components/QuestionChat.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
@@ -15,6 +16,7 @@ interface Question {
     source: 'ai_generated' | 'user_created';
     expected_answer: string | null;
     expected_keywords: string[];
+    topic_tags: string[];
     created_at: string;
 }
 
@@ -37,12 +39,17 @@ interface PaginatedQuestions {
 const props = defineProps<{
     questions: PaginatedQuestions;
     has_api_key: boolean;
+    selected_tags: string[];
+    tag_suggestions: string[];
 }>();
 
 const generating = ref(false);
 const generateError = ref<string | null>(null);
 const selectedId = ref<number | null>(props.questions.data[0]?.id ?? null);
 const mobileShowDetail = ref(false);
+
+// Local copy of active filter tags — synced back to URL on change
+const filterTags = ref<string[]>([...props.selected_tags]);
 
 const selectedQuestion = computed(
     () => props.questions.data.find((q) => q.id === selectedId.value) ?? null,
@@ -53,12 +60,27 @@ function selectQuestion(q: Question): void {
     mobileShowDetail.value = true;
 }
 
+function applyTagFilter(tags: string[]): void {
+    filterTags.value = tags;
+    router.visit(route('questions.index'), {
+        data: tags.length ? { tags } : {},
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+        onSuccess: () => {
+            selectedId.value = props.questions.data[0]?.id ?? null;
+        },
+    });
+}
+
 async function generate(): Promise<void> {
     generating.value = true;
     generateError.value = null;
     try {
-        await window.axios.post('/api/questions/generate');
-        router.reload({ only: ['questions'] });
+        await window.axios.post('/api/questions/generate', {
+            tags: filterTags.value,
+        });
+        router.reload({ only: ['questions', 'tag_suggestions'] });
     } catch (err: unknown) {
         const axiosErr = err as { response?: { data?: { message?: string } } };
         generateError.value = axiosErr.response?.data?.message ?? t('questions.generation_failed');
@@ -128,11 +150,29 @@ const difficultyBadge = {
                 class="flex w-72 flex-none flex-col border-r border-emerald-500/15 bg-white/35 backdrop-blur-2xl dark:border-emerald-400/10 dark:bg-slate-900/35"
                 :class="mobileShowDetail ? 'hidden md:flex' : 'flex'"
             >
+                <!-- Tag filter -->
+                <div class="border-b border-emerald-500/12 px-3 py-3 dark:border-emerald-400/8">
+                    <FreeTextTagInput
+                        :model-value="filterTags"
+                        :suggestions="tag_suggestions"
+                        :max-tags="5"
+                        @update:model-value="applyTagFilter"
+                    />
+                </div>
+
                 <!-- List header with count -->
-                <div class="flex items-center justify-between border-b border-emerald-500/12 px-4 py-3 dark:border-emerald-400/8">
+                <div class="flex items-center justify-between border-b border-emerald-500/12 px-4 py-2.5 dark:border-emerald-400/8">
                     <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                         {{ questions.meta.total }} {{ t('questions.list_count') }}
                     </span>
+                    <button
+                        v-if="filterTags.length > 0"
+                        type="button"
+                        class="text-xs text-emerald-600 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-200"
+                        @click="applyTagFilter([])"
+                    >
+                        {{ t('questions.clear_filter') }}
+                    </button>
                 </div>
 
                 <!-- No API key warning -->
@@ -158,8 +198,10 @@ const difficultyBadge = {
                     class="flex flex-1 flex-col items-center justify-center gap-2 px-6 text-center"
                 >
                     <div class="text-3xl">📋</div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('questions.empty_state') }}</p>
-                    <p class="text-xs text-gray-400 dark:text-gray-500">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        {{ filterTags.length > 0 ? t('questions.empty_state_filtered') : t('questions.empty_state') }}
+                    </p>
+                    <p v-if="filterTags.length === 0" class="text-xs text-gray-400 dark:text-gray-500">
                         {{ t('questions.empty_state_hint_prefix') }}
                         <span class="font-semibold text-gray-600 dark:text-gray-300">{{ t('questions.empty_state_hint_button') }}</span>{{ t('questions.empty_state_hint_suffix') }}
                     </p>
@@ -179,12 +221,25 @@ const difficultyBadge = {
                             <p class="line-clamp-2 text-sm font-medium leading-snug text-gray-800 dark:text-gray-200">
                                 {{ q.content }}
                             </p>
-                            <span
-                                class="mt-1.5 inline-block rounded-full px-2 py-0.5 text-xs font-semibold"
-                                :class="difficultyBadge[q.difficulty]"
-                            >
-                                {{ t(`questions.card.difficulty.${q.difficulty}`) }}
-                            </span>
+                            <div class="mt-1.5 flex flex-wrap items-center gap-1">
+                                <span
+                                    class="inline-block rounded-full px-2 py-0.5 text-xs font-semibold"
+                                    :class="difficultyBadge[q.difficulty]"
+                                >
+                                    {{ t(`questions.card.difficulty.${q.difficulty}`) }}
+                                </span>
+                                <span
+                                    v-for="tag in q.topic_tags.slice(0, 2)"
+                                    :key="tag"
+                                    class="inline-block rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-slate-700/60 dark:text-slate-400"
+                                >
+                                    {{ tag }}
+                                </span>
+                                <span
+                                    v-if="q.topic_tags.length > 2"
+                                    class="text-xs text-gray-400 dark:text-gray-500"
+                                >+{{ q.topic_tags.length - 2 }}</span>
+                            </div>
                         </button>
                     </li>
                 </ul>

@@ -12,6 +12,8 @@
     "empty_state_hint_prefix": "Click",
     "empty_state_hint_button": "+ Generate",
     "empty_state_hint_suffix": " to create your first AI question.",
+    "clear_filter": "clear filter",
+    "empty_state_filtered": "No questions match the selected tags.",
     "list_count": "questions",
     "back_to_list": "← Back to list",
     "select_question": "Select a question from the list on the left",

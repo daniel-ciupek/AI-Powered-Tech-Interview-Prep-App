@@ -58,6 +58,7 @@ final class GenerateQuestionAction
             'expected_keywords' => $validated['expected_keywords'],
             'difficulty' => $difficulty,
             'source' => QuestionSource::AiGenerated,
+            'topic_tags' => $tags,
         ]);
 
         $user->repetitions()->create([
