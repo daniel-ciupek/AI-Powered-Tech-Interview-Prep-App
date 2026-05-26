@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import QuestionCard from '@/Components/QuestionCard.vue';
 import QuestionChat from '@/Components/QuestionChat.vue';
-import FreeTextTagInput from '@/Components/FreeTextTagInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -27,31 +26,22 @@ interface StudyItem {
 type Difficulty = 'junior' | 'mid' | 'senior';
 
 const props = defineProps<{
-    has_api_key: boolean;
     preferred_difficulty: Difficulty;
 }>();
 
-// ─── Difficulty selector ──────────────────────────────────────────────────
 const selectedDifficulty = ref<Difficulty>(props.preferred_difficulty);
 
-// ─── Generate mode state ──────────────────────────────────────────────────
-const availableTags = ref<string[]>([]);
-const selectedTags = ref<string[]>([]);
-const generating = ref(false);
-const generateError = ref<string | null>(null);
-const generatedQuestion = ref<Question | null>(null);
-
-// ─── Review mode state ────────────────────────────────────────────────────
 const dueItems = ref<StudyItem[]>([]);
 const currentIndex = ref(0);
 const reviewing = ref(false);
 const sessionComplete = ref(false);
+const loading = ref(true);
 
 const currentItem = (): StudyItem | null => dueItems.value[currentIndex.value] ?? null;
 const currentQuestion = (): Question | null => currentItem()?.question ?? null;
 
-// ─── Load due questions ───────────────────────────────────────────────────
 async function loadDueQuestions(): Promise<void> {
+    loading.value = true;
     try {
         const res = await window.axios.get<{ data: StudyItem[]; count: number }>('/api/study/today', {
             params: { difficulty: selectedDifficulty.value },
@@ -60,48 +50,12 @@ async function loadDueQuestions(): Promise<void> {
         currentIndex.value = 0;
         sessionComplete.value = false;
     } catch {
-        // silent — fall back to generate mode
-    }
-}
-
-// ─── Load available tags ──────────────────────────────────────────────────
-async function loadTags(): Promise<void> {
-    if (!props.has_api_key) return;
-    try {
-        const res = await window.axios.get<{ data: string[] }>('/api/tags');
-        availableTags.value = res.data.data;
-    } catch {
-        // tags optional
-    }
-}
-
-onMounted(async () => {
-    await Promise.all([loadDueQuestions(), loadTags()]);
-});
-
-// ─── Generate question ────────────────────────────────────────────────────
-async function generateQuestion(): Promise<void> {
-    generating.value = true;
-    generateError.value = null;
-    generatedQuestion.value = null;
-    try {
-        const res = await window.axios.post<{ data: Question }>('/api/questions/generate', {
-            tags: selectedTags.value,
-            difficulty: selectedDifficulty.value,
-        });
-        generatedQuestion.value = res.data.data;
-        await loadDueQuestions();
-    } catch (err: unknown) {
-        const e = err as { response?: { data?: { message?: string }; status?: number } };
-        generateError.value = e.response?.status === 429
-            ? t('study.rate_limit')
-            : (e.response?.data?.message ?? t('study.generation_failed'));
+        // silent
     } finally {
-        generating.value = false;
+        loading.value = false;
     }
 }
 
-// ─── Record review ────────────────────────────────────────────────────────
 async function recordReview(quality: number): Promise<void> {
     const item = currentItem();
     if (!item || reviewing.value) return;
@@ -121,14 +75,16 @@ async function recordReview(quality: number): Promise<void> {
     }
 }
 
-// ─── Keyboard shortcuts ───────────────────────────────────────────────────
 function onKeydown(e: KeyboardEvent): void {
     if (currentQuestion() === null) return;
     if (e.key === 'ArrowLeft' || e.key === 'r') recordReview(2);
     if (e.key === 'ArrowRight' || e.key === 'g') recordReview(4);
 }
 
-onMounted(() => window.addEventListener('keydown', onKeydown));
+onMounted(() => {
+    loadDueQuestions();
+    window.addEventListener('keydown', onKeydown);
+});
 onUnmounted(() => window.removeEventListener('keydown', onKeydown));
 </script>
 
@@ -150,19 +106,28 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
         <div class="py-10">
             <div class="mx-auto max-w-2xl space-y-5 px-4 sm:px-6 lg:px-8">
 
-                <!-- No API key -->
-                <div
-                    v-if="!has_api_key"
-                    class="rounded-2xl border border-amber-200/60 bg-amber-50/60 px-6 py-12 text-center backdrop-blur-sm dark:border-amber-800/40 dark:bg-amber-900/10"
-                >
-                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-2xl dark:bg-amber-900/40">
-                        🔑
-                    </div>
-                    <p class="font-semibold text-amber-800 dark:text-amber-200">{{ t('study.no_api_key_header') }}</p>
-                    <p class="mt-1 text-sm text-amber-700 dark:text-amber-300">
-                        {{ t('study.no_api_key_prefix') }}
-                        <Link :href="route('settings.edit')" class="font-medium underline decoration-amber-400 hover:text-amber-900 dark:hover:text-amber-100">{{ t('study.no_api_key_link') }}</Link>{{ t('study.no_api_key_suffix') }}
-                    </p>
+                <!-- Difficulty selector — always visible -->
+                <div class="flex items-center justify-center gap-2">
+                    <button
+                        v-for="d in (['junior', 'mid', 'senior'] as Difficulty[])"
+                        :key="d"
+                        type="button"
+                        class="rounded-xl px-5 py-2 text-sm font-semibold capitalize transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                        :class="selectedDifficulty === d
+                            ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/25'
+                            : 'bg-white/60 text-gray-500 hover:bg-emerald-50 hover:text-emerald-700 dark:bg-slate-800/50 dark:text-gray-400 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-300'"
+                        @click="selectedDifficulty = d; loadDueQuestions()"
+                    >
+                        {{ t(`study.difficulty.${d}`) }}
+                    </button>
+                </div>
+
+                <!-- Loading -->
+                <div v-if="loading" class="flex justify-center py-12">
+                    <svg class="h-6 w-6 animate-spin text-emerald-500" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                    </svg>
                 </div>
 
                 <template v-else>
@@ -230,72 +195,17 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
                         <p class="mt-1 text-sm text-emerald-600 dark:text-emerald-400">{{ t('study.session_complete_summary', { count: dueItems.length }) }}</p>
                     </div>
 
-                    <!-- ── GENERATE MODE ───────────────────────────────── -->
-                    <template v-else>
-                        <!-- Tag selector -->
-                        <div class="glass-card animate-spring-in rounded-3xl p-5" style="animation-delay: 0ms;">
-                            <FreeTextTagInput
-                                v-model="selectedTags"
-                                :suggestions="availableTags"
-                                :max-tags="5"
-                                :max-length="50"
-                            />
+                    <!-- ── NOTHING DUE ─────────────────────────────────── -->
+                    <div
+                        v-else
+                        class="glass-card animate-fade-in-up rounded-2xl px-6 py-14 text-center"
+                    >
+                        <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 text-3xl dark:from-slate-800 dark:to-slate-700">
+                            ✅
                         </div>
-
-                        <!-- Generate button -->
-                        <div class="animate-spring-in text-center" style="animation-delay: 80ms;">
-                            <button
-                                type="button"
-                                :disabled="generating"
-                                @click="generateQuestion"
-                                class="btn-shimmer inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-7 py-3 text-base font-semibold text-white transition-all duration-200 hover:from-emerald-400 hover:to-teal-500 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(16,185,129,0.6)] active:scale-[0.95] active:shadow-[0_0_8px_rgba(16,185,129,0.2)] disabled:opacity-50 disabled:hover:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
-                                style="box-shadow: 0 0 20px rgba(16,185,129,0.35);"
-                            >
-                                <svg v-if="generating" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
-                                </svg>
-                                <svg v-else class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
-                                {{ generating ? t('study.generating') : t('study.generate') }}
-                            </button>
-                            <div class="mt-3 flex items-center justify-center gap-1.5">
-                                <button
-                                    v-for="d in (['junior', 'mid', 'senior'] as Difficulty[])"
-                                    :key="d"
-                                    type="button"
-                                    class="rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-                                    :class="selectedDifficulty === d
-                                        ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-sm shadow-emerald-500/25'
-                                        : 'bg-white/60 text-gray-500 hover:bg-emerald-50 hover:text-emerald-700 dark:bg-slate-800/50 dark:text-gray-400 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-300'"
-                                    @click="selectedDifficulty = d; loadDueQuestions()"
-                                >
-                                    {{ t(`study.difficulty.${d}`) }}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div
-                            v-if="generateError"
-                            class="rounded-xl border border-red-200/60 bg-red-50/60 px-4 py-3 text-sm text-red-700 text-center backdrop-blur-sm dark:border-red-800/40 dark:bg-red-950/20 dark:text-red-300"
-                        >
-                            {{ generateError }}
-                        </div>
-
-                        <Transition enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0 translate-y-2">
-                            <div v-if="generatedQuestion" class="space-y-4">
-                                <QuestionCard :question="generatedQuestion" />
-                                <QuestionChat
-                                    :question-id="generatedQuestion.id"
-                                    :key="generatedQuestion.id"
-                                />
-                                <p class="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                                    {{ t('study.come_back_tomorrow') }}
-                                </p>
-                            </div>
-                        </Transition>
-                    </template>
+                        <p class="text-lg font-bold text-gray-700 dark:text-gray-200">{{ t('study.nothing_due') }}</p>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ t('study.nothing_due_hint') }}</p>
+                    </div>
 
                 </template>
             </div>

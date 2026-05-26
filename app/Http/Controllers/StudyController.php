@@ -16,7 +16,6 @@ class StudyController extends Controller
         assert($user !== null);
 
         return Inertia::render('Study/Session', [
-            'has_api_key' => $user->gemini_api_key_encrypted !== null,
             'preferred_difficulty' => $user->preferred_difficulty->value,
         ]);
     }

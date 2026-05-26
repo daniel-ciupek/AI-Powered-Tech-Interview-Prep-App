@@ -25,6 +25,8 @@
     "rate_limit": "Rate limit reached. Please wait a moment.",
     "generation_failed": "Generation failed.",
     "come_back_tomorrow": "Come back tomorrow to review it!",
+    "nothing_due": "Nothing to review",
+    "nothing_due_hint": "Come back when you have questions due. Go to Learning to add new questions.",
     "chat": {
         "title": "💬 Ask AI for details",
         "placeholder": "E.g. \"Why?\", \"Give a PHP example\", \"Explain simpler\"…",

@@ -9,14 +9,17 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
+type Difficulty = 'junior' | 'mid' | 'senior';
+
 const props = defineProps<{
     has_api_key: boolean;
-    preferred_difficulty: 'junior' | 'mid' | 'senior';
+    preferred_difficulty: Difficulty;
 }>();
 
 const store = useInterviewSession();
 const availableTags = ref<string[]>([]);
 const selectedTags = ref<string[]>([]);
+const selectedDifficulty = ref<Difficulty>(props.preferred_difficulty);
 const inputText = ref('');
 const chatBottom = ref<HTMLElement | null>(null);
 
@@ -39,7 +42,7 @@ watch(
 );
 
 async function startInterview(): Promise<void> {
-    await store.start(selectedTags.value, props.preferred_difficulty);
+    await store.start(selectedTags.value, selectedDifficulty.value);
 }
 
 async function submit(): Promise<void> {
@@ -97,9 +100,20 @@ function onKeydown(e: KeyboardEvent): void {
                         <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 text-2xl shadow-lg shadow-emerald-200/40 dark:from-emerald-900/40 dark:to-teal-900/40 dark:shadow-emerald-900/30">
                             🤝
                         </div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('interview.difficulty_prefix') }} <span class="font-semibold capitalize text-gray-800 dark:text-gray-200">{{ preferred_difficulty }}</span>
-                            · <Link :href="route('settings.edit')" class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300">{{ t('interview.difficulty_change') }}</Link>
-                        </p>
+                        <div class="mt-3 flex items-center justify-center gap-2">
+                            <button
+                                v-for="d in (['junior', 'mid', 'senior'] as Difficulty[])"
+                                :key="d"
+                                type="button"
+                                class="rounded-xl px-5 py-2 text-sm font-semibold capitalize transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                                :class="selectedDifficulty === d
+                                    ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/25'
+                                    : 'bg-white/60 text-gray-500 hover:bg-emerald-50 hover:text-emerald-700 dark:bg-slate-800/50 dark:text-gray-400 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-300'"
+                                @click="selectedDifficulty = d"
+                            >
+                                {{ d }}
+                            </button>
+                        </div>
                     </div>
 
                     <div class="glass-card animate-spring-in w-full rounded-3xl p-6" style="animation-delay: 80ms;">

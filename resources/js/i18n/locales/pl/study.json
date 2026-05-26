@@ -25,6 +25,8 @@
     "rate_limit": "Limit zapytań osiągnięty. Poczekaj chwilę.",
     "generation_failed": "Generowanie nie powiodło się.",
     "come_back_tomorrow": "Wróć jutro, aby ją powtórzyć!",
+    "nothing_due": "Nic do powtórzenia",
+    "nothing_due_hint": "Wróć tu gdy będziesz mieć pytania do powtórki. Idź do Nauki, żeby dodać nowe pytania.",
     "chat": {
         "title": "💬 Zapytaj AI o szczegóły",
         "placeholder": "Np. „Dlaczego tak?”, „Daj przykład w PHP”, „Wyjaśnij prościej”…",
