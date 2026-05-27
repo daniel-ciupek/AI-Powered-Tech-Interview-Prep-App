@@ -144,14 +144,43 @@ class GeminiClient
      */
     private function parseResponse(array $data): array
     {
-        if (! isset($data['candidates'][0]['content']['parts'][0]['text'])) {
-            throw new GeminiApiException('Unexpected Gemini API response structure');
+        if (empty($data['candidates'])) {
+            throw new GeminiApiException('Gemini API returned no candidates');
         }
 
-        return [
-            'text' => (string) $data['candidates'][0]['content']['parts'][0]['text'],
-            'tokens_in' => (int) ($data['usageMetadata']['promptTokenCount'] ?? 0),
-            'tokens_out' => (int) ($data['usageMetadata']['candidatesTokenCount'] ?? 0),
-        ];
+        $candidate = $data['candidates'][0];
+
+        // Safety block or finish without content (finishReason: SAFETY, RECITATION, OTHER)
+        $parts = $candidate['content']['parts'] ?? [];
+        if (empty($parts)) {
+            throw new GeminiApiException(
+                'Gemini API returned no content parts (finishReason: '.($candidate['finishReason'] ?? 'UNKNOWN').')'
+            );
+        }
+
+        // gemini-2.5-flash may include thinking parts (thought: true) before the actual response.
+        // Skip them and return the first real text part.
+        foreach ($parts as $part) {
+            if (isset($part['text']) && ! ($part['thought'] ?? false)) {
+                return [
+                    'text' => (string) $part['text'],
+                    'tokens_in' => (int) ($data['usageMetadata']['promptTokenCount'] ?? 0),
+                    'tokens_out' => (int) ($data['usageMetadata']['candidatesTokenCount'] ?? 0),
+                ];
+            }
+        }
+
+        // Fallback: accept any part with text (e.g. all parts are thought parts)
+        foreach ($parts as $part) {
+            if (isset($part['text'])) {
+                return [
+                    'text' => (string) $part['text'],
+                    'tokens_in' => (int) ($data['usageMetadata']['promptTokenCount'] ?? 0),
+                    'tokens_out' => (int) ($data['usageMetadata']['candidatesTokenCount'] ?? 0),
+                ];
+            }
+        }
+
+        throw new GeminiApiException('Unexpected Gemini API response structure');
     }
 }

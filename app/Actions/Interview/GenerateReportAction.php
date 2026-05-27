@@ -6,6 +6,7 @@ namespace App\Actions\Interview;
 
 use App\Enums\MessageRole;
 use App\Enums\SessionStatus;
+use App\Exceptions\GeminiRateLimitException;
 use App\Models\InterviewSession;
 use App\Models\User;
 use App\Services\Gemini\GeminiClient;
@@ -44,11 +45,23 @@ final class GenerateReportAction
         $messages[] = ['role' => 'user', 'content' => self::REPORT_REQUEST];
 
         $apiKey = Crypt::decryptString($user->gemini_api_key_encrypted);
-        $result = (new GeminiClient($apiKey))->chat(
-            systemPrompt: self::SYSTEM_PROMPT,
-            messages: $messages,
-            maxOutputTokens: 2048,
-        );
+        $client = new GeminiClient($apiKey);
+
+        try {
+            $result = $client->chat(
+                systemPrompt: self::SYSTEM_PROMPT,
+                messages: $messages,
+                maxOutputTokens: 2048,
+            );
+        } catch (GeminiRateLimitException) {
+            // Gemini free-tier resets in 60 s — wait and retry once.
+            sleep(65);
+            $result = $client->chat(
+                systemPrompt: self::SYSTEM_PROMPT,
+                messages: $messages,
+                maxOutputTokens: 2048,
+            );
+        }
 
         $session->update([
             'final_report' => $result['text'],

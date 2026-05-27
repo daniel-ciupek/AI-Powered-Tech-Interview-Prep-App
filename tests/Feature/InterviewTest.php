@@ -10,7 +10,6 @@ use App\Models\InterviewSession;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\RateLimiter;
 
 function interviewGeminiResponse(string $text = 'Hello! I am Anna. Let us start.'): array
@@ -124,20 +123,21 @@ test('cannot send message to completed session', function () {
         ->assertStatus(422);
 });
 
-test('finish interview dispatches report job', function () {
-    Queue::fake();
+test('finish interview marks session completed and triggers report generation', function () {
+    Http::fake(['*' => Http::response(interviewGeminiResponse('## Overall Assessment\nGood.'), 200)]);
 
     $user = User::factory()->create([
         'gemini_api_key_encrypted' => Crypt::encryptString('fake-key'),
     ]);
     $session = InterviewSession::factory()->create(['user_id' => $user->id]);
+    InterviewMessage::create(['session_id' => $session->id, 'role' => MessageRole::Assistant, 'content' => 'Tell me about PHP.', 'tokens_used' => 10]);
+    InterviewMessage::create(['session_id' => $session->id, 'role' => MessageRole::User, 'content' => 'PHP is great.', 'tokens_used' => 5]);
 
     $this->actingAs($user)
         ->postJson("/api/interview/{$session->id}/finish")
         ->assertOk();
 
     expect($session->refresh()->status)->toBe(SessionStatus::Completed);
-    Queue::assertPushed(GenerateInterviewReportJob::class);
 });
 
 test('start interview is rate limited per user', function () {

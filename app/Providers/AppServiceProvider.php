@@ -34,7 +34,14 @@ class AppServiceProvider extends ServiceProvider
             $user = $request->user();
             assert($user !== null);
 
-            return Limit::perMinute(20)->by((string) $user->id);
+            return Limit::perMinute(60)->by((string) $user->id);
+        });
+
+        RateLimiter::for('interview-finish', static function (Request $request): Limit {
+            $user = $request->user();
+            assert($user !== null);
+
+            return Limit::perMinute(10)->by((string) $user->id);
         });
 
         RateLimiter::for('question-generate', static function (Request $request): Limit {

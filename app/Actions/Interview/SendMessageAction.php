@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Services\Gemini\GeminiClient;
 use App\Services\Gemini\PromptBuilder;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 final class SendMessageAction
 {
@@ -18,20 +19,18 @@ final class SendMessageAction
     {
         assert($user->gemini_api_key_encrypted !== null);
 
-        $session->messages()->create([
-            'role' => MessageRole::User,
-            'content' => $userContent,
-        ]);
-
         $systemPrompt = (new PromptBuilder)
             ->withTags($session->topic_tags)
             ->withDifficulty($session->difficulty)
             ->buildInterviewSystemPrompt();
 
-        $history = $session->messages()
+        // Build history from DB (existing messages) + the new user message appended inline.
+        // This avoids saving the user message before the API call so that a failed API call
+        // does not leave an orphaned user message that corrupts future history.
+        $existing = $session->messages()
             ->whereIn('role', [MessageRole::User->value, MessageRole::Assistant->value])
             ->orderByDesc('created_at')
-            ->take(20)
+            ->take(19)
             ->get()
             ->reverse()
             ->map(static fn (InterviewMessage $m): array => [
@@ -41,20 +40,30 @@ final class SendMessageAction
             ->values()
             ->all();
 
+        $history = [...$existing, ['role' => MessageRole::User->value, 'content' => $userContent]];
+
         $apiKey = Crypt::decryptString($user->gemini_api_key_encrypted);
         $result = (new GeminiClient($apiKey))->chat(
             systemPrompt: $systemPrompt,
             messages: $history,
         );
 
-        $assistant = $session->messages()->create([
-            'role' => MessageRole::Assistant,
-            'content' => $result['text'],
-            'tokens_used' => $result['tokens_in'] + $result['tokens_out'],
-        ]);
+        // Only write to DB after a successful API response.
+        return DB::transaction(function () use ($session, $userContent, $result): InterviewMessage {
+            $session->messages()->create([
+                'role' => MessageRole::User,
+                'content' => $userContent,
+            ]);
 
-        $session->increment('tokens_used_total', $result['tokens_in'] + $result['tokens_out']);
+            $assistant = $session->messages()->create([
+                'role' => MessageRole::Assistant,
+                'content' => $result['text'],
+                'tokens_used' => $result['tokens_in'] + $result['tokens_out'],
+            ]);
 
-        return $assistant;
+            $session->increment('tokens_used_total', $result['tokens_in'] + $result['tokens_out']);
+
+            return $assistant;
+        });
     }
 }

@@ -8,18 +8,12 @@ use App\Actions\Interview\GenerateReportAction;
 use App\Models\InterviewSession;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class GenerateInterviewReportJob implements ShouldQueue
+class GenerateInterviewReportJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public int $tries = 3;
-
-    public int $backoff = 10;
+    use Dispatchable, Queueable, SerializesModels;
 
     public function __construct(
         public readonly InterviewSession $session,
