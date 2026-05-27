@@ -258,6 +258,12 @@ onMounted(() => {
                             </div>
 
                             <div class="relative z-10 h-full">
+                                <!-- Fire watermark -->
+                                <svg aria-hidden="true" class="pointer-events-none absolute -bottom-12 -right-10 h-64 w-64 text-emerald-400 opacity-[0.11] dark:opacity-[0.14]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.601a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/>
+                                    <path d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z"/>
+                                </svg>
+
                                 <div class="mb-4 flex items-center gap-3">
                                     <span class="motion-safe:animate-streak-pulse select-none text-4xl" role="img" aria-label="streak flame">🔥</span>
                                     <p class="text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-slate-400">
@@ -315,6 +321,10 @@ onMounted(() => {
                             @click.stop="toggleFocus('today')"
                         >
                             <div class="metric-card__accent bg-gradient-to-b from-sky-400 to-blue-500" />
+                            <!-- Check-circle watermark -->
+                            <svg aria-hidden="true" class="pointer-events-none absolute -right-5 -top-5 h-28 w-28 text-sky-400 opacity-[0.13] dark:opacity-[0.17]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
                             <p class="pl-3 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-slate-400">
                                 {{ t('dashboard.today.title') }}
                             </p>
@@ -337,6 +347,10 @@ onMounted(() => {
                             @click.stop="toggleFocus('due')"
                         >
                             <div class="metric-card__accent bg-gradient-to-b from-amber-400 to-orange-500" />
+                            <!-- Clock watermark -->
+                            <svg aria-hidden="true" class="pointer-events-none absolute -right-5 -top-5 h-28 w-28 text-amber-400 opacity-[0.13] dark:opacity-[0.17]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
                             <p class="pl-3 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-slate-400">
                                 {{ t('dashboard.today.due_remaining') }}
                             </p>
@@ -359,6 +373,10 @@ onMounted(() => {
                             @click.stop="toggleFocus('retention')"
                         >
                             <div class="metric-card__accent bg-gradient-to-b from-violet-400 to-purple-500" />
+                            <!-- Trending-up watermark -->
+                            <svg aria-hidden="true" class="pointer-events-none absolute -right-5 -top-5 h-28 w-28 text-violet-400 opacity-[0.13] dark:opacity-[0.17]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/>
+                            </svg>
                             <p class="pl-3 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-slate-400">
                                 {{ t('dashboard.retention.title') }}
                             </p>
@@ -388,6 +406,10 @@ onMounted(() => {
                             @click.stop="toggleFocus('total-q')"
                         >
                             <div class="total-card__glow" />
+                            <!-- Book watermark -->
+                            <svg aria-hidden="true" class="pointer-events-none absolute -right-3 -top-3 h-20 w-20 text-emerald-500 opacity-[0.13] dark:opacity-[0.16]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+                            </svg>
                             <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-slate-500">{{ t('dashboard.totals.questions') }}</p>
                             <p class="number-breathe mt-1 text-3xl font-black tabular-nums text-gray-900 dark:text-white">{{ animQuestions }}</p>
                         </div>
@@ -399,6 +421,10 @@ onMounted(() => {
                             @click.stop="toggleFocus('total-r')"
                         >
                             <div class="total-card__glow" />
+                            <!-- Arrow-path (refresh) watermark -->
+                            <svg aria-hidden="true" class="pointer-events-none absolute -right-3 -top-3 h-20 w-20 text-teal-500 opacity-[0.13] dark:opacity-[0.16]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                            </svg>
                             <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-slate-500">{{ t('dashboard.totals.reviews') }}</p>
                             <p class="number-breathe mt-1 text-3xl font-black tabular-nums text-gray-900 dark:text-white">{{ animReviews }}</p>
                         </div>
@@ -410,6 +436,10 @@ onMounted(() => {
                             @click.stop="toggleFocus('total-i')"
                         >
                             <div class="total-card__glow" />
+                            <!-- Chat-bubbles watermark -->
+                            <svg aria-hidden="true" class="pointer-events-none absolute -right-3 -top-3 h-20 w-20 text-violet-500 opacity-[0.13] dark:opacity-[0.16]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V20.25a.75.75 0 001.28.53l3.58-3.58A48.458 48.458 0 0011.25 17c.239 0 .477-.006.714-.018"/>
+                            </svg>
                             <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-slate-500">{{ t('dashboard.totals.interviews') }}</p>
                             <p class="number-breathe mt-1 text-3xl font-black tabular-nums text-gray-900 dark:text-white">{{ animInterviews }}</p>
                         </div>
