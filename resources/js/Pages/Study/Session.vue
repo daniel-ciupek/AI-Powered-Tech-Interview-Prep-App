@@ -91,7 +91,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
 <template>
     <Head :title="t('study.title')" />
 
-    <AuthenticatedLayout :minimal="true">
+    <AuthenticatedLayout>
         <template #header>
             <div class="flex items-center justify-between">
                 <h2 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-xl font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
