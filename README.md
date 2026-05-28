@@ -5,7 +5,7 @@
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Vue](https://img.shields.io/badge/Vue-3-4FC08D?logo=vue.js&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
-![Tests](https://img.shields.io/badge/testy-159%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/testy-180%20passing-brightgreen)
 ![Coverage](https://img.shields.io/badge/pokrycie-≥93%25-brightgreen)
 ![PWA](https://img.shields.io/badge/PWA-instalowalna-5A0FC8?logo=pwa&logoColor=white)
 ![License](https://img.shields.io/badge/licencja-MIT-green)
@@ -121,7 +121,7 @@ Kluczowe decyzje architektoniczne:
 | Internacjonalizacja | vue-i18n 11 (frontend) · Laravel lang files (backend) |
 | AI | Google Gemini 2.5 Flash (BYOK, `thinkingBudget: 0`) |
 | PWA | `vite-plugin-pwa` 1 z inline Workbox runtime |
-| Testy | Pest 3 (Feature + Unit), 159 testów, ≥93% pokrycie domeny |
+| Testy | Pest 3 (Feature + Unit), 180 testów, ≥93% pokrycie domeny |
 | Jakość kodu | Pint · Larastan poziom 8 · Husky + lint-staged · gitleaks · commitlint |
 | Środowisko dev | Laravel Sail (Docker) |
 
