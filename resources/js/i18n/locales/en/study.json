@@ -1,0 +1,40 @@
+{
+    "title": "Repetitions",
+    "header": "Repetitions",
+    "due_counter": "{current} / {total} due",
+    "no_api_key_header": "Gemini API key required",
+    "no_api_key_prefix": "Add it in",
+    "no_api_key_link": "Settings",
+    "no_api_key_suffix": ".",
+    "didnt_know": "← Didn't know",
+    "didnt_know_shortcut": "(R)",
+    "got_it": "Got it →",
+    "got_it_shortcut": "(G)",
+    "shortcuts_hint": "Use arrow keys or R / G as shortcuts",
+    "session_complete": "Session complete 🎉",
+    "session_complete_summary": "All {count} cards reviewed.",
+    "generate": "Generate Question",
+    "generating": "Generating…",
+    "difficulty_prefix": "Difficulty:",
+    "difficulty_change": "change",
+    "difficulty": {
+        "junior": "Junior",
+        "mid": "Mid",
+        "senior": "Senior"
+    },
+    "rate_limit": "Rate limit reached. Please wait a moment.",
+    "generation_failed": "Generation failed.",
+    "come_back_tomorrow": "Come back tomorrow to review it!",
+    "nothing_due": "Nothing to review",
+    "nothing_due_hint": "Come back when you have questions due. Go to Learning to add new questions.",
+    "chat": {
+        "title": "💬 Ask AI for details",
+        "placeholder": "E.g. \"Why?\", \"Give a PHP example\", \"Explain simpler\"…",
+        "send": "Send",
+        "sending": "Sending…",
+        "clear": "Clear conversation",
+        "empty": "Ask a question to get more details. Conversation is not saved.",
+        "error_rate_limit": "AI rate limit reached. Try again shortly.",
+        "error_generic": "Could not send the message. Please try again."
+    }
+}

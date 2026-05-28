@@ -1,0 +1,21 @@
+{
+    "title": "Interview Simulator",
+    "header": "Interview Simulator",
+    "general_topic": "General",
+    "no_api_key_header": "Gemini API key required",
+    "no_api_key_prefix": "Add it in",
+    "no_api_key_link": "Settings",
+    "no_api_key_suffix": ".",
+    "start_button": "Start Interview",
+    "start_loading": "Starting interview…",
+    "difficulty_prefix": "Difficulty:",
+    "difficulty_change": "change",
+    "report_queued": "Report generation started. Refresh the page in a moment to see your evaluation.",
+    "report_generating": "Generating evaluation report… (may take up to 30 seconds)",
+    "report_title": "Interview Report",
+    "retry_report": "Try again",
+    "input_placeholder": "Your answer… (Enter to send, Shift+Enter for new line)",
+    "send": "Send",
+    "finish": "Finish & generate report",
+    "finishing": "Finishing…"
+}

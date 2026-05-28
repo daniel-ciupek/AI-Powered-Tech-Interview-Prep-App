@@ -1,0 +1,30 @@
+{
+    "title": "Profil",
+    "info": {
+        "header": "Informacje o profilu",
+        "intro": "Zaktualizuj dane swojego konta i adres e-mail.",
+        "save": "Zapisz",
+        "saved": "Zapisano."
+    },
+    "password": {
+        "header": "Zmiana hasła",
+        "intro": "Używaj długiego, losowego hasła, aby Twoje konto pozostało bezpieczne.",
+        "save": "Zapisz",
+        "saved": "Zapisano."
+    },
+    "delete": {
+        "header": "Usuń konto",
+        "intro": "Po usunięciu konta wszystkie zasoby i dane zostaną trwale skasowane. Przed usunięciem pobierz dane, które chcesz zachować.",
+        "button": "Usuń konto",
+        "modal_title": "Czy na pewno chcesz usunąć konto?",
+        "modal_intro": "Po usunięciu konta wszystkie zasoby i dane zostaną trwale skasowane. Wprowadź hasło, aby potwierdzić chęć trwałego usunięcia konta.",
+        "placeholder": "Hasło",
+        "cancel": "Anuluj",
+        "confirm": "Usuń konto"
+    },
+    "email": {
+        "unverified": "Twój adres e-mail nie został zweryfikowany.",
+        "resend": "Kliknij tutaj, aby wysłać link weryfikacyjny ponownie.",
+        "resent": "Nowy link weryfikacyjny został wysłany na Twój adres e-mail."
+    }
+}

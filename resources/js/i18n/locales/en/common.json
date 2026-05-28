@@ -1,0 +1,27 @@
+{
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "loading": "Loading…",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "error": "An error occurred.",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "tags": {
+        "label": "Topics",
+        "hint": "(up to {max} — press Enter or comma to add)",
+        "placeholder": "Type a topic and press Enter…",
+        "remove": "Remove tag {tag}",
+        "limit_reached": "Reached the {max}-tag limit.",
+        "too_long": "Tag can be at most {max} characters."
+    },
+    "tts": {
+        "play": "Read aloud",
+        "stop": "Stop reading"
+    }
+}

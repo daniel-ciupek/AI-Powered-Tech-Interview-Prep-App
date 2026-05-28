@@ -1,0 +1,51 @@
+{
+    "title": "Settings",
+    "saved": "Settings saved.",
+    "interview": {
+        "header": "Interview Preferences",
+        "intro": "Adjust the difficulty level and your daily practice goal.",
+        "difficulty_label": "Preferred Difficulty",
+        "daily_goal_label": "Daily Goal (questions per day)"
+    },
+    "difficulty": {
+        "junior": "Junior",
+        "mid": "Mid",
+        "senior": "Senior"
+    },
+    "appearance": {
+        "header": "Appearance",
+        "intro": "Choose the colour theme for the interface."
+    },
+    "theme": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+    },
+    "tts": {
+        "header": "Reader voice (TTS)",
+        "intro": "Pick the voice used for reading questions and AI replies. Saved locally in your browser.",
+        "label": "Voice",
+        "default": "Default (prefer Polish male)",
+        "group_pl": "Polish",
+        "group_other": "Other languages",
+        "preview": "Preview",
+        "preview_text": "Hi, this is how the selected voice sounds.",
+        "hint": "The available voices depend on your OS and browser. On Windows, add more under Settings → Time & Language → Speech.",
+        "no_voices": "Your system has no speech synthesis voices available.",
+        "unsupported": "Your browser does not support speech synthesis (Web Speech API)."
+    },
+    "api_key": {
+        "header": "Gemini API Key",
+        "intro_prefix": "Your key is stored encrypted and never exposed.",
+        "intro_link_prefix": "Get one at",
+        "intro_link_text": "Google AI Studio",
+        "configured": "API key configured",
+        "change": "Change",
+        "remove": "Remove",
+        "label": "API Key",
+        "save": "Save Key",
+        "cancel": "Cancel",
+        "none_set": "No API key set."
+    },
+    "submit": "Save Settings"
+}

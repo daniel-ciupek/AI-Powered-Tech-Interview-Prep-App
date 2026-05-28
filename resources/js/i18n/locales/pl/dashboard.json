@@ -1,0 +1,52 @@
+{
+    "title": "Pulpit",
+    "header": "Twój postęp",
+    "greeting": "Cześć, {name}!",
+    "subtitle": "Oto skrót Twojej nauki.",
+    "streak": {
+        "title": "Seria dni",
+        "days": "dzień | dni | dni",
+        "today_done": "{done} z {goal} dziś",
+        "goal_met": "Cel dnia osiągnięty 🎉",
+        "last_studied": "Ostatnia nauka: {when}",
+        "never": "Jeszcze nie uczyłeś się dziś.",
+        "start_today": "Zacznij dziś, by rozpocząć serię.",
+        "keep_going": "Wróć dziś, by nie przerwać serii."
+    },
+    "today": {
+        "title": "Dziś",
+        "reviewed": "Powtórzonych dziś",
+        "due_remaining": "Do powtórki",
+        "review_now": "Uczę się"
+    },
+    "totals": {
+        "title": "W sumie",
+        "questions": "Pytań",
+        "reviews": "Powtórek",
+        "interviews": "Rozmów"
+    },
+    "retention": {
+        "title": "Skuteczność (30 dni)",
+        "tooltip": "Odsetek powtórek z oceną dobrą lub wyższą.",
+        "sample": "Próba: {n} powtórek",
+        "no_data": "Za mało danych — zrób kilka powtórek."
+    },
+    "heatmap": {
+        "title": "Aktywność (12 tygodni)",
+        "legend_less": "mniej",
+        "legend_more": "więcej",
+        "cell": "{date}: {count} powtórek",
+        "no_activity": "Brak aktywności"
+    },
+    "cta": {
+        "study": "Idź do Powtórek",
+        "interview": "Symulator rozmowy",
+        "questions": "Idź do Nauki",
+        "settings": "Ustawienia"
+    },
+    "no_api_key": {
+        "title": "Połącz klucz Gemini, aby zacząć.",
+        "description": "Bez klucza nie wygenerujesz pytań ani nie odpalisz symulatora.",
+        "cta": "Dodaj klucz w Ustawieniach"
+    }
+}

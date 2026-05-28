@@ -5,6 +5,9 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const passwordInput = ref<HTMLInputElement | null>(null);
 const currentPasswordInput = ref<HTMLInputElement | null>(null);
@@ -38,20 +41,17 @@ const updatePassword = () => {
 <template>
     <section>
         <header>
-            <h2 class="text-lg font-medium text-gray-900">
-                Update Password
+            <h2 class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-base font-bold tracking-tight text-transparent dark:from-emerald-400 dark:to-teal-400">
+                {{ t('profile.password.header') }}
             </h2>
-
-            <p class="mt-1 text-sm text-gray-600">
-                Ensure your account is using a long, random password to stay
-                secure.
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {{ t('profile.password.intro') }}
             </p>
         </header>
 
-        <form @submit.prevent="updatePassword" class="mt-6 space-y-6">
+        <form @submit.prevent="updatePassword" class="mt-6 space-y-5">
             <div>
-                <InputLabel for="current_password" value="Current Password" />
-
+                <InputLabel for="current_password" :value="t('auth.fields.current_password')" class="mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300" />
                 <TextInput
                     id="current_password"
                     ref="currentPasswordInput"
@@ -60,16 +60,11 @@ const updatePassword = () => {
                     class="mt-1 block w-full"
                     autocomplete="current-password"
                 />
-
-                <InputError
-                    :message="form.errors.current_password"
-                    class="mt-2"
-                />
+                <InputError :message="form.errors.current_password" class="mt-2" />
             </div>
 
             <div>
-                <InputLabel for="password" value="New Password" />
-
+                <InputLabel for="password" :value="t('auth.fields.new_password')" class="mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300" />
                 <TextInput
                     id="password"
                     ref="passwordInput"
@@ -78,16 +73,15 @@ const updatePassword = () => {
                     class="mt-1 block w-full"
                     autocomplete="new-password"
                 />
-
                 <InputError :message="form.errors.password" class="mt-2" />
             </div>
 
             <div>
                 <InputLabel
                     for="password_confirmation"
-                    value="Confirm Password"
+                    :value="t('auth.fields.password_confirmation')"
+                    class="mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300"
                 />
-
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
@@ -95,27 +89,29 @@ const updatePassword = () => {
                     class="mt-1 block w-full"
                     autocomplete="new-password"
                 />
-
-                <InputError
-                    :message="form.errors.password_confirmation"
-                    class="mt-2"
-                />
+                <InputError :message="form.errors.password_confirmation" class="mt-2" />
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <PrimaryButton :disabled="form.processing">
+                    <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                    </svg>
+                    {{ t('profile.password.save') }}
+                </PrimaryButton>
 
                 <Transition
-                    enter-active-class="transition ease-in-out"
+                    enter-active-class="transition ease-out duration-200"
                     enter-from-class="opacity-0"
-                    leave-active-class="transition ease-in-out"
+                    leave-active-class="transition ease-in duration-150"
                     leave-to-class="opacity-0"
                 >
                     <p
                         v-if="form.recentlySuccessful"
-                        class="text-sm text-gray-600"
+                        class="text-sm font-medium text-emerald-600 dark:text-emerald-400"
                     >
-                        Saved.
+                        {{ t('profile.password.saved') }}
                     </p>
                 </Transition>
             </div>

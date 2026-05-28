@@ -101,6 +101,6 @@
   "outputStyle": "default",
   "statusLine": {
     "type": "command",
-    "command": "echo \"PrepMind | $(git branch --show-current 2>/dev/null || echo 'no-git') | $(git status --porcelain 2>/dev/null | wc -l | xargs) changes\""
+    "command": "echo \"Wirtualny Nauczyciel | $(git branch --show-current 2>/dev/null || echo 'no-git') | $(git status --porcelain 2>/dev/null | wc -l | xargs) changes\""
   }
 }

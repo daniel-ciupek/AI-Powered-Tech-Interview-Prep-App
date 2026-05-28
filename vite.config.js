@@ -1,6 +1,21 @@
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import { VitePWA } from 'vite-plugin-pwa';
+
+const fileRevision = (path) => createHash('md5').update(readFileSync(path)).digest('hex');
+
+const extraPrecache = [
+    '/offline.html',
+    '/icons/icon-192.png',
+    '/icons/icon-512.png',
+    '/icons/icon-maskable-512.png',
+    '/icons/apple-touch-icon.png',
+    '/icons/favicon-32.png',
+    '/favicon.ico',
+].map((url) => ({ url, revision: fileRevision('public' + url) }));
 
 export default defineConfig({
     plugins: [
@@ -14,6 +29,85 @@ export default defineConfig({
                     base: null,
                     includeAbsolute: false,
                 },
+            },
+        }),
+        VitePWA({
+            registerType: 'autoUpdate',
+            injectRegister: false,
+            manifest: {
+                name: 'PrepMind',
+                short_name: 'PrepMind',
+                description: 'AI-powered tech interview prep — spaced repetition + simulator.',
+                lang: 'pl',
+                start_url: '/',
+                scope: '/',
+                display: 'standalone',
+                orientation: 'portrait',
+                theme_color: '#4F46E5',
+                background_color: '#ffffff',
+                icons: [
+                    {
+                        src: '/icons/icon-192.png',
+                        sizes: '192x192',
+                        type: 'image/png',
+                        purpose: 'any',
+                    },
+                    {
+                        src: '/icons/icon-512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'any',
+                    },
+                    {
+                        src: '/icons/icon-maskable-512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'maskable',
+                    },
+                ],
+            },
+            workbox: {
+                inlineWorkboxRuntime: true,
+                additionalManifestEntries: extraPrecache,
+                globPatterns: ['**/*.{js,css,woff2}'],
+                runtimeCaching: [
+                    {
+                        // Navigations: always hit the network so Inertia gets
+                        // fresh server-rendered HTML. Only fall back to the
+                        // precached offline shell if the request actually fails.
+                        urlPattern: ({ request }) => request.mode === 'navigate',
+                        handler: 'NetworkOnly',
+                        options: {
+                            precacheFallback: { fallbackURL: '/offline.html' },
+                        },
+                    },
+                    {
+                        urlPattern: /^https:\/\/fonts\.bunny\.net\/.*/i,
+                        handler: 'CacheFirst',
+                        options: {
+                            cacheName: 'prepmind-fonts',
+                            expiration: {
+                                maxEntries: 16,
+                                maxAgeSeconds: 60 * 60 * 24 * 90,
+                            },
+                            cacheableResponse: { statuses: [0, 200] },
+                        },
+                    },
+                    {
+                        urlPattern: /\/icons\/.*\.png$/,
+                        handler: 'CacheFirst',
+                        options: {
+                            cacheName: 'prepmind-icons',
+                            expiration: {
+                                maxEntries: 16,
+                                maxAgeSeconds: 60 * 60 * 24 * 30,
+                            },
+                        },
+                    },
+                ],
+            },
+            devOptions: {
+                enabled: false,
             },
         }),
     ],

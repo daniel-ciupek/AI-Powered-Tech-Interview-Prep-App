@@ -7,6 +7,9 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref<HTMLInputElement | null>(null);
@@ -41,39 +44,32 @@ const closeModal = () => {
 </script>
 
 <template>
-    <section class="space-y-6">
+    <section class="space-y-5">
         <header>
-            <h2 class="text-lg font-medium text-gray-900">
-                Delete Account
+            <h2 class="text-base font-bold tracking-tight text-red-700 dark:text-red-400">
+                {{ t('profile.delete.header') }}
             </h2>
-
-            <p class="mt-1 text-sm text-gray-600">
-                Once your account is deleted, all of its resources and data will
-                be permanently deleted. Before deleting your account, please
-                download any data or information that you wish to retain.
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {{ t('profile.delete.intro') }}
             </p>
         </header>
 
-        <DangerButton @click="confirmUserDeletion">Delete Account</DangerButton>
+        <DangerButton @click="confirmUserDeletion">{{ t('profile.delete.button') }}</DangerButton>
 
         <Modal :show="confirmingUserDeletion" @close="closeModal">
-            <div class="p-6">
-                <h2
-                    class="text-lg font-medium text-gray-900"
-                >
-                    Are you sure you want to delete your account?
+            <div class="p-7">
+                <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">
+                    {{ t('profile.delete.modal_title') }}
                 </h2>
 
-                <p class="mt-1 text-sm text-gray-600">
-                    Once your account is deleted, all of its resources and data
-                    will be permanently deleted. Please enter your password to
-                    confirm you would like to permanently delete your account.
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    {{ t('profile.delete.modal_intro') }}
                 </p>
 
                 <div class="mt-6">
                     <InputLabel
                         for="password"
-                        value="Password"
+                        :value="t('auth.fields.password')"
                         class="sr-only"
                     />
 
@@ -83,25 +79,28 @@ const closeModal = () => {
                         v-model="form.password"
                         type="password"
                         class="mt-1 block w-3/4"
-                        placeholder="Password"
+                        :placeholder="t('profile.delete.placeholder')"
                         @keyup.enter="deleteUser"
                     />
 
                     <InputError :message="form.errors.password" class="mt-2" />
                 </div>
 
-                <div class="mt-6 flex justify-end">
+                <div class="mt-6 flex justify-end gap-3">
                     <SecondaryButton @click="closeModal">
-                        Cancel
+                        {{ t('profile.delete.cancel') }}
                     </SecondaryButton>
 
                     <DangerButton
-                        class="ms-3"
-                        :class="{ 'opacity-25': form.processing }"
+                        :class="{ 'opacity-50 cursor-not-allowed': form.processing }"
                         :disabled="form.processing"
                         @click="deleteUser"
                     >
-                        Delete Account
+                        <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                        </svg>
+                        {{ t('profile.delete.confirm') }}
                     </DangerButton>
                 </div>
             </div>

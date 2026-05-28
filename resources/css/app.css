@@ -1,3 +1,226 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ============================================================
+   CUSTOM @property — required for conic-gradient animation
+   (streak card rotating border). Must live at global scope.
+============================================================ */
+@property --streak-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+/* ============================================================
+   GLASS CARD — global glassmorphism token used across all pages
+============================================================ */
+.glass-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(24px) saturate(200%);
+    -webkit-backdrop-filter: blur(24px) saturate(200%);
+    border: 1px solid rgba(16, 185, 129, 0.18);
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
+        0 8px 24px -8px rgba(15, 118, 110, 0.18),
+        0 2px 6px -2px rgba(15, 23, 42, 0.08),
+        0 0 0 1px rgba(255, 255, 255, 0.4);
+    transition:
+        transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        border-color 350ms ease,
+        opacity 350ms ease,
+        filter 350ms ease;
+}
+
+.dark .glass-card {
+    background: rgba(15, 23, 42, 0.78);
+    border: 1px solid rgba(16, 185, 129, 0.22);
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
+        0 16px 32px -12px rgba(0, 0, 0, 0.6),
+        0 4px 12px -2px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(16, 185, 129, 0.08);
+}
+
+.glass-card:hover {
+    transform: translateY(-3px) scale(1.008);
+    border-color: rgba(16, 185, 129, 0.35);
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
+        0 20px 40px -12px rgba(15, 118, 110, 0.28),
+        0 6px 14px -4px rgba(15, 23, 42, 0.12),
+        0 0 0 1px rgba(16, 185, 129, 0.18);
+}
+
+.dark .glass-card:hover {
+    border-color: rgba(16, 185, 129, 0.45);
+    box-shadow:
+        0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+        0 24px 48px -12px rgba(0, 0, 0, 0.75),
+        0 8px 16px -4px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(16, 185, 129, 0.25),
+        0 0 32px rgba(16, 185, 129, 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .glass-card {
+        transition: border-color 350ms ease, opacity 350ms ease;
+    }
+}
+
+@layer utilities {
+    /* ----------------------------------------------------------
+       Stagger fade-in-up — used by all dashboard sections
+    ---------------------------------------------------------- */
+    @keyframes fade-in-up {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fade-in-up 0.45s ease-out both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .animate-fade-in-up {
+            animation: none;
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    /* ----------------------------------------------------------
+       Shimmer utility (reusable outside dashboard)
+    ---------------------------------------------------------- */
+    @keyframes shimmer-slide {
+        0%   { transform: translateX(-120%); }
+        100% { transform: translateX(220%); }
+    }
+
+    /* ----------------------------------------------------------
+       Mesh-shift background animation (reusable)
+    ---------------------------------------------------------- */
+    @keyframes mesh-shift {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* ----------------------------------------------------------
+       Blob drift keyframes
+    ---------------------------------------------------------- */
+    @keyframes blob-drift-1 {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33%       { transform: translate(-30px, 40px) scale(1.08); }
+        66%       { transform: translate(20px, -20px) scale(0.95); }
+    }
+
+    @keyframes blob-drift-2 {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        40%       { transform: translate(40px, -30px) scale(1.1); }
+        70%       { transform: translate(-20px, 20px) scale(0.92); }
+    }
+
+    @keyframes blob-drift-3 {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        50%       { transform: translate(-40px, 30px) scale(1.12); }
+    }
+
+    /* ----------------------------------------------------------
+       Rotating conic-gradient border (streak card)
+    ---------------------------------------------------------- */
+    @keyframes rotate-border {
+        to { --streak-angle: 360deg; }
+    }
+
+    /* ----------------------------------------------------------
+       Streak flame pulse
+    ---------------------------------------------------------- */
+    @keyframes streak-pulse {
+        0%, 100% { transform: scale(1) rotate(-3deg); }
+        50%       { transform: scale(1.15) rotate(3deg); }
+    }
+
+    /* ----------------------------------------------------------
+       Variant C: Spring Pop + Blur Clear page entry animation
+    ---------------------------------------------------------- */
+    @keyframes spring-in {
+        0%   { opacity: 0; transform: scale(0.95); filter: blur(8px); }
+        100% { opacity: 1; transform: scale(1);    filter: blur(0); }
+    }
+
+    .animate-spring-in {
+        animation: spring-in 350ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .animate-spring-in {
+            animation: fade-in 200ms ease both;
+        }
+    }
+
+    /* ----------------------------------------------------------
+       Variant A: Glow Pulse Button shimmer (::after sweep)
+    ---------------------------------------------------------- */
+    @keyframes btn-shimmer-sweep {
+        0%   { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    .btn-shimmer {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-shimmer::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 100%
+        );
+        transform: translateX(-100%);
+        transition: none;
+    }
+
+    .btn-shimmer:hover::after {
+        animation: btn-shimmer-sweep 0.5s ease-out forwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .btn-shimmer::after {
+            display: none;
+        }
+    }
+
+    /* ----------------------------------------------------------
+       Variant A: Chat bubble TransitionGroup (.msg-*)
+    ---------------------------------------------------------- */
+    .msg-enter-active {
+        transition: all 0.2s ease-out;
+    }
+
+    .msg-enter-from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    .msg-leave-active {
+        transition: all 0.15s ease-in;
+    }
+
+    .msg-leave-to {
+        opacity: 0;
+    }
+}

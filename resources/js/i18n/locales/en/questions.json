@@ -1,0 +1,32 @@
+{
+    "title": "Learning",
+    "header": "Learning",
+    "study_session": "Repetitions →",
+    "generate": "+ Generate",
+    "generating": "Generating…",
+    "no_api_key": "No Gemini API key configured.",
+    "go_to_settings": "Go to Settings",
+    "go_to_settings_suffix": " to add one.",
+    "generation_failed": "Generation failed. Please try again.",
+    "empty_state": "No questions yet.",
+    "empty_state_hint_prefix": "Click",
+    "empty_state_hint_button": "+ Generate",
+    "empty_state_hint_suffix": " to create your first AI question.",
+    "clear_filter": "clear filter",
+    "empty_state_filtered": "No questions on this topic yet.",
+    "generate_on_topic": "Generate a question about {topic}",
+    "list_count": "questions",
+    "back_to_list": "← Back to list",
+    "select_question": "Select a question from the list on the left",
+    "card": {
+        "show_answer": "Show answer",
+        "hide_answer": "Hide answer",
+        "source_ai": "AI generated",
+        "source_user": "User created",
+        "difficulty": {
+            "junior": "Junior",
+            "mid": "Mid",
+            "senior": "Senior"
+        }
+    }
+}

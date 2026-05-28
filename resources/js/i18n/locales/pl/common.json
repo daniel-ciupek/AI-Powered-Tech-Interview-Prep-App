@@ -1,0 +1,27 @@
+{
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "close": "Zamknij",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "back": "Wstecz",
+    "loading": "Ładowanie…",
+    "saving": "Zapisywanie…",
+    "saved": "Zapisano.",
+    "error": "Wystąpił błąd.",
+    "confirm": "Potwierdź",
+    "yes": "Tak",
+    "no": "Nie",
+    "tags": {
+        "label": "Tematy",
+        "hint": "(maks. {max} — Enter lub przecinek aby dodać)",
+        "placeholder": "Wpisz temat i naciśnij Enter…",
+        "remove": "Usuń tag {tag}",
+        "limit_reached": "Osiągnięto limit {max} tagów.",
+        "too_long": "Tag może mieć maks. {max} znaków."
+    },
+    "tts": {
+        "play": "Odczytaj na głos",
+        "stop": "Zatrzymaj odczyt"
+    }
+}

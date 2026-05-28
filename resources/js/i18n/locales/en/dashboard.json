@@ -1,0 +1,52 @@
+{
+    "title": "Dashboard",
+    "header": "Your progress",
+    "greeting": "Hi, {name}!",
+    "subtitle": "Here's a snapshot of your learning.",
+    "streak": {
+        "title": "Streak",
+        "days": "day | days | days",
+        "today_done": "{done} of {goal} today",
+        "goal_met": "Daily goal met 🎉",
+        "last_studied": "Last studied: {when}",
+        "never": "You haven't studied today yet.",
+        "start_today": "Start today to begin a streak.",
+        "keep_going": "Come back today to keep your streak."
+    },
+    "today": {
+        "title": "Today",
+        "reviewed": "Reviewed today",
+        "due_remaining": "Due now",
+        "review_now": "Review now"
+    },
+    "totals": {
+        "title": "Lifetime",
+        "questions": "Questions",
+        "reviews": "Reviews",
+        "interviews": "Interviews"
+    },
+    "retention": {
+        "title": "Retention (30 days)",
+        "tooltip": "Share of reviews rated good or better.",
+        "sample": "Sample: {n} reviews",
+        "no_data": "Not enough data — do a few reviews."
+    },
+    "heatmap": {
+        "title": "Activity (12 weeks)",
+        "legend_less": "less",
+        "legend_more": "more",
+        "cell": "{date}: {count} reviews",
+        "no_activity": "No activity"
+    },
+    "cta": {
+        "study": "Go to Repetitions",
+        "interview": "Interview simulator",
+        "questions": "Go to Learning",
+        "settings": "Settings"
+    },
+    "no_api_key": {
+        "title": "Connect a Gemini key to get started.",
+        "description": "Without a key you can't generate questions or run the simulator.",
+        "cta": "Add key in Settings"
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "title": "Symulator rozmowy",
+    "header": "Symulator rozmowy",
+    "general_topic": "Ogólne",
+    "no_api_key_header": "Wymagany klucz Gemini API",
+    "no_api_key_prefix": "Dodaj go w",
+    "no_api_key_link": "Ustawieniach",
+    "no_api_key_suffix": ".",
+    "start_button": "Rozpocznij rozmowę",
+    "start_loading": "Uruchamiam rozmowę…",
+    "difficulty_prefix": "Poziom:",
+    "difficulty_change": "zmień",
+    "report_queued": "Generowanie raportu rozpoczęte. Odśwież stronę za chwilę, aby zobaczyć ocenę.",
+    "report_generating": "Generuję raport oceny… (może potrwać do 30 sekund)",
+    "report_title": "Raport z rozmowy",
+    "retry_report": "Spróbuj ponownie",
+    "input_placeholder": "Twoja odpowiedź… (Enter aby wysłać, Shift+Enter nowa linia)",
+    "send": "Wyślij",
+    "finish": "Zakończ i wygeneruj raport",
+    "finishing": "Kończę…"
+}

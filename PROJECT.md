@@ -602,7 +602,7 @@ Każda faza ma **Definition of Done (DoD)**:
 | Formatter | Laravel Pint | latest | Auto-format |
 | Tagi | spatie/laravel-tags | latest | Polimorficzne tagi |
 | Markdown | league/commonmark | latest | Safe rendering |
-| AI | Gemini API | gemini-2.0-flash (recommended) | LLM |
+| AI | Gemini API | gemini-2.5-flash (recommended) | LLM |
 | Środowisko | Laravel Sail (Docker) | latest | Dev environment |
 | CI/CD | GitHub Actions | — | Test & build |
 | Git Hooks | Husky + lint-staged | latest | Pre-commit checks |

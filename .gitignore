@@ -6,13 +6,15 @@
 /public/build
 /public/hot
 /public/storage
+/public/sw.js
+/public/manifest.webmanifest
 /storage/*.key
 /storage/pail
 /vendor
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
-auth.json
+/auth.json
 npm-debug.log
 yarn-error.log
 
@@ -111,3 +113,8 @@ docker-compose.override.yml
 # Husky / NPM tooling
 # =============================================================================
 .husky/_/
+
+# =============================================================================
+# Local CI references (kept locally for learning, not for this repo)
+# =============================================================================
+.gitlab-ci.yml
