@@ -10,7 +10,7 @@
 ![PWA](https://img.shields.io/badge/PWA-instalowalna-5A0FC8?logo=pwa&logoColor=white)
 ![License](https://img.shields.io/badge/licencja-MIT-green)
 
-PrepMind to pełnostackowa aplikacja SPA do nauki technicznego angielskiego rekrutacyjnego — generuje pytania techniczne dopasowane do Twojego poziomu, planuje ich powtórki algorytmem **SM-2** i pozwala przeprowadzić prawdziwą rozmowę kwalifikacyjną z **AI-rekruterem**, który na końcu wystawia pisemną ocenę. Klucz Gemini dostarczasz sam (model **BYOK**) — żadnych abonamentów.
+PrepMind to pełnostackowa aplikacja SPA dla programistów szukających pracy — generuje techniczne pytania rekrutacyjne dopasowane do Twojego poziomu i stosu technologicznego, planuje ich powtórki algorytmem **SM-2** i pozwala przeprowadzić prawdziwą rozmowę kwalifikacyjną z **AI-rekruterem**, który na końcu wystawia pisemną ocenę kandydata. Klucz Gemini dostarczasz sam (model **BYOK**) — żadnych abonamentów.
 
 ---
 
